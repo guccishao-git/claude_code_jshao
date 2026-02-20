@@ -1,0 +1,23 @@
+# Ephemeral / runtime
+cache/
+debug/
+downloads/
+file-history/
+history.jsonl
+ide/
+plans/
+projects/
+session-env/
+shell-snapshots/
+stats-cache.json
+statsig/
+subagent/
+telemetry/
+todos/
+backups/
+agents/
+agent-memory/
+plugins/
+
+# Sensitive
+settings.local.json
