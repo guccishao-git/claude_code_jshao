@@ -15,8 +15,6 @@ subagent/
 telemetry/
 todos/
 backups/
-agents/
-agent-memory/
 plugins/
 
 # Sensitive
