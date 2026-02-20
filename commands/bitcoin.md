@@ -1,22 +1,22 @@
-Search the web for the current Bitcoin (BTC) price and do the following:
+Search the web for the current Bitcoin (BTC) price and do the following. **All output must be in Chinese (Simplified).**
 
-## Terminal Output (brief)
-Print a short, casual summary to the terminal covering:
-1. Current price in USD
-2. 24-hour change (percentage)
-3. One-line market vibe
-4. Forcast for next week
+## 终端输出（简短）
+在终端打印简短的摘要，包含：
+1. 当前价格（美元）
+2. 24小时涨跌幅（百分比）
+3. 一句话市场情绪
+4. 下周价格预测
 
-Keep it to 3-4 lines max. Casual tone, no jargon.
+最多3-4行，语气轻松，避免专业术语。
 
-## Weekly Digest File (detailed)
-Write a detailed digest to `~/Documents/BitCoinNewsDaily/digest-YYYY-MM-DD.md` (use today's date). Include:
+## 每日摘要文件（详细）
+将详细摘要写入 `~/Documents/BitCoinNewsDaily/digest-YYYY-MM-DD.md`（使用今天的日期）。包含：
 
-1. Current price in USD
-2. 24-hour change (percentage)
-3. 7-day and 30-day performance
-4. Recent news and market context (2-3 items)
-5. Price forecast for: 1 week, 1 month, 1 year
-6. A plain-English summary for a layman — what does all this mean?
+1. 当前价格（美元）
+2. 24小时涨跌幅（百分比）
+3. 7日和30日表现
+4. 近期新闻与市场背景（2-3条）
+5. 价格预测：1周、1个月、1年
+6. 用通俗易懂的语言总结——这一切意味着什么？
 
-Use markdown formatting with clear headers. Keep the tone casual and accessible.
+使用Markdown格式，标题清晰，语气轻松易读。
