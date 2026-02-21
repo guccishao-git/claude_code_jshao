@@ -20,5 +20,8 @@ This file provides guidance to Claude Code (claude.ai/code) across all sessions.
 - Keep output casual and scannable — assume data engineering background
 - Highlight action items in green when producing briefings
 - Never include secrets, tokens, or credentials in output or commits
+- If there are docs generated, by default it should be under /Documents directory. For example: /Users/jason.shao/Documents/ArsenalWeekly
 
 After completing a task that involves tool use, provide a quick summary of the work you've done.
+
+

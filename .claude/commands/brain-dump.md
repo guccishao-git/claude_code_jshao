@@ -10,4 +10,4 @@ Once they've finished dumping, organize their thoughts into clear categories suc
 
 Only include categories that have content. Keep it concise and scannable.
 
-After organizing, ask if they want to save the dump to a daily notes file (e.g., ~/brain-dumps/YYYY-MM-DD.md).
+After organizing, ask if they want to save the dump to a daily notes file. Save to ~/Documents/BrainDumps/YYYY-MM-DD.md (create the directory if it doesn't exist).
