@@ -19,4 +19,4 @@ Write a detailed digest to `~/Documents/BitCoinNewsDaily/digest-YYYY-MM-DD.md` (
 5. Price forecast for: 1 week, 1 month, 1 year
 6. A plain-English summary for a layman — what does all this mean?
 
-Use markdown formatting with clear headers. Keep the tone casual and accessible.
+Use markdown formatting with clear headers. Keep the tone casual and accessible. Write the entire digest in Simplified Chinese.

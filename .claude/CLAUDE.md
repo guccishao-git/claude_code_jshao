@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) across all sessions.
 - Homebrew at /opt/homebrew/bin
 - Python via Homebrew (`/opt/homebrew/bin/python3`)
 - Databricks CLI and gcloud SDK installed
-- Git user: Jason Shao <jshao@demonware.net>
+- Git user: 
 - Git LFS enabled
 
 ## Preferences
