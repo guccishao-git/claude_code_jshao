@@ -18,6 +18,7 @@ Ultra-brief. One-liner TL;DR at the top, then each section as a short bullet lis
 - Microsoft Xbox
 - Game Tech & Infrastructure
 - Industry Moves
+- Any newly released games
 - One-line Hot Take
 
 Flag anything needing attention with ⚠️. No sources needed here.
