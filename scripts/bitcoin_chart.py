@@ -14,8 +14,10 @@ import glob
 
 import plotly.graph_objects as go
 
-DIGEST_DIR = os.path.expanduser("~/Documents/BitCoinNewsDaily")
+DIGEST_DIR  = os.path.expanduser("~/Documents/BitCoinNewsDaily")
 OUTPUT_FILE = os.path.join(DIGEST_DIR, "bitcoin-forecast-chart.html")
+REPO_DIR    = os.path.expanduser("~/Documents/GitHub1/claude_code_jshao")
+PAGES_FILE  = os.path.join(REPO_DIR, "docs", "index.html")
 
 
 # ── 1. Parse digest files ─────────────────────────────────────────────────────
@@ -512,10 +514,29 @@ def main():
     fig = build_chart(digests, real_prices)
     fig.write_html(OUTPUT_FILE, include_plotlyjs="cdn")
     print(f"\n✅ Chart saved to: {OUTPUT_FILE}")
-    print("   Opening in browser...")
 
-    # Auto-open in default browser
-    import subprocess
+    # ── Publish to GitHub Pages ───────────────────────────────────────────
+    import subprocess, shutil
+    os.makedirs(os.path.dirname(PAGES_FILE), exist_ok=True)
+    shutil.copy(OUTPUT_FILE, PAGES_FILE)
+    print(f"   Copied to: {PAGES_FILE}")
+
+    result = subprocess.run(
+        ["git", "-C", REPO_DIR, "add", "docs/index.html"],
+        capture_output=True, text=True
+    )
+    today_str = datetime.date.today().isoformat()
+    result = subprocess.run(
+        ["git", "-C", REPO_DIR, "commit", "-m", f"Update Bitcoin chart {today_str}"],
+        capture_output=True, text=True
+    )
+    if "nothing to commit" in result.stdout:
+        print("   No changes to push.")
+    else:
+        subprocess.run(["git", "-C", REPO_DIR, "push", "origin", "main"])
+        print("   Pushed to GitHub Pages ✅")
+
+    print("\n   Opening in browser...")
     subprocess.run(["open", OUTPUT_FILE])
 
 
