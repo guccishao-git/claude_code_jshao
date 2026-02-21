@@ -20,3 +20,12 @@ Search the web for the current Bitcoin (BTC) price and do the following. **All o
 6. 用通俗易懂的语言总结——这一切意味着什么？
 
 使用Markdown格式，标题清晰，语气轻松易读。
+
+## 更新图表
+写完摘要文件后，运行以下命令自动更新价格预测图表：
+
+```
+~/Documents/BitCoinNewsDaily/.venv/bin/python3 ~/Documents/BitCoinNewsDaily/bitcoin_chart.py
+```
+
+运行成功后，图表会自动在浏览器中打开。
