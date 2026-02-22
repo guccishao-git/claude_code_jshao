@@ -27,7 +27,7 @@ Flag anything critical with ⚠️. No sources needed here.
 
 Full write-up with the following sections:
 1. **Match Results** (last 7 days) — score, competition, key moments, player standouts, tactical notes
-2. **Premier League Standing** — current position, points, GD, gap to top/rivals, form table
+2. **Premier League Standing** — current position, points, played matches, GD, gap to top/rivals, form table
 3. **Upcoming Fixtures** (next 2-3 matches) — opponent, date, competition, difficulty rating, what's at stake
 4. **Recent Form** (last 5 matches) — W/D/L breakdown with brief context per match
 5. **Team News** — injuries (player, issue, return estimate), transfers, suspensions, notable squad updates
@@ -37,4 +37,4 @@ Full write-up with the following sections:
 
 Each story 4-5 sentences. Use bullet points. TL;DR one-liner at the very top. Highlight action items or concerns with ⚠️. After saving, confirm the file path in chat.
 
-Last step: Present in Chinese with a sense of humor.
+Last step: Present in Chinese with professionalism.
