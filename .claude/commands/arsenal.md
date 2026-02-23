@@ -70,7 +70,7 @@ Generate a self-contained HTML file that renders a professional-looking football
 
 - Full-page dark background (`#1a1a2e`)
 - Centered card layout, max-width 600px
-- **Header**: Arsenal crest emoji ⚽, match title (Arsenal vs Opponent), date and competition — white text on Arsenal red (`#EF0107`)
+- **Header**: Both team logos side-by-side flanking the score — use Premier League CDN badge URLs (`https://resources.premierleague.com/premierleague/badges/100/t<ID>.png`, Arsenal = t3, Tottenham = t6, Liverpool = t14, Man City = t43, Chelsea = t8, Man Utd = t1, etc.). Include emoji fallback via `onerror`. Team names below each logo. Score in the centre. White text on Arsenal red (`#EF0107`)
 - **Pitch**: Deep green gradient background (`#2d5a27` to `#1e3d1a`), white pitch markings (centre circle, halfway line, penalty arcs, goal boxes) drawn with CSS borders and border-radius
 - **Players**: Each player rendered as a white circle (50px diameter) with their shirt number in bold Arsenal red inside, and their name in small white text below the circle. Circles are absolutely positioned in rows according to their formation line (attackers at top of pitch, goalkeeper at bottom)
 - **Formation label**: Shown in white above the pitch (e.g. `4-3-3`)
