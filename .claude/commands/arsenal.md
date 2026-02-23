@@ -43,7 +43,7 @@ Adjust spacing so names are roughly evenly spread across each row. Label the dia
 
 ---
 
-### OUTPUT 2 — Weekly Doc (save to ~/Documents/ArsenalWeekly/<YYYY-MM-DD>.md)
+### OUTPUT 2 — Weekly Doc (save to ~/Documents/ArsenalWeekly/arsenal-<YYYY-MM-DD>.md)
 
 Full write-up with the following sections:
 1. **Match Results** (last 7 days) — score, competition, key moments, player standouts, tactical notes
@@ -62,7 +62,7 @@ Last step: Present in Chinese with a sense of humor.
 
 ---
 
-### OUTPUT 3 — Lineup Graphic (save to ~/Documents/ArsenalWeekly/<YYYY-MM-DD>-lineup.html)
+### OUTPUT 3 — Lineup Graphic (save to ~/Documents/ArsenalWeekly/arsenal-<YYYY-MM-DD>-lineup.html)
 
 Generate a self-contained HTML file that renders a professional-looking football pitch lineup card for the most recent match. Open it in the browser — it should look like something from BBC Sport or Sky Sports.
 
@@ -79,4 +79,4 @@ Generate a self-contained HTML file that renders a professional-looking football
 
 Use inline CSS only (no external dependencies). Position players using flexbox rows stacked vertically inside the pitch div. Each formation line = one flex row, spaced evenly. The pitch should be approximately 560px wide × 750px tall.
 
-After saving, confirm the file path and remind the user to open it in a browser. Also run: `open ~/Documents/ArsenalWeekly/<YYYY-MM-DD>-lineup.html` to auto-open it.
+After saving, confirm the file path and remind the user to open it in a browser. Also run: `open ~/Documents/ArsenalWeekly/arsenal-<YYYY-MM-DD>-lineup.html` to auto-open it.
