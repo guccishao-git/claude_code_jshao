@@ -58,7 +58,7 @@ Full write-up with the following sections:
 
 Each story 4-5 sentences. Use bullet points. TL;DR one-liner at the very top. Highlight action items or concerns with ⚠️. After saving, confirm the file path in chat.
 
-Last step: Present in Chinese with a sense of humor.
+Last step: Present in Chinese with a sense of professionalism.
 
 ---
 
