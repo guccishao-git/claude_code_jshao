@@ -18,6 +18,7 @@ Ultra-brief. One-liner TL;DR at the top, then each section as a short bullet lis
 - Team News (injuries/transfers)
 - Key Stats
 - One-line Hot Take
+- **Title Race Rival** — current 2nd place team, points gap, last result, next fixture, and one line on whether it affects Arsenal's title chances
 
 Flag anything critical with ⚠️. No sources needed here.
 
@@ -52,9 +53,14 @@ Full write-up with the following sections:
 4. **Upcoming Fixtures** (next 2-3 matches) — opponent, date, competition, difficulty rating, what's at stake
 5. **Recent Form** (last 5 matches) — W/D/L breakdown with brief context per match
 6. **Team News** — injuries (player, issue, return estimate), transfers, suspensions, notable squad updates
-7. **Key Players** — top scorer, best performer of the week, player of concern
-8. **Hot Takes** — analysis of how Arsenal are performing, title race outlook, critical upcoming matches, tactical trends worth watching
-9. **Sources** — all referenced articles linked at the bottom
+7. **Title Race Rival** — identify the current 2nd-place team and provide:
+   - Recent form: last 3 results with scores
+   - Upcoming fixtures (next 2-3 matches) — opponent, date, difficulty
+   - Points gap to Arsenal and games in hand/deficit
+   - Brief analysis: does their schedule help or hurt Arsenal's title chances? Any banana skins coming up for them?
+8. **Key Players** — top scorer, best performer of the week, player of concern
+9. **Hot Takes** — analysis of how Arsenal are performing, title race outlook, critical upcoming matches, tactical trends worth watching
+10. **Sources** — all referenced articles linked at the bottom
 
 Each story 4-5 sentences. Use bullet points. TL;DR one-liner at the very top. Highlight action items or concerns with ⚠️. After saving, confirm the file path in chat.
 
