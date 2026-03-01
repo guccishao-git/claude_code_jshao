@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
   <style>
     /* ═══════════════════════════════════════
@@ -317,6 +318,35 @@
       letter-spacing: 0.1em;
     }
 
+    /* ── CHART SLIDE ── */
+    .chart-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      margin-top: clamp(0.6rem, 1.5vh, 1.5rem);
+      border: var(--border);
+      border-radius: var(--radius-lg);
+      background: rgba(0,255,200,0.02);
+      padding: clamp(0.5rem, 1vw, 1rem);
+    }
+    .chart-wrap canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .chart-legend {
+      display: flex; gap: 1.2rem; flex-wrap: wrap;
+      margin-top: clamp(0.4rem, 0.8vh, 0.75rem);
+    }
+    .chart-legend-item {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font-mono); font-size: var(--fs-tag);
+      color: var(--text-muted);
+    }
+    .chart-legend-item .leg-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .news-grid     { grid-template-columns: 1fr; }
@@ -363,9 +393,37 @@
 
 
   <!-- ════════════════════════════════════════
-       SLIDE 2 — PRICE JOURNEY / 价格回顾
+       SLIDE 2 — PRICE CHART / 价格走势图
        ════════════════════════════════════════ -->
-  <section class="slide" id="slide-2" aria-label="价格回顾">
+  <section class="slide" id="slide-2" aria-label="价格走势图">
+    <div class="grid-bg"></div>
+    <div class="glow-cyan"></div>
+
+    <div class="slide-content">
+      <div class="tag reveal d1">价格走势图</div>
+      <h2 class="reveal d2">本周 <span class="accent">BTC/USD</span> 行情曲线</h2>
+      <p class="subtitle reveal d3">实线=已录入价格 &nbsp;·&nbsp; 虚线=预测中位数</p>
+
+      <div class="chart-wrap reveal d4">
+        <canvas id="priceChart"></canvas>
+      </div>
+
+      <div class="chart-legend reveal d5">
+        <span class="chart-legend-item">
+          <span class="leg-dot" style="background:#00ffc8;box-shadow:0 0 6px rgba(0,255,200,0.5);"></span>实际价格
+        </span>
+        <span class="chart-legend-item">
+          <span class="leg-dot" style="background:#ff00b4;box-shadow:0 0 6px rgba(255,0,180,0.4);"></span>预测中位数
+        </span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       SLIDE 3 — PRICE JOURNEY / 价格回顾
+       ════════════════════════════════════════ -->
+  <section class="slide" id="slide-3" aria-label="价格回顾">
     <div class="grid-bg"></div>
     <div class="glow-cyan"></div>
 
@@ -423,9 +481,9 @@
 
 
   <!-- ════════════════════════════════════════
-       SLIDE 3 — NEWS HIGHLIGHTS / 市场新闻
+       SLIDE 4 — NEWS HIGHLIGHTS / 市场新闻
        ════════════════════════════════════════ -->
-  <section class="slide" id="slide-3" aria-label="市场新闻">
+  <section class="slide" id="slide-4" aria-label="市场新闻">
     <div class="grid-bg"></div>
     <div class="glow-magenta"></div>
 
@@ -457,9 +515,9 @@
 
 
   <!-- ════════════════════════════════════════
-       SLIDE 4 — FORECAST / 预测展望
+       SLIDE 5 — FORECAST / 预测展望
        ════════════════════════════════════════ -->
-  <section class="slide" id="slide-4" aria-label="预测展望">
+  <section class="slide" id="slide-5" aria-label="预测展望">
     <div class="grid-bg"></div>
     <div class="glow-cyan"></div>
 
@@ -490,9 +548,9 @@
 
 
   <!-- ════════════════════════════════════════
-       SLIDE 5 — PLAIN SUMMARY / 白话总结
+       SLIDE 6 — PLAIN SUMMARY / 白话总结
        ════════════════════════════════════════ -->
-  <section class="slide" id="slide-5" aria-label="白话总结">
+  <section class="slide" id="slide-6" aria-label="白话总结">
     <div class="grid-bg"></div>
     <div class="glow-magenta"></div>
     <div class="corner tl"></div>
@@ -529,6 +587,102 @@
 
 
   <script>
+    // ── Chart.js — Price Trend ────────────────────────────────────────────
+    (function() {
+      const labels   = ["02/19", "02/21", "02/22", "02/23", "02/28", "03/07", "03/30"];
+      const actuals  = [67341.0, 67811.0, 67782.0, 64744.0, 65600.0, null, null];
+      const forecasts = [null, null, null, null, null, 68705.0, 70000.0];
+      const yMin = 62154;
+      const yMax = 72800;
+
+      const ctx = document.getElementById('priceChart').getContext('2d');
+
+      // Gradient fill for actual price line
+      const grad = ctx.createLinearGradient(0, 0, 0, 400);
+      grad.addColorStop(0, 'rgba(0,255,200,0.25)');
+      grad.addColorStop(1, 'rgba(0,255,200,0.01)');
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: '实际价格',
+              data: actuals,
+              borderColor: '#00ffc8',
+              borderWidth: 2.5,
+              pointBackgroundColor: '#00ffc8',
+              pointBorderColor: '#050a14',
+              pointBorderWidth: 2,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              fill: true,
+              backgroundColor: grad,
+              tension: 0.35,
+              spanGaps: false,
+            },
+            {
+              label: '预测中位数',
+              data: forecasts,
+              borderColor: '#ff00b4',
+              borderWidth: 2,
+              borderDash: [6, 4],
+              pointBackgroundColor: '#ff00b4',
+              pointBorderColor: '#050a14',
+              pointBorderWidth: 2,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              fill: false,
+              tension: 0.3,
+              spanGaps: true,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 900, easing: 'easeOutQuart' },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(5,10,20,0.92)',
+              borderColor: 'rgba(0,255,200,0.3)',
+              borderWidth: 1,
+              titleColor: '#00ffc8',
+              bodyColor: '#e8f4f8',
+              titleFont: { family: "'Space Mono', monospace", size: 11 },
+              bodyFont:  { family: "'Space Mono', monospace", size: 12 },
+              padding: 10,
+              callbacks: {
+                label: ctx => ' $' + (ctx.parsed.y ? ctx.parsed.y.toLocaleString() : '—'),
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(0,255,200,0.06)', drawBorder: false },
+              ticks: {
+                color: 'rgba(232,244,248,0.45)',
+                font: { family: "'Space Mono', monospace", size: 11 },
+              },
+            },
+            y: {
+              min: yMin,
+              max: yMax,
+              position: 'right',
+              grid: { color: 'rgba(0,255,200,0.06)', drawBorder: false },
+              ticks: {
+                color: 'rgba(232,244,248,0.45)',
+                font: { family: "'Space Mono', monospace", size: 11 },
+                callback: v => '$' + (v / 1000).toFixed(0) + 'K',
+              },
+            },
+          },
+        },
+      });
+    })();
+
     // ── Navigation ────────────────────────────────────────────────────────
     const slides = Array.from(document.querySelectorAll('.slide'));
     const navDots = document.getElementById('nav-dots');
