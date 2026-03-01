@@ -318,6 +318,39 @@
       letter-spacing: 0.1em;
     }
 
+    /* ── CHART TOOLBAR ── */
+    .chart-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: clamp(0.3rem, 0.8vh, 0.75rem);
+      margin-bottom: clamp(0.3rem, 0.6vh, 0.5rem);
+    }
+    .chart-timeframes {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .tf-btn {
+      font-family: var(--font-mono);
+      font-size: var(--fs-tag);
+      letter-spacing: 0.12em;
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius);
+      border: var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tf-btn:hover { color: var(--cyan); border-color: rgba(0,255,200,0.3); }
+    .tf-btn.active {
+      background: var(--cyan-dim);
+      border-color: rgba(0,255,200,0.35);
+      color: var(--cyan);
+    }
+
     /* ── CHART SLIDE ── */
     .chart-wrap {
       position: relative;
@@ -401,20 +434,29 @@
 
     <div class="slide-content">
       <div class="tag reveal d1">价格走势图</div>
-      <h2 class="reveal d2">本周 <span class="accent">BTC/USD</span> 行情曲线</h2>
-      <p class="subtitle reveal d3">实线=已录入价格 &nbsp;·&nbsp; 虚线=预测中位数</p>
+      <h2 class="reveal d2">BTC/USD <span class="accent">价格走势</span></h2>
 
-      <div class="chart-wrap reveal d4">
-        <canvas id="priceChart"></canvas>
+      <div class="chart-toolbar reveal d2">
+        <div class="chart-timeframes">
+          <button class="tf-btn" data-days="7">1W</button>
+          <button class="tf-btn active" data-days="30">1M</button>
+          <button class="tf-btn" data-days="365">1Y</button>
+        </div>
+        <div class="chart-legend">
+          <span class="chart-legend-item">
+            <span class="leg-dot" style="background:#00ffc8;box-shadow:0 0 6px rgba(0,255,200,0.5);"></span>实际价格
+          </span>
+          <span class="chart-legend-item">
+            <span class="leg-dot" style="background:#ffffff;border:2px solid #00ffc8;"></span>摘要记录
+          </span>
+          <span class="chart-legend-item">
+            <span class="leg-dot" style="background:#ff00b4;box-shadow:0 0 6px rgba(255,0,180,0.4);"></span>预测中位数
+          </span>
+        </div>
       </div>
 
-      <div class="chart-legend reveal d5">
-        <span class="chart-legend-item">
-          <span class="leg-dot" style="background:#00ffc8;box-shadow:0 0 6px rgba(0,255,200,0.5);"></span>实际价格
-        </span>
-        <span class="chart-legend-item">
-          <span class="leg-dot" style="background:#ff00b4;box-shadow:0 0 6px rgba(255,0,180,0.4);"></span>预测中位数
-        </span>
+      <div class="chart-wrap reveal d3">
+        <canvas id="priceChart"></canvas>
       </div>
     </div>
   </section>
@@ -587,99 +629,220 @@
 
 
   <script>
-    // ── Chart.js — Price Trend ────────────────────────────────────────────
+    // ── Chart.js — Price Trend with 1W / 1M / 1Y toggle ─────────────────
     (function() {
-      const labels   = ["02/19", "02/21", "02/22", "02/23", "02/28", "03/07", "03/30"];
-      const actuals  = [67341.0, 67811.0, 67782.0, 64744.0, 65600.0, null, null];
-      const forecasts = [null, null, null, null, null, 68705.0, 70000.0];
-      const yMin = 62154;
-      const yMax = 72800;
+      // Full historical dataset (up to 1Y from CoinGecko)
+      const histLabels = [];   // ISO date strings
+      const histValues = [];   // prices
+
+      // Digest price markers
+      const digestDates  = ["2026-02-19", "2026-02-21", "2026-02-22", "2026-02-23", "2026-02-28"];
+      const digestPrices = [67341.0, 67811.0, 67782.0, 64744.0, 65600.0];
+
+      // Forecast extension points
+      const fcPoints = [{"date": "2026-03-07", "price": 68705.0, "label": "1W\u9884\u6d4b"}, {"date": "2026-03-30", "price": 70000.0, "label": "1M\u9884\u6d4b"}];
+
+      const fallbackMin = 60859;
+      const fallbackMax = 71879;
+
+      // ── Helpers ───────────────────────────────────────────────────────
+      function sliceByDays(days) {
+        if (!histLabels.length) return { labels: [], values: [] };
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        const idx = histLabels.findIndex(d => new Date(d) >= cutoff);
+        const start = idx === -1 ? 0 : idx;
+        return { labels: histLabels.slice(start), values: histValues.slice(start) };
+      }
+
+      // Add forecast points that fall within the view window
+      function buildForecastDataset(viewLabels, viewValues) {
+        // Extend labels/values with forecast points beyond today
+        const extended = { labels: [...viewLabels], values: [...viewValues] };
+        fcPoints.forEach(pt => {
+          if (!extended.labels.includes(pt.date)) {
+            extended.labels.push(pt.date);
+            extended.values.push(null);   // no actual price
+          }
+        });
+        // Build forecast series aligned to extended labels
+        return extended.labels.map(lbl => {
+          const fc = fcPoints.find(p => p.date === lbl);
+          return fc ? fc.price : null;
+        });
+      }
+
+      // Build digest marker dataset aligned to chart labels
+      function buildDigestDataset(viewLabels) {
+        return viewLabels.map(lbl => {
+          const idx = digestDates.indexOf(lbl);
+          return idx !== -1 ? digestPrices[idx] : null;
+        });
+      }
+
+      function yRange(values) {
+        const valid = values.filter(v => v !== null && v !== undefined);
+        if (!valid.length) return { min: fallbackMin, max: fallbackMax };
+        return {
+          min: Math.floor(Math.min(...valid) * 0.95),
+          max: Math.ceil(Math.max(...valid)  * 1.04),
+        };
+      }
+
+      // ── Initial view: 1M ─────────────────────────────────────────────
+      let current = sliceByDays(30);
+      const fcSeries = buildForecastDataset(current.labels, current.values);
+      const allExtLabels = current.labels.length + fcPoints.filter(p => !current.labels.includes(p.date)).length
+        ? [...current.labels, ...fcPoints.filter(p => !current.labels.includes(p.date)).map(p => p.date)]
+        : current.labels;
 
       const ctx = document.getElementById('priceChart').getContext('2d');
 
-      // Gradient fill for actual price line
-      const grad = ctx.createLinearGradient(0, 0, 0, 400);
-      grad.addColorStop(0, 'rgba(0,255,200,0.25)');
+      // Cyan gradient fill
+      const grad = ctx.createLinearGradient(0, 0, 0, 380);
+      grad.addColorStop(0, 'rgba(0,255,200,0.22)');
       grad.addColorStop(1, 'rgba(0,255,200,0.01)');
 
-      new Chart(ctx, {
+      const initRange = yRange([...current.values, ...fcSeries.filter(Boolean)]);
+
+      const chart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels,
+          labels: current.labels,
           datasets: [
             {
               label: '实际价格',
-              data: actuals,
+              data: current.values,
               borderColor: '#00ffc8',
-              borderWidth: 2.5,
-              pointBackgroundColor: '#00ffc8',
-              pointBorderColor: '#050a14',
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: '#00ffc8',
+              fill: true,
+              backgroundColor: grad,
+              tension: 0.3,
+              spanGaps: false,
+              order: 3,
+            },
+            {
+              label: '摘要记录',
+              data: buildDigestDataset(current.labels),
+              borderColor: 'transparent',
+              backgroundColor: '#ffffff',
+              pointBackgroundColor: '#050a14',
+              pointBorderColor: '#00ffc8',
               pointBorderWidth: 2,
               pointRadius: 5,
               pointHoverRadius: 7,
-              fill: true,
-              backgroundColor: grad,
-              tension: 0.35,
+              fill: false,
+              showLine: false,
               spanGaps: false,
+              order: 1,
             },
             {
               label: '预测中位数',
-              data: forecasts,
+              data: fcSeries,
               borderColor: '#ff00b4',
               borderWidth: 2,
-              borderDash: [6, 4],
+              borderDash: [5, 4],
               pointBackgroundColor: '#ff00b4',
               pointBorderColor: '#050a14',
               pointBorderWidth: 2,
               pointRadius: 5,
               pointHoverRadius: 7,
               fill: false,
-              tension: 0.3,
+              tension: 0.2,
               spanGaps: true,
+              order: 2,
             },
           ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: { duration: 900, easing: 'easeOutQuart' },
+          animation: { duration: 600, easing: 'easeOutQuart' },
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: 'rgba(5,10,20,0.92)',
-              borderColor: 'rgba(0,255,200,0.3)',
+              mode: 'index',
+              intersect: false,
+              backgroundColor: 'rgba(5,10,20,0.93)',
+              borderColor: 'rgba(0,255,200,0.25)',
               borderWidth: 1,
               titleColor: '#00ffc8',
               bodyColor: '#e8f4f8',
-              titleFont: { family: "'Space Mono', monospace", size: 11 },
-              bodyFont:  { family: "'Space Mono', monospace", size: 12 },
+              titleFont: { family: "'Space Mono', monospace", size: 10 },
+              bodyFont:  { family: "'Space Mono', monospace", size: 11 },
               padding: 10,
               callbacks: {
-                label: ctx => ' $' + (ctx.parsed.y ? ctx.parsed.y.toLocaleString() : '—'),
+                title: items => items[0]?.label || '',
+                label: item => {
+                  if (item.parsed.y === null) return null;
+                  const labels = ['BTC', '摘要', '预测'];
+                  return ` ${labels[item.datasetIndex]}: $${item.parsed.y.toLocaleString()}`;
+                },
               },
             },
           },
           scales: {
             x: {
-              grid: { color: 'rgba(0,255,200,0.06)', drawBorder: false },
+              grid: { color: 'rgba(0,255,200,0.05)', drawBorder: false },
               ticks: {
-                color: 'rgba(232,244,248,0.45)',
-                font: { family: "'Space Mono', monospace", size: 11 },
+                color: 'rgba(232,244,248,0.4)',
+                font: { family: "'Space Mono', monospace", size: 10 },
+                maxTicksLimit: 8,
+                maxRotation: 0,
               },
             },
             y: {
-              min: yMin,
-              max: yMax,
+              min: initRange.min,
+              max: initRange.max,
               position: 'right',
-              grid: { color: 'rgba(0,255,200,0.06)', drawBorder: false },
+              grid: { color: 'rgba(0,255,200,0.05)', drawBorder: false },
               ticks: {
-                color: 'rgba(232,244,248,0.45)',
-                font: { family: "'Space Mono', monospace", size: 11 },
+                color: 'rgba(232,244,248,0.4)',
+                font: { family: "'Space Mono', monospace", size: 10 },
                 callback: v => '$' + (v / 1000).toFixed(0) + 'K',
+                maxTicksLimit: 6,
               },
             },
           },
         },
+      });
+
+      // ── Time-frame buttons ────────────────────────────────────────────
+      document.querySelectorAll('.tf-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const days = parseInt(btn.dataset.days);
+          const sliced = sliceByDays(days);
+
+          // Extend labels with forecast points for the 1W/1M views
+          let extLabels = [...sliced.labels];
+          let extValues = [...sliced.values];
+          if (days <= 30) {
+            fcPoints.forEach(pt => {
+              if (!extLabels.includes(pt.date)) {
+                extLabels.push(pt.date);
+                extValues.push(null);
+              }
+            });
+          }
+
+          const newFc      = extLabels.map(lbl => { const p = fcPoints.find(x => x.date === lbl); return p ? p.price : null; });
+          const newDigests = buildDigestDataset(extLabels);
+          const rng        = yRange([...extValues.filter(Boolean), ...newFc.filter(Boolean)]);
+
+          chart.data.labels                  = extLabels;
+          chart.data.datasets[0].data        = extValues;
+          chart.data.datasets[1].data        = newDigests;
+          chart.data.datasets[2].data        = newFc;
+          chart.options.scales.y.min         = rng.min;
+          chart.options.scales.y.max         = rng.max;
+          chart.update('active');
+        });
       });
     })();
 
