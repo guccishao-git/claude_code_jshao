@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>比特币周报 W10 · 2026</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════
+       NEON CYBER THEME
+       ═══════════════════════════════════════ */
+    :root {
+      --bg-primary:    #050a14;
+      --bg-secondary:  #0a1526;
+      --bg-card:       rgba(255,255,255,0.04);
+      --cyan:          #00ffc8;
+      --cyan-dim:      rgba(0,255,200,0.15);
+      --cyan-glow:     rgba(0,255,200,0.35);
+      --magenta:       #ff00b4;
+      --magenta-dim:   rgba(255,0,180,0.12);
+      --red:           #ff5060;
+      --red-dim:       rgba(255,80,96,0.12);
+      --amber:         #ffb340;
+      --text-primary:  #e8f4f8;
+      --text-muted:    rgba(232,244,248,0.45);
+      --text-dim:      rgba(232,244,248,0.25);
+      --font-display:  'Space Grotesk', sans-serif;
+      --font-mono:     'Space Mono', monospace;
+      --fs-title:  clamp(2.2rem, 5.5vw, 4.5rem);
+      --fs-h2:     clamp(1.5rem, 3.5vw, 2.75rem);
+      --fs-h3:     clamp(1rem,   2vw,   1.5rem);
+      --fs-body:   clamp(0.78rem, 1.3vw, 1rem);
+      --fs-small:  clamp(0.65rem, 1vw,   0.8rem);
+      --fs-mono:   clamp(0.65rem, 1vw,   0.82rem);
+      --fs-tag:    clamp(0.55rem, 0.85vw, 0.72rem);
+      --pad:       clamp(1.5rem, 4vw, 4rem);
+      --gap:       clamp(0.6rem, 1.5vw, 1.5rem);
+      --gap-sm:    clamp(0.3rem, 0.8vw, 0.75rem);
+      --border:    1px solid rgba(0,255,200,0.12);
+      --border-red:1px solid rgba(255,80,96,0.2);
+      --radius:    6px;
+      --radius-lg: 12px;
+      --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --dur:       0.65s;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    html {
+      height: 100%;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: var(--font-display);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      height: 100%;
+      overflow-x: hidden;
+    }
+
+    /* ── SLIDE ── */
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      padding: var(--pad);
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-height: 100%;
+      overflow: hidden;
+    }
+
+    /* ── BACKGROUND DECORATION ── */
+    .grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,200,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,200,0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none; z-index: 0;
+      animation: gridPulse 5s ease-in-out infinite;
+    }
+    @keyframes gridPulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+    .glow-cyan {
+      position: absolute;
+      width: clamp(300px,40vw,600px); height: clamp(300px,40vw,600px);
+      background: radial-gradient(circle, rgba(0,255,200,0.12) 0%, transparent 70%);
+      top: calc(-1 * clamp(80px,12vw,150px));
+      right: calc(-1 * clamp(80px,12vw,150px));
+      pointer-events: none; z-index: 0;
+      animation: driftA 7s ease-in-out infinite;
+    }
+    .glow-magenta {
+      position: absolute;
+      width: clamp(200px,30vw,450px); height: clamp(200px,30vw,450px);
+      background: radial-gradient(circle, rgba(255,0,180,0.08) 0%, transparent 70%);
+      bottom: calc(-1 * clamp(50px,8vw,100px));
+      left: calc(-1 * clamp(50px,8vw,100px));
+      pointer-events: none; z-index: 0;
+      animation: driftB 9s ease-in-out infinite;
+    }
+    @keyframes driftA { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-25px,25px)} }
+    @keyframes driftB { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-20px)} }
+
+    .corner {
+      position: absolute;
+      width: clamp(24px,3vw,44px); height: clamp(24px,3vw,44px);
+      border-color: rgba(0,255,200,0.3); border-style: solid; z-index: 1;
+    }
+    .corner.tl { top: clamp(12px,2vw,24px); left: clamp(12px,2vw,24px); border-width: 2px 0 0 2px; }
+    .corner.br { bottom: clamp(12px,2vw,24px); right: clamp(12px,2vw,24px); border-width: 0 2px 2px 0; }
+
+    /* ── TYPOGRAPHY ── */
+    .tag {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      font-family: var(--font-mono); font-size: var(--fs-tag);
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: clamp(0.75rem,1.8vh,1.8rem);
+    }
+    .tag::before {
+      content: ''; display: inline-block; width: 16px; height: 1px;
+      background: var(--cyan); opacity: 0.6;
+    }
+
+    h1 { font-size: var(--fs-title); font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: clamp(0.5rem,1.2vh,1.2rem); }
+    h2 { font-size: var(--fs-h2);    font-weight: 700; line-height: 1.1;  letter-spacing: -0.02em; margin-bottom: clamp(0.5rem,1.2vh,1.2rem); }
+
+    .accent  { color: var(--cyan); }
+    .danger  { color: var(--red); }
+    .muted   { color: var(--text-muted); }
+    .up      { color: var(--cyan); }
+    .down    { color: var(--red); }
+
+    .subtitle {
+      font-size: var(--fs-body); color: var(--text-muted);
+      line-height: 1.55; margin-bottom: clamp(0.75rem,1.5vh,1.5rem);
+    }
+
+    .mono { font-family: var(--font-mono); font-size: var(--fs-mono); }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.35rem 0.85rem; border-radius: var(--radius);
+      font-family: var(--font-mono); font-size: var(--fs-mono);
+      border: var(--border); background: var(--cyan-dim); color: var(--cyan);
+    }
+    .badge.red { border: var(--border-red); background: var(--red-dim); color: var(--red); }
+    .badges { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: clamp(0.75rem,1.5vh,1.5rem); }
+    .badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: currentColor; box-shadow: 0 0 8px currentColor;
+      animation: blink 1.8s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--bg-card); border: var(--border);
+      border-radius: var(--radius-lg); padding: clamp(0.75rem,1.5vw,1.5rem);
+    }
+
+    /* ── PRICE TABLE (slide 2) ── */
+    .price-table-wrap {
+      margin-top: clamp(0.6rem,1.5vh,1.5rem);
+      overflow: hidden; border-radius: var(--radius-lg);
+      border: var(--border);
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: var(--fs-body);
+    }
+    thead th {
+      font-family: var(--font-mono); font-size: var(--fs-tag);
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-muted); padding: clamp(0.4rem,0.8vh,0.75rem) clamp(0.6rem,1vw,1rem);
+      background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06);
+      text-align: left;
+    }
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.15s ease;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,255,200,0.03); }
+    tbody td {
+      padding: clamp(0.35rem,0.7vh,0.65rem) clamp(0.6rem,1vw,1rem);
+    }
+    tbody td.mono { font-family: var(--font-mono); font-size: var(--fs-mono); }
+    tbody td.accent { color: var(--cyan); font-weight: 600; }
+
+    /* ── NEWS CARDS (slide 3) ── */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--gap);
+      margin-top: clamp(0.6rem,1.5vh,1.5rem);
+    }
+    .news-card {
+      background: var(--bg-card); border: var(--border);
+      border-radius: var(--radius-lg);
+      padding: clamp(0.75rem,1.5vw,1.25rem);
+      display: flex; flex-direction: column; gap: var(--gap-sm);
+    }
+    .news-date {
+      font-family: var(--font-mono); font-size: var(--fs-tag);
+      color: var(--cyan); letter-spacing: 0.15em;
+    }
+    .news-title { font-size: var(--fs-h3); font-weight: 600; line-height: 1.2; }
+    .news-body  { font-size: var(--fs-small); color: var(--text-muted); line-height: 1.5; flex: 1; }
+
+    /* ── FORECAST CARDS (slide 4) ── */
+    .forecast-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--gap);
+      margin-top: clamp(0.6rem,1.5vh,1.5rem);
+    }
+    .forecast-card {
+      background: var(--bg-card); border: var(--border);
+      border-radius: var(--radius-lg);
+      padding: clamp(0.75rem,1.5vw,1.5rem);
+      display: flex; flex-direction: column; gap: var(--gap-sm);
+    }
+    .forecast-card.highlight {
+      border-color: rgba(0,255,200,0.25); background: rgba(0,255,200,0.04);
+    }
+    .fc-timeframe {
+      font-family: var(--font-mono); font-size: var(--fs-tag);
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan);
+    }
+    .fc-price {
+      font-family: var(--font-mono);
+      font-size: clamp(1.1rem,2.2vw,1.8rem);
+      font-weight: 700; color: var(--text-primary); line-height: 1.1;
+    }
+    .fc-note { font-size: var(--fs-small); color: var(--text-muted); line-height: 1.4; }
+
+    /* ── SUMMARY LIST (slide 5) ── */
+    .summary-list {
+      display: flex; flex-direction: column;
+      gap: var(--gap-sm);
+      margin-top: clamp(0.5rem,1.2vh,1.2rem);
+    }
+    .summary-item {
+      display: flex; gap: 0.8rem; align-items: flex-start;
+      padding: clamp(0.5rem,1vw,0.85rem);
+      background: var(--bg-card); border: var(--border);
+      border-radius: var(--radius); font-size: var(--fs-body);
+    }
+    .summary-item .s-icon { font-size: clamp(0.9rem,1.5vw,1.1rem); flex-shrink: 0; line-height: 1.4; }
+    .summary-item .s-text { color: var(--text-muted); line-height: 1.5; }
+    .summary-item .s-text strong { color: var(--text-primary); font-weight: 600; }
+
+    /* ── REVEAL ANIMATION ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp var(--dur) var(--ease-expo) forwards;
+    }
+    .d1 { animation-delay: 0.05s; }
+    .d2 { animation-delay: 0.15s; }
+    .d3 { animation-delay: 0.25s; }
+    .d4 { animation-delay: 0.35s; }
+    .d5 { animation-delay: 0.45s; }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── NAV DOTS ── */
+    #nav-dots {
+      position: fixed; right: clamp(12px,2vw,24px); top: 50%;
+      transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 8px; z-index: 100;
+    }
+    .nav-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(255,255,255,0.2); cursor: pointer;
+      transition: background 0.25s, transform 0.25s;
+    }
+    .nav-dot.active { background: var(--cyan); transform: scale(1.4); }
+
+    /* ── PROGRESS BAR ── */
+    #progress-bar {
+      position: fixed; top: 0; left: 0; height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      z-index: 200; transition: width 0.3s ease;
+    }
+
+    /* ── KBD HINT ── */
+    #kbd-hint {
+      position: fixed; bottom: clamp(12px,2vh,20px); left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono); font-size: var(--fs-tag);
+      color: var(--text-dim); z-index: 100; white-space: nowrap;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .news-grid     { grid-template-columns: 1fr; }
+      .forecast-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-height: 700px) {
+      :root { --pad: clamp(1rem,3vw,2.5rem); --gap: clamp(0.4rem,1vw,1rem); --fs-title: clamp(1.8rem,4.5vw,3.5rem); --fs-h2: clamp(1.2rem,2.8vw,2.2rem); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="progress-bar"></div>
+  <nav id="nav-dots"></nav>
+  <div id="kbd-hint">↑ ↓ 或空格 导航</div>
+
+
+  <!-- ════════════════════════════════════════
+       SLIDE 1 — TITLE / 封面
+       ════════════════════════════════════════ -->
+  <section class="slide slide-title" id="slide-1" aria-label="封面">
+    <div class="grid-bg"></div>
+    <div class="glow-cyan"></div>
+    <div class="glow-magenta"></div>
+    <div class="corner tl"></div>
+    <div class="corner br"></div>
+
+    <div class="slide-content">
+      <div class="tag reveal d1">BTC · 周报 · W10 / 2026</div>
+      <h1 class="reveal d2">
+        比特币<br><span class="accent">每周回顾</span>
+      </h1>
+      <p class="subtitle reveal d3">02月19日 – 02月28日 · 本周行情全回顾</p>
+      <div class="badges reveal d4">
+        <span class="badge"><span class="dot"></span>收盘价 &nbsp;$65,600</span>
+        <span class="badge red">▼ 周涨跌 -2.6%</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       SLIDE 2 — PRICE JOURNEY / 价格回顾
+       ════════════════════════════════════════ -->
+  <section class="slide" id="slide-2" aria-label="价格回顾">
+    <div class="grid-bg"></div>
+    <div class="glow-cyan"></div>
+
+    <div class="slide-content">
+      <div class="tag reveal d1">价格回顾</div>
+      <h2 class="reveal d2">
+        本周走势：
+        <span class="accent">$67,341</span>
+        →
+        <span class="danger">$65,600</span>
+      </h2>
+      <p class="subtitle reveal d3">每日收盘价与涨跌幅</p>
+
+      <div class="price-table-wrap reveal d4">
+        <table>
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>价格 (USD)</th>
+              <th>24h 涨跌</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+        <tr>
+          <td class="mono">02/19</td>
+          <td class="mono accent">$67,341</td>
+          <td class="mono down">-2.2%</td>
+        </tr>
+        <tr>
+          <td class="mono">02/21</td>
+          <td class="mono accent">$67,811</td>
+          <td class="mono ">—</td>
+        </tr>
+        <tr>
+          <td class="mono">02/22</td>
+          <td class="mono accent">$67,782</td>
+          <td class="mono ">—</td>
+        </tr>
+        <tr>
+          <td class="mono">02/23</td>
+          <td class="mono accent">$64,744</td>
+          <td class="mono ">—</td>
+        </tr>
+        <tr>
+          <td class="mono">02/28</td>
+          <td class="mono accent">$65,600</td>
+          <td class="mono down">-2.3%</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       SLIDE 3 — NEWS HIGHLIGHTS / 市场新闻
+       ════════════════════════════════════════ -->
+  <section class="slide" id="slide-3" aria-label="市场新闻">
+    <div class="grid-bg"></div>
+    <div class="glow-magenta"></div>
+
+    <div class="slide-content">
+      <div class="tag reveal d1">市场新闻</div>
+      <h2 class="reveal d2">本周<span class="accent">重要事件</span></h2>
+      <p class="subtitle reveal d3">影响行情的关键新闻汇总</p>
+
+      <div class="news-grid reveal d4">
+        
+        <div class="news-card reveal">
+          <div class="news-date mono">02/28</div>
+          <div class="news-title">📉 ETF资金持续外流</div>
+          <div class="news-body">美国现货比特币ETF累计净流入从 $630亿 高点跌至 $540亿，机构持仓减少约 85,000 BTC，ETF已从买方变为卖方。</div>
+        </div>
+        <div class="news-card reveal">
+          <div class="news-date mono">02/28</div>
+          <div class="news-title">😨 恐惧贪婪指数创历史新低</div>
+          <div class="news-body">加密货币恐惧贪婪指数一度跌至 5（历史最低），长期处于"极度恐慌"区间，技术面24个指标看空、5个看多。</div>
+        </div>
+        <div class="news-card reveal">
+          <div class="news-date mono">02/28</div>
+          <div class="news-title">📜 监管利好（美国印第安纳州）</div>
+          <div class="news-body">印第安纳州通过加密货币权利立法，禁止歧视性税收，并要求州立退休计划在2027年7月前提供加密投资选项。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       SLIDE 4 — FORECAST / 预测展望
+       ════════════════════════════════════════ -->
+  <section class="slide" id="slide-4" aria-label="预测展望">
+    <div class="grid-bg"></div>
+    <div class="glow-cyan"></div>
+
+    <div class="slide-content">
+      <div class="tag reveal d1">预测展望</div>
+      <h2 class="reveal d2">下周 · 下月 · <span class="accent">年底目标</span></h2>
+      <p class="subtitle reveal d3">基于最新摘要的价格预测（截至 02月28日）</p>
+
+      <div class="forecast-grid reveal d4">
+        <div class="forecast-card highlight">
+          <div class="fc-timeframe">1 周预测</div>
+          <div class="fc-price">$68,705 ± $350</div>
+          <div class="fc-note">短期目标价，波动区间较窄</div>
+        </div>
+        <div class="forecast-card">
+          <div class="fc-timeframe">1 月预测</div>
+          <div class="fc-price">$70,000 ± $400</div>
+          <div class="fc-note">中期目标，参考宏观走势</div>
+        </div>
+        <div class="forecast-card">
+          <div class="fc-timeframe">年底目标</div>
+          <div class="fc-price">$100K – $150K</div>
+          <div class="fc-note">机构共识宽区间，仅供参考</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       SLIDE 5 — PLAIN SUMMARY / 白话总结
+       ════════════════════════════════════════ -->
+  <section class="slide" id="slide-5" aria-label="白话总结">
+    <div class="grid-bg"></div>
+    <div class="glow-magenta"></div>
+    <div class="corner tl"></div>
+    <div class="corner br"></div>
+
+    <div class="slide-content">
+      <div class="tag reveal d1">一句话总结</div>
+      <h2 class="reveal d2">这周<span class="accent">说明了什么？</span></h2>
+
+      <div class="summary-list reveal d3">
+        <div class="summary-item">
+          <span class="s-icon">📉</span>
+          <span class="s-text">
+            <strong>本周表现：</strong>
+            BTC 从 $67,341 下跌 至 $65,600，
+            周涨跌幅 <strong class="down">-2.6%</strong>。
+          </span>
+        </div>
+        <div class="summary-item">
+          <span class="s-icon">🔮</span>
+          <span class="s-text">
+            <strong>下周展望：</strong>
+            最新预测目标价 <strong>$68,705 ± $350</strong>，关注宏观数据与链上资金流向。
+          </span>
+        </div>
+        <div class="summary-item"><span class="s-icon">💬</span><span class="s-text">简单来说，BTC 现在处于"熊市底部摸索期"，跟2022年底有点像。从高点 $12.6万 跌了将近一半，市场上人心惶惶，就连机构也在卖。短期内别指望能马上反弹到新高，更可能是在 $60K-$75K 区间横盘震荡。</span></div>
+      </div>
+
+      <div class="muted mono reveal d5" style="margin-top: clamp(1rem,2vh,2rem); font-size: var(--fs-tag);">
+        生成时间: 2026-03-02 &nbsp;·&nbsp; 数据来源: 每日摘要文件
+      </div>
+    </div>
+  </section>
+
+
+  <script>
+    // ── Navigation ────────────────────────────────────────────────────────
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const navDots = document.getElementById('nav-dots');
+    const progressBar = document.getElementById('progress-bar');
+
+    // Build nav dots
+    slides.forEach((slide, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'nav-dot';
+      dot.setAttribute('aria-label', `幻灯片 ${i + 1}`);
+      dot.addEventListener('click', () => slide.scrollIntoView({ behavior: 'smooth' }));
+      navDots.appendChild(dot);
+    });
+
+    const dots = Array.from(navDots.querySelectorAll('.nav-dot'));
+
+    function updateNav() {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const totalH = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = totalH > 0 ? (scrollTop / totalH) * 100 : 0;
+      progressBar.style.width = pct + '%';
+
+      const idx = Math.round(scrollTop / window.innerHeight);
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+
+    document.addEventListener('scroll', updateNav, { passive: true });
+    updateNav();
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      const idx = Math.round((document.documentElement.scrollTop || document.body.scrollTop) / window.innerHeight);
+      if (e.key === 'ArrowDown' || e.key === ' ') {
+        e.preventDefault();
+        if (idx < slides.length - 1) slides[idx + 1].scrollIntoView({ behavior: 'smooth' });
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (idx > 0) slides[idx - 1].scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  </script>
+
+</body>
+</html>
