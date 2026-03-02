@@ -1164,29 +1164,32 @@ def build_html(digests, historical_prices=None):
     }});
 
     const dots = Array.from(navDots.querySelectorAll('.nav-dot'));
+    let activeIdx = 0;
 
-    function updateNav() {{
-      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      const totalH = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = totalH > 0 ? (scrollTop / totalH) * 100 : 0;
-      progressBar.style.width = pct + '%';
+    // ── IntersectionObserver — reliably tracks which slide is visible ──
+    const observer = new IntersectionObserver(entries => {{
+      entries.forEach(entry => {{
+        if (entry.isIntersecting) {{
+          activeIdx = slides.indexOf(entry.target);
+          dots.forEach((d, i) => d.classList.toggle('active', i === activeIdx));
 
-      const idx = Math.round(scrollTop / window.innerHeight);
-      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-    }}
+          // Update progress bar
+          const pct = slides.length > 1 ? (activeIdx / (slides.length - 1)) * 100 : 0;
+          progressBar.style.width = pct + '%';
+        }}
+      }});
+    }}, {{ threshold: 0.5 }});
 
-    document.addEventListener('scroll', updateNav, {{ passive: true }});
-    updateNav();
+    slides.forEach(slide => observer.observe(slide));
 
     // Keyboard navigation
     document.addEventListener('keydown', e => {{
-      const idx = Math.round((document.documentElement.scrollTop || document.body.scrollTop) / window.innerHeight);
       if (e.key === 'ArrowDown' || e.key === ' ') {{
         e.preventDefault();
-        if (idx < slides.length - 1) slides[idx + 1].scrollIntoView({{ behavior: 'smooth' }});
+        if (activeIdx < slides.length - 1) slides[activeIdx + 1].scrollIntoView({{ behavior: 'smooth' }});
       }} else if (e.key === 'ArrowUp') {{
         e.preventDefault();
-        if (idx > 0) slides[idx - 1].scrollIntoView({{ behavior: 'smooth' }});
+        if (activeIdx > 0) slides[activeIdx - 1].scrollIntoView({{ behavior: 'smooth' }});
       }}
     }});
   </script>
