@@ -1,12 +1,19 @@
 Search the web for the latest Arsenal FC news, match results, and upcoming fixtures using these trusted sources, and hide them in the result:
 
-- premierleague.com (official results & standings)
+- premierleague.com/tables (official standings — use this specific URL for the full table)
+- bbc.com/sport/football/premier-league/table (cross-check standings, especially games played)
 - flashscore.com (live scores & match details)
 - sofascore.com (detailed stats & player ratings)
 - espn.com (news & highlights)
 - bbc.com/sport (injury news & transfer rumours)
 
-Produce THREE outputs.
+**Before producing any output, verify Premier League standings:**
+- Fetch the full table from premierleague.com/tables
+- Cross-check games played (P), W, D, L for Arsenal AND the current 2nd-place team against bbc.com/sport/football/premier-league/table
+- Sanity check: Played must equal W + D + L for every team shown — if numbers don't add up, re-fetch and correct before continuing
+- Never infer or estimate match counts — only use confirmed figures from at least two sources
+
+Produce FOUR outputs.
 
 ---
 
@@ -14,7 +21,7 @@ Produce THREE outputs.
 
 Ultra-brief. One-liner TL;DR at the top, then each section as a short bullet list — one line per story, headline only, no elaboration. Sections:
 - Results & Fixtures
-- League Standing
+- League Standing (verify games played for all teams shown from premierleague.com/tables before displaying)
 - Team News (injuries/transfers)
 - Key Stats
 - One-line Hot Take
@@ -49,7 +56,7 @@ Adjust spacing so names are roughly evenly spread across each row. Label the dia
 Full write-up with the following sections:
 1. **Match Results** (last 7 days) — score, competition, key moments, player standouts, tactical notes
 2. **Starting XI** — for the most recent match only, show the confirmed lineup as an ASCII pitch diagram with formation, player names, and shirt numbers (same style as Output 1). Include substitutes listed below the pitch.
-3. **Premier League Standing** — current position, points, GD, gap to top/rivals, form table
+3. **Premier League Standing** — Pull full table from premierleague.com/tables. Cross-check games played for Arsenal and rival team against BBC Sport table. Confirm P = W + D + L before displaying. Show current position, points, GD, gap to top/rivals, form table.
 4. **Upcoming Fixtures** (next 2-3 matches) — opponent, date, competition, difficulty rating, what's at stake
 5. **Recent Form** (last 5 matches) — W/D/L breakdown with brief context per match
 6. **Team News** — injuries (player, issue, return estimate), transfers, suspensions, notable squad updates
@@ -86,3 +93,40 @@ Generate a self-contained HTML file that renders a professional-looking football
 Use inline CSS only (no external dependencies). Position players using flexbox rows stacked vertically inside the pitch div. Each formation line = one flex row, spaced evenly. The pitch should be approximately 560px wide × 750px tall.
 
 After saving, confirm the file path and remind the user to open it in a browser. Also run: `open ~/Documents/ArsenalWeekly/arsenal-<YYYY-MM-DD>-lineup.html` to auto-open it.
+
+---
+
+### OUTPUT 4 — Weekly Slides (save to ~/Documents/ArsenalWeekly/arsenal-<YYYY-MM-DD>-slides.html)
+
+Generate a self-contained, full-screen scroll-snap HTML slide deck summarising the week in Arsenal. Use the **Stadium Lights theme** — match the existing design style exactly as used in `arsenal-feb2026-slides.html`.
+
+**Design theme — Stadium Lights (preserve exactly):**
+
+| Element | Spec |
+|---------|------|
+| Background | `#080b10` (near-black) |
+| Primary | `#EF0107` (Arsenal red) — `--red-dim: rgba(239,1,7,0.15)`, `--red-glow: rgba(239,1,7,0.35)` |
+| Gold accent | `#D4AF37` — `--gold-dim: rgba(212,175,55,0.15)` |
+| Text | `#f0ede8` / muted `rgba(240,237,232,0.5)` |
+| Fonts | Syne 600–800 (display/headings) + Noto Sans SC 300–700 (Chinese body) + Oswald 400–700 (stats/numbers) via Google Fonts |
+| Layout | `scroll-snap-type: y mandatory`, each `.slide` = `100vw × 100dvh`, `scroll-snap-align: start` |
+| Background FX | `.beams` (4 red light beams swaying from top, `beamSway` keyframe), `.pitch-bg` (subtle grid at bottom 30%), `.center-glow` (radial red gradient from top-center) |
+| Crest watermark | Faint Arsenal crest (`opacity: 0.04`) positioned right side on each slide, using `https://resources.premierleague.com/premierleague/badges/100/t3.png` with emoji fallback |
+| Typography scale | All `clamp()` — title `clamp(2.2rem, 6vw, 5rem)`, h2 `clamp(1.5rem, 3.5vw, 2.75rem)`, body `clamp(0.78rem, 1.3vw, 1rem)` |
+| `.tag` component | Uppercase, letter-spacing 0.25em, red color, preceded by an 18px red line (`::before`) |
+| Cards | `background: rgba(255,255,255,0.04)`, `border: 1px solid rgba(239,1,7,0.15)`, `border-radius: 8px` |
+| Nav dots | Fixed right-side dot indicator, active dot = red, inactive = muted |
+| Animations | `fadeUp` reveal on slide content entry; `beamSway` on light beams |
+
+**Slide structure (6 slides):**
+
+| # | Title | Content |
+|---|-------|---------|
+| 1 | 封面 (Cover) | Arsenal crest, "阿森纳本周快报", date in Chinese, one-line TL;DR in Chinese |
+| 2 | 本周战报 (Match Results) | Last 1-2 results — score, competition, key goalscorers, brief tactical note. Use large score display with Oswald font. |
+| 3 | 积分榜 (League Standing) | PL table showing top 5 teams — Arsenal row highlighted with red background tint. Columns: 排名, 球队, 赛, 胜, 平, 负, 净, 积分. W/D/L form pills for last 5 (W=`#22c55e`, D=`#f59e0b`, L=`#ef4444`). Points gap to 2nd noted. |
+| 4 | 积分竞争 (Title Race Rival) | Current 2nd-place team spotlight — their last 3 results, next 2-3 fixtures with difficulty colour (green/amber/red), points gap, one-line threat verdict in Chinese |
+| 5 | 近期赛程 (Upcoming Fixtures) | Next 2-3 Arsenal fixtures — opponent, date, competition, difficulty stars (★☆☆–★★★), what's at stake. In Chinese. |
+| 6 | 球队动态与总结 (Team News & Hot Take) | Injury/suspension bullet cards, then a bold Hot Take paragraph on Arsenal's title chances. All in Chinese. |
+
+After saving, run: `open ~/Documents/ArsenalWeekly/arsenal-<YYYY-MM-DD>-slides.html` to auto-open it in the browser. Confirm the file path in chat.
