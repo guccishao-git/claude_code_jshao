@@ -7,11 +7,36 @@ Search the web for the latest Arsenal FC news, match results, and upcoming fixtu
 - espn.com (news & highlights)
 - bbc.com/sport (injury news & transfer rumours)
 
-**Before producing any output, verify Premier League standings:**
+**Before producing any output, verify ALL statistics using the checklist below. Never infer, estimate, or hallucinate — only use confirmed figures. If a stat can only be found from one source, mark it "(待核实)" in the output.**
+
+**① Match Results & Goalscorers**
+- Confirm final score from at least 2 sources (e.g. flashscore.com + espn.com or bbc.com/sport)
+- Confirm each goalscorer name, minute, and type (open play / penalty / OG) from at least 2 sources
+- Confirm red cards, assist credits, and key events from match reports — do not guess
+
+**② Premier League Standings**
 - Fetch the full table from premierleague.com/tables
-- Cross-check games played (P), W, D, L for Arsenal AND the current 2nd-place team against bbc.com/sport/football/premier-league/table
+- Cross-check games played (P), W, D, L for Arsenal AND the current 2nd-place team against a second source (espn.com or bbc.com/sport/football/premier-league/table)
 - Sanity check: Played must equal W + D + L for every team shown — if numbers don't add up, re-fetch and correct before continuing
 - Never infer or estimate match counts — only use confirmed figures from at least two sources
+
+**③ Form Table (Last 5)**
+- Verify each of Arsenal's last 5 results (opponent, score, W/D/L) from flashscore.com or sofascore.com
+- Do not reconstruct form from season aggregate stats — use the actual match list
+
+**④ Injury & Suspension List**
+- Use at least one official or specialist source (arsenal.com, physioroom.com, bbc.com/sport, or 3addedminutes.com)
+- Note expected return timeline only if a source explicitly states it — otherwise write "待定"
+- Flag suspended players separately from injured players
+
+**⑤ Title Race Rival Stats**
+- Verify rival's W, D, L, GD, and points with the same P = W + D + L sanity check
+- Confirm rival's last 3 results from flashscore.com or sofascore.com — include scores, not just W/D/L
+- Confirm rival's upcoming fixtures from their official club site or premierleague.com
+
+**⑥ Upcoming Arsenal Fixtures**
+- Verify dates, opponents, and competition from arsenal.com/fixtures or premierleague.com
+- Do not infer fixture dates from memory — fetch them
 
 Produce FOUR outputs.
 
