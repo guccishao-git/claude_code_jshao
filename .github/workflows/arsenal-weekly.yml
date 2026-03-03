@@ -1,0 +1,53 @@
+name: Arsenal Weekly Slides
+
+on:
+  schedule:
+    - cron: '59 23 * * 0'   # Sunday 23:59 UTC = Monday ~12:59 NZDT (Auckland)
+  workflow_dispatch:          # Manual trigger for testing
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install anthropic
+
+      - name: Generate Arsenal weekly slides
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/arsenal_weekly_slides.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "Arsenal Weekly Bot"
+          git config user.email "arsenal-bot@users.noreply.github.com"
+          git add docs/arsenal-weekly.html
+          git diff --staged --quiet || git commit -m "Update Arsenal weekly slides $(date -u +%Y-%m-%d)"
+          git push
+
+      - name: Send email notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "⚽ 阿森纳周报已更新 — $(date -u +%Y-%m-%d)"
+          body: |
+            阿森纳本周快报已自动更新！
+
+            查看地址：https://guccishao-git.github.io/claude_code_jshao/arsenal-weekly.html
+
+            本邮件由 GitHub Actions 自动发送。
+          to: ${{ secrets.EMAIL_TO }}
+          from: "Arsenal Weekly Bot <${{ secrets.EMAIL_USERNAME }}>"
