@@ -83,7 +83,8 @@ CSS variables:
 Fonts (load via Google Fonts):
   Syne 600–800 (display/headings)
   Noto Sans SC 300–700 (Chinese body)
-  Oswald 400–700 (stats/numbers)
+  Oswald 400–700 (standalone stats/scores only — e.g. "3-1" score displays)
+  IMPORTANT: Never apply Oswald to numbers embedded inside Chinese text (e.g. "第2名", "第3轮"). Use Noto Sans SC for all mixed Chinese+number text.
 
 Layout:
   scroll-snap-type: y mandatory
