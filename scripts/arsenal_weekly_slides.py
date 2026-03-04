@@ -86,14 +86,14 @@ the week in Arsenal. Use the **Stadium Lights theme** with the exact design spec
 **Design theme — Stadium Lights (preserve exactly):**
 
 CSS variables:
-  --bg: #080b10
+  --bg: #05080d
   --red: #EF0107
-  --red-dim: rgba(239,1,7,0.15)
-  --red-glow: rgba(239,1,7,0.35)
+  --red-dim: rgba(239,1,7,0.28)
+  --red-glow: rgba(239,1,7,0.55)
   --gold: #D4AF37
-  --gold-dim: rgba(212,175,55,0.15)
+  --gold-dim: rgba(212,175,55,0.2)
   --text: #f0ede8
-  --text-muted: rgba(240,237,232,0.5)
+  --text-muted: rgba(240,237,232,0.6)
 
 Fonts (load via Google Fonts):
   Syne 600–800 (display/headings)
@@ -104,35 +104,48 @@ Fonts (load via Google Fonts):
 Chart.js (CDN): https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js
 
 Layout:
-  scroll-snap-type: y mandatory
+  scroll-snap-type: y mandatory on html ONLY
   Each .slide = 100vw × 100dvh, scroll-snap-align: start
-  overflow-y: scroll on html/body
+  CRITICAL — scroll container must be html ONLY:
+    html { overflow-y: scroll; scroll-snap-type: y mandatory; height: 100%; }
+    body { overflow: hidden; height: 100%; }
+  Never apply overflow-y: scroll or scroll-snap-type to body — doing so creates two scroll containers and breaks scrollIntoView() navigation.
 
-Background FX on every slide:
-  .beams — 4 red light beams swaying from top (beamSway keyframe)
+Background FX on every slide (make them dramatic and vivid):
+  .beams — 4 red light beams from top, width clamp(80px,12vw,180px), opacity 0.75,
+    mix-blend-mode: screen, background gradient from var(--red-glow) → rgba(239,1,7,0.12) → transparent,
+    sway ±8deg with scaleX(1.15) at peak; beam 2 opacity 0.5, beam 3 opacity 0.6
   .pitch-bg — subtle grid at bottom 30%
-  .center-glow — radial red gradient from top-center
+  .center-glow — wide radial red gradient (width 110%, top -15%), pulsing opacity animation (glowPulse 4s):
+    background: radial-gradient(ellipse at 50% 20%, rgba(239,1,7,0.5) 0%, rgba(239,1,7,0.15) 40%, transparent 70%)
 
 Crest watermark on every slide:
   <img src="https://resources.premierleague.com/premierleague/badges/100/t3.png"
        onerror="this.style.display='none'" class="crest-watermark">
-  opacity: 0.04, positioned right side, pointer-events: none
+  opacity: 0.07, positioned right side, pointer-events: none
 
 Typography (all clamp):
-  title: clamp(2.2rem, 6vw, 5rem)
-  h2: clamp(1.5rem, 3.5vw, 2.75rem)
+  title: clamp(2.2rem, 6vw, 5rem), text-shadow: 0 0 60px rgba(239,1,7,0.4), 0 2px 4px rgba(0,0,0,0.6)
+  h2: clamp(1.5rem, 3.5vw, 2.75rem), text-shadow: 0 0 40px rgba(239,1,7,0.3), 0 2px 4px rgba(0,0,0,0.5)
   body: clamp(0.78rem, 1.3vw, 1rem)
+
+Score display (.score-display): Oswald, text-shadow: 0 0 30px rgba(239,1,7,0.5), 0 0 60px rgba(239,1,7,0.2)
+Score team names (.score-team): Syne bold, font-size clamp(1.1rem,2.5vw,1.8rem), color var(--text), text-shadow: 0 0 20px rgba(239,1,7,0.3)
 
 .tag component: uppercase, letter-spacing 0.25em, color var(--red), ::before = 18px red horizontal line
 
 Cards:
-  background: rgba(255,255,255,0.04)
+  background: rgba(239,1,7,0.06)
   border: 1px solid var(--red-dim)
   border-radius: 8px
+  box-shadow: 0 4px 24px rgba(239,1,7,0.08), inset 0 1px 0 rgba(255,255,255,0.05)
 
-Nav dots: fixed right side, active = var(--red), inactive = var(--text-muted)
+Nav dots: fixed right side, active = var(--red) with pulsing red box-shadow animation (dotPulse 2s), inactive = var(--text-muted)
 
-Animations: fadeUp reveal on slide content entry; beamSway on light beams
+Nav JS: use data-idx attributes on buttons; wire click → scrollIntoView; IntersectionObserver updates active dot; arrow keys navigate slides.
+DO NOT put navigation JS in a DOMContentLoaded block — put it in a plain <script> tag before </body>.
+
+Animations: fadeUp reveal on slide content entry; beamSway on light beams; glowPulse on center-glow; dotPulse on active nav dot
 
 **Slide structure (7 slides, all content in Chinese):**
 
