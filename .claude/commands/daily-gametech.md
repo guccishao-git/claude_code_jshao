@@ -18,7 +18,7 @@ Ultra-brief. One-liner TL;DR at the top, then each section as a short bullet lis
 - Microsoft Xbox
 - Game Tech & Infrastructure
 - Industry Moves
-- Any newly released games
+- New Releases Worth Playing (2-3 games, include indie gems)
 - One-line Hot Take
 
 Flag anything needing attention with ⚠️. No sources needed here.
@@ -32,7 +32,8 @@ Full write-up with the following sections:
 2. **Microsoft Xbox** (top 2-3 stories) — Xbox hardware, Game Pass, Xbox Game Studios, Microsoft Gaming strategy, first-party titles, Xbox platform policies, Phil Spencer news
 3. **Game Tech & Infrastructure** (top 2-3 stories) — game engine updates (Unreal, Unity, IW Engine mentions), backend/cloud gaming (AWS GameLift, GCP, Azure PlayFab), anti-cheat, netcode, live-service ops
 4. **Industry Moves** (top 2-3 stories) — acquisitions, layoffs, funding rounds, publisher strategies, platform news (PlayStation, Xbox, PC/Battle.net)
-5. **Hot Takes** — quick analysis: what matters for live-service games like CoD and the broader Microsoft Gaming umbrella, any trends worth flagging to leadership or engineering
-6. **Sources** — all referenced articles linked at the bottom
+5. **New Releases Worth Playing** — 2-3 recently released games across any platform or genre (include indie gems). For each: what it is, why it's interesting, who it's for, and a one-line verdict on whether it's worth your time.
+7. **Hot Takes** — quick analysis: what matters for live-service games like CoD and the broader Microsoft Gaming umbrella, any trends worth flagging to leadership or engineering
+8. **Sources** — all referenced articles linked at the bottom
 
 Each story 4-5 sentences. Use bullet points. TL;DR one-liner at the very top. Highlight action items with ⚠️. After saving, confirm the file path in chat.
