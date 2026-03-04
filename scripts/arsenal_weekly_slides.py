@@ -67,11 +67,21 @@ If a stat can only be found from one source, mark it "(待核实)".**
 - Fetch Arsenal's cumulative points by gameweek for the current Premier League season from premierleague.com or fbref.com
 - Fetch the same for the current 2nd-place team
 - Provide at minimum the last 10 gameweeks; full season preferred
+- CRITICAL data rules:
+  - Each array index N represents the total cumulative points AFTER gameweek N has been played
+  - If a team had a blank gameweek (no fixture scheduled), repeat the previous value — do NOT skip the index
+  - If a gameweek has not yet been played, use null — do NOT carry forward the last value
+  - Both arrays must have the same length as the labels array
+  - Verify: the final non-null value in arsenalPts must equal Arsenal's current points total from the standings (step ②)
+  - Verify: the final non-null value in rivalPts must equal the rival's current points total from the standings (step ②)
 - Format as two JS arrays: labels (GW1, GW2…), arsenalPts[], rivalPts[]
 
 **⑧ Goals Form Data (for chart)**
 - Fetch Arsenal's last 8 matches: date, opponent, goals scored, goals conceded
 - Source: flashscore.com or sofascore.com
+- Order: oldest match first (left) → most recent match last (right)
+- Only include completed matches — no upcoming fixtures
+- All three arrays (matchLabels, goalsFor, goalsAgainst) must have the same length
 - Format as JS arrays: matchLabels[] (opponent abbreviation), goalsFor[], goalsAgainst[]
 
 ---
