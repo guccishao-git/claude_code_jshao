@@ -168,17 +168,7 @@ Slide 6 — 近期赛程 (Upcoming Fixtures):
   Next 2–3 Arsenal fixtures — opponent, date, competition,
   difficulty stars (★☆☆–★★★), what's at stake. All in Chinese.
 
-Slide 7 — 进攻数据图 (Goals Form Chart):
-  Chart.js grouped bar chart using data from step ⑧, two datasets:
-  - 进球 (Goals Scored): backgroundColor #EF0107, hoverBackgroundColor rgba(239,1,7,0.8)
-  - 失球 (Goals Conceded): backgroundColor rgba(212,175,55,0.7), hoverBackgroundColor rgba(212,175,55,0.9)
-  Both bars: borderRadius 4, borderSkipped false
-  X-axis: matchLabels[] (opponent abbreviations). Y-axis: goals integer ticks, position "left".
-  Reference lines: implement as two additional type:"line" datasets (not a plugin) —
-    one at y=avgGoalsFor (dotted red), one at y=avgGoalsAgainst (dotted gold), pointRadius 0, borderWidth 1.
-  Chart layout must NOT overflow the slide — see Chart.js layout spec below.
-
-Slide 8 — 球队动态与总结 (Team News & Hot Take):
+Slide 7 — 球队动态与总结 (Team News & Hot Take):
   Injury/suspension bullet cards, then a bold Hot Take paragraph on Arsenal's
   title chances. All in Chinese.
 
@@ -202,7 +192,6 @@ Chart.js config (both charts):
 Custom HTML legend: a flex row below the canvas-wrap with 10px coloured dots (border-radius 50%) and Noto Sans SC 0.75rem labels in rgba(240,237,232,0.7). For reference-line entries use a 16×2px rectangle dot instead of a circle.
 
 Slide 4 annotation: one line below legend — Oswald 0.8rem rgba(240,237,232,0.5) — showing "▲ 领先 X 分" (red) or "▼ 落后 X 分" (gold).
-Slide 7 annotation: two inline spans — "均进 X.X" red, "均失 X.X" gold — Oswald 0.8rem.
 
 **Important:**
 - The output must be a single complete HTML document starting with <!DOCTYPE html> and ending with </html>
