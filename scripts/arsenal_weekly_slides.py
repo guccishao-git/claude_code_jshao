@@ -200,6 +200,7 @@ Slide 4 annotation: one line below legend — Oswald 0.8rem rgba(240,237,232,0.5
 - Embed everything inline (no external CSS files, no external JS files except Google Fonts CDN and Chart.js CDN)
 - Load Chart.js from: https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js
 - IMPORTANT: Initialise each chart with an inline <script> tag placed IMMEDIATELY after that slide's closing </section> tag — NOT in a DOMContentLoaded block at the end of the document. This ensures the chart JS is output early and survives any token truncation.
+- DO NOT add any additional <script> blocks after the last </section>. The final document structure must be: last </section>, then a single nav/keyboard JS block, then </body></html>. Never output a second Chart.js CDN tag or a second chart initialisation block.
 - Add class="chart-slide" to the <section> element for Slide 4 so the chart layout CSS applies
 - NEVER use a fixed pixel height on .slide — every slide must remain height:100vh; height:100dvh; overflow:hidden
 - The chart canvas MUST have its wrapper div constrained to clamp(160px,42vh,360px) so it never causes overflow
