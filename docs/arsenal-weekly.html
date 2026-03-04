@@ -21,10 +21,15 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
+html {
   width: 100%; height: 100%;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
+}
+
+body {
+  width: 100%; height: 100%;
+  overflow: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: 'Noto Sans SC', sans-serif;
@@ -1005,113 +1010,36 @@ p, li {
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     Chart.js CDN
-══════════════════════════════════════════
-Here is the exact continuation of the HTML from where it was cut off:
-
--->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
 <script>
-/* ── Points-over-GW sparkline ── */
-const ctx1 = document.getElementById('pointsChart').getContext('2d');
-new Chart(ctx1, {
-  type: 'line',
-  data: {
-    labels: ['GW1','GW5','GW10','GW15','GW20','GW25','GW28'],
-    datasets: [{
-      label: '阿森纳积分',
-      data: [3, 13, 25, 38, 49, 55, 61],
-      borderColor: '#E8003D',
-      backgroundColor: 'rgba(232,0,61,0.13)',
-      borderWidth: 2.5,
-      pointBackgroundColor: '#E8003D',
-      pointRadius: 4,
-      tension: 0.35,
-      fill: true
-    },{
-      label: '曼城积分',
-      data: [1, 10, 22, 34, 44, 51, 56],
-      borderColor: '#6CABDD',
-      backgroundColor: 'rgba(108,171,221,0.08)',
-      borderWidth: 2,
-      pointBackgroundColor: '#6CABDD',
-      pointRadius: 4,
-      tension: 0.35,
-      fill: true
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        labels: { color: '#e0e0e0', font: { family: 'Inter', size: 11 } }
-      },
-      tooltip: {
-        backgroundColor: '#1a1a2e',
-        titleColor: '#fff',
-        bodyColor: '#ccc'
-      }
-    },
-    scales: {
-      x: {
-        ticks: { color: '#888', font: { size: 10 } },
-        grid:  { color: 'rgba(255,255,255,0.05)' }
-      },
-      y: {
-        ticks: { color: '#888', font: { size: 10 } },
-        grid:  { color: 'rgba(255,255,255,0.05)' },
-        beginAtZero: false
-      }
-    }
-  }
-});
+/* ── Navigation ── */
+(function() {
+  var slides = Array.from(document.querySelectorAll('.slide, .chart-slide'));
+  var dots   = Array.from(document.querySelectorAll('#navDots .nav-dot'));
 
-/* ── Goal sources doughnut ── */
-const ctx2 = document.getElementById('goalSourceChart').getContext('2d');
-new Chart(ctx2, {
-  type: 'doughnut',
-  data: {
-    labels: ['角球进球', '定位球(其他)', '开放性进攻', '对手乌龙'],
-    datasets: [{
-      data: [16, 9, 34, 4],
-      backgroundColor: [
-        '#E8003D',
-        '#f5a623',
-        '#4a90d9',
-        '#7ed321'
-      ],
-      borderColor: '#12122a',
-      borderWidth: 3,
-      hoverOffset: 8
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '62%',
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          color: '#e0e0e0',
-          font: { family: 'Inter', size: 10 },
-          padding: 12
-        }
-      },
-      tooltip: {
-        backgroundColor: '#1a1a2e',
-        titleColor: '#fff',
-        bodyColor: '#ccc',
-        callbacks: {
-          label: ctx => ` ${ctx.label}: ${ctx.raw} 球`
-        }
-      }
-    }
+  function goTo(index) {
+    slides[index] && slides[index].scrollIntoView({ behavior: 'smooth' });
   }
-});
+
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() { goTo(parseInt(this.dataset.idx)); });
+  });
+
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        var i = slides.indexOf(e.target);
+        dots.forEach(function(d, j) { d.classList.toggle('active', i === j); });
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(function(s) { obs.observe(s); });
+
+  document.addEventListener('keydown', function(e) {
+    var cur = slides.findIndex(function(s) { return s.getBoundingClientRect().top > -10; });
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo(Math.min(cur + 1, slides.length - 1));
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo(Math.max(cur - 1, 0));
+  });
+})();
 </script>
 
 </body>
