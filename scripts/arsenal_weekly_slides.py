@@ -76,17 +76,9 @@ If a stat can only be found from one source, mark it "(待核实)".**
   - Verify: the final non-null value in rivalPts must equal the rival's current points total from the standings (step ②)
 - Format as two JS arrays: labels (GW1, GW2…), arsenalPts[], rivalPts[]
 
-**⑧ Goals Form Data (for chart)**
-- Fetch Arsenal's last 8 matches: date, opponent, goals scored, goals conceded
-- Source: flashscore.com or sofascore.com
-- Order: oldest match first (left) → most recent match last (right)
-- Only include completed matches — no upcoming fixtures
-- All three arrays (matchLabels, goalsFor, goalsAgainst) must have the same length
-- Format as JS arrays: matchLabels[] (opponent abbreviation), goalsFor[], goalsAgainst[]
-
 ---
 
-Now generate a self-contained, full-screen scroll-snap HTML slide deck (8 slides) summarising
+Now generate a self-contained, full-screen scroll-snap HTML slide deck (7 slides) summarising
 the week in Arsenal. Use the **Stadium Lights theme** with the exact design spec below.
 **All text content must be in Chinese (Simplified). Output only the HTML — no markdown, no code fences.**
 **Arsenal nickname in Chinese is 枪手 (Gunners) — never use 红军 (Red Army, which refers to Liverpool).**
@@ -142,7 +134,7 @@ Nav dots: fixed right side, active = var(--red), inactive = var(--text-muted)
 
 Animations: fadeUp reveal on slide content entry; beamSway on light beams
 
-**Slide structure (8 slides, all content in Chinese):**
+**Slide structure (7 slides, all content in Chinese):**
 
 Slide 1 — 封面 (Cover):
   Arsenal crest image (t3.png), large title "阿森纳本周快报", current date in Chinese,
