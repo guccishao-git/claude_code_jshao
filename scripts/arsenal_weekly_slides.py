@@ -176,16 +176,27 @@ def generate_slides() -> str:
 
         print(f"  stop_reason={response.stop_reason}")
 
-        if response.stop_reason == "end_turn":
-            # Extract text from final response
-            html_parts = [
-                block.text
-                for block in response.content
-                if hasattr(block, "text")
-            ]
-            return "\n".join(html_parts)
+        # Check what's in the response content
+        has_tool_use = any(block.type == "tool_use" for block in response.content)
+        text_parts = [block.text for block in response.content if hasattr(block, "text")]
+        text = "\n".join(text_parts)
 
-        if response.stop_reason != "tool_use":
+        if response.stop_reason == "end_turn":
+            return text
+
+        if response.stop_reason == "max_tokens":
+            # If there are tool_use blocks, continue the agentic loop
+            if has_tool_use:
+                print("  max_tokens hit during tool_use, continuing loop…")
+            elif text.strip():
+                # Got truncated HTML — return what we have
+                print("  max_tokens hit during HTML generation, extracting partial HTML…")
+                return text
+            else:
+                print("  max_tokens hit with no usable content.", file=sys.stderr)
+                sys.exit(1)
+
+        if response.stop_reason not in ("tool_use", "max_tokens"):
             print(f"  Unexpected stop_reason: {response.stop_reason}", file=sys.stderr)
             sys.exit(1)
 
