@@ -719,6 +719,15 @@ p, li {
 </head>
 <body>
 
+<nav class="nav-dots" id="navDots">
+  <button class="nav-dot active" data-idx="0" title="封面"></button>
+  <button class="nav-dot" data-idx="1" title="本周战报"></button>
+  <button class="nav-dot" data-idx="2" title="积分榜"></button>
+  <button class="nav-dot" data-idx="3" title="积分竞赛图"></button>
+  <button class="nav-dot" data-idx="4" title="积分竞争"></button>
+  <button class="nav-dot" data-idx="5" title="近期赛程"></button>
+</nav>
+
 <!-- ========== SLIDE 1: 封面 ========== -->
 <section class="slide" id="slide-0">
   <div class="beams">
@@ -1309,6 +1318,45 @@ Based on the context clues in the HTML (Chinese language, Arsenal fixtures, 3月
     <div style="margin-bottom:0.4rem;">⚽ 数据仅供参考，赛程可能因官方调整而变动</div>
     <div>© 2025 Arsenal FC Fan Hub · 非官方球迷站点</div>
   </footer>
+
+<script>
+(function () {
+  var slides = Array.from(document.querySelectorAll('section.slide'));
+  var dots   = Array.from(document.querySelectorAll('#navDots .nav-dot'));
+
+  function goTo(index) {
+    if (slides[index]) slides[index].scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Click handler
+  dots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      goTo(parseInt(this.dataset.idx, 10));
+    });
+  });
+
+  // Highlight active dot on scroll
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        var i = slides.indexOf(entry.target);
+        dots.forEach(function (d, j) { d.classList.toggle('active', i === j); });
+      }
+    });
+  }, { threshold: 0.5 });
+
+  slides.forEach(function (s) { obs.observe(s); });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function (e) {
+    var cur = slides.findIndex(function (s) {
+      return s.getBoundingClientRect().top > -10;
+    });
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo(Math.min(cur + 1, slides.length - 1));
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo(Math.max(cur - 1, 0));
+  });
+})();
+</script>
 
 </body>
 </html>

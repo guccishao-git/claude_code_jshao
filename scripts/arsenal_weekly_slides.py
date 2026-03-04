@@ -141,10 +141,37 @@ Cards:
   border-radius: 8px
   box-shadow: 0 4px 24px rgba(239,1,7,0.08), inset 0 1px 0 rgba(255,255,255,0.05)
 
-Nav dots: fixed right side, active = var(--red) with pulsing red box-shadow animation (dotPulse 2s), inactive = var(--text-muted)
+Nav dots: fixed right side, active = var(--red) with pulsing red box-shadow animation (dotPulse 2s), inactive = var(--text-muted).
+MANDATORY: Place a <nav class="nav-dots" id="navDots"> element immediately after <body> with one <button class="nav-dot" data-idx="N"> per slide (N = 0-based index). First button gets class="nav-dot active". Example for 7 slides:
+  <nav class="nav-dots" id="navDots">
+    <button class="nav-dot active" data-idx="0" title="封面"></button>
+    <button class="nav-dot" data-idx="1" title="本周战报"></button>
+    ... (one per slide)
+  </nav>
 
-Nav JS: use data-idx attributes on buttons; wire click → scrollIntoView; IntersectionObserver updates active dot; arrow keys navigate slides.
-DO NOT put navigation JS in a DOMContentLoaded block — put it in a plain <script> tag before </body>.
+Nav JS: place a plain <script> block immediately before </body> (not in DOMContentLoaded). It must:
+  1. Select all section.slide elements and all #navDots .nav-dot buttons
+  2. Wire click on each dot → slides[data-idx].scrollIntoView({behavior:'smooth'})
+  3. Use IntersectionObserver(threshold:0.5) to add/remove 'active' class on dots as slides enter view
+  4. Listen for ArrowDown/ArrowRight (next) and ArrowUp/ArrowLeft (prev) keydown events
+Example JS block:
+  <script>
+  (function () {
+    var slides = Array.from(document.querySelectorAll('section.slide'));
+    var dots   = Array.from(document.querySelectorAll('#navDots .nav-dot'));
+    function goTo(i) { if (slides[i]) slides[i].scrollIntoView({ behavior: 'smooth' }); }
+    dots.forEach(function (d) { d.addEventListener('click', function () { goTo(parseInt(this.dataset.idx, 10)); }); });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { var i = slides.indexOf(e.target); dots.forEach(function (d, j) { d.classList.toggle('active', i === j); }); } });
+    }, { threshold: 0.5 });
+    slides.forEach(function (s) { obs.observe(s); });
+    document.addEventListener('keydown', function (e) {
+      var cur = slides.findIndex(function (s) { return s.getBoundingClientRect().top > -10; });
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo(Math.min(cur + 1, slides.length - 1));
+      if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo(Math.max(cur - 1, 0));
+    });
+  })();
+  </script>
 
 Animations: fadeUp reveal on slide content entry; beamSway on light beams; glowPulse on center-glow; dotPulse on active nav dot
 
