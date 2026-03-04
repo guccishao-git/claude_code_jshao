@@ -107,8 +107,9 @@ Layout:
   scroll-snap-type: y mandatory on html ONLY
   Each .slide = 100vw × 100dvh, scroll-snap-align: start
   CRITICAL — scroll container must be html ONLY:
-    html { overflow-y: scroll; scroll-snap-type: y mandatory; height: 100%; }
-    body { overflow: hidden; height: 100%; }
+    html { overflow-y: scroll; scroll-snap-type: y mandatory; background: var(--bg); }
+    body { font-family: 'Noto Sans SC', sans-serif; color: var(--text); background: var(--bg); }
+  NEVER set overflow: hidden or height: 100% on body — doing so clips all slides beyond the first viewport, making only slide 1 visible.
   Never apply overflow-y: scroll or scroll-snap-type to body — doing so creates two scroll containers and breaks scrollIntoView() navigation.
 
 Background FX on every slide (make them dramatic and vivid):
