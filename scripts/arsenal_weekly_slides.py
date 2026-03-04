@@ -89,6 +89,7 @@ If a stat can only be found from one source, mark it "(待核实)".**
 Now generate a self-contained, full-screen scroll-snap HTML slide deck (8 slides) summarising
 the week in Arsenal. Use the **Stadium Lights theme** with the exact design spec below.
 **All text content must be in Chinese (Simplified). Output only the HTML — no markdown, no code fences.**
+**Arsenal nickname in Chinese is 枪手 (Gunners) — never use 红军 (Red Army, which refers to Liverpool).**
 
 **Design theme — Stadium Lights (preserve exactly):**
 
