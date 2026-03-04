@@ -172,7 +172,7 @@ Slide 7 — 球队动态与总结 (Team News & Hot Take):
   Injury/suspension bullet cards, then a bold Hot Take paragraph on Arsenal's
   title chances. All in Chinese.
 
-**Chart.js layout & styling rules (apply to both chart slides):**
+**Chart.js layout & styling rules (apply to the chart slide):**
 
 Viewport fitting — CRITICAL (no slide may scroll):
 - Give both chart slide <section> elements class="chart-slide"
@@ -202,7 +202,7 @@ Slide 4 annotation: one line below legend — Oswald 0.8rem rgba(240,237,232,0.5
 - IMPORTANT: Initialise each chart with an inline <script> tag placed IMMEDIATELY after that slide's closing </section> tag — NOT in a DOMContentLoaded block at the end of the document. This ensures the chart JS is output early and survives any token truncation.
 - Add class="chart-slide" to the <section> element for Slide 4 so the chart layout CSS applies
 - NEVER use a fixed pixel height on .slide — every slide must remain height:100vh; height:100dvh; overflow:hidden
-- Both chart canvases MUST have their wrapper div constrained to clamp(160px,42vh,360px) so they never cause overflow
+- The chart canvas MUST have its wrapper div constrained to clamp(160px,42vh,360px) so it never causes overflow
 """
 
 # ── Agentic loop ───────────────────────────────────────────────────────────────
