@@ -486,12 +486,13 @@ p, li {
 .canvas-wrap {
   position: relative;
   height: clamp(160px, 42vh, 360px);
-  flex: 1 1 0;
+  min-height: clamp(160px, 42vh, 360px);
+  flex: 0 0 auto;
   min-height: 0;
 }
 
 @media (max-height: 700px) {
-  .canvas-wrap { height: clamp(120px, 38vh, 260px); }
+  .canvas-wrap { height: clamp(120px, 38vh, 260px); min-height: clamp(120px, 38vh, 260px); }
 }
 
 .canvas-wrap canvas {

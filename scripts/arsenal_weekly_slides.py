@@ -190,7 +190,8 @@ Slide 7 — 球队动态与总结 (Team News & Hot Take):
 Viewport fitting — CRITICAL (no slide may scroll):
 - Give both chart slide <section> elements class="chart-slide"
 - Inside the slide, use a flex-column layout: tag + h2 are flex:0 auto; the card is flex:1 1 0 with min-height:0 so it fills remaining space
-- The canvas wrapper: position:relative; height:clamp(160px,42vh,360px); flex:1 1 0; min-height:0
+- The canvas wrapper: position:relative; height:clamp(160px,42vh,360px); min-height:clamp(160px,42vh,360px); flex:0 0 auto
+  CRITICAL: do NOT use flex:1 1 0 + min-height:0 on the canvas wrapper — that lets flexbox shrink it to 0, making the chart invisible
 - Add @media (max-height:700px) reducing canvas-wrap height to clamp(120px,38vh,260px)
 - canvas element: width:100%!important; height:100%!important; display:block
 - Card container: background rgba(255,255,255,0.04); border 1px solid rgba(239,1,7,0.15); border-radius 8px; overflow:hidden
