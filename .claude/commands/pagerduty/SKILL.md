@@ -35,13 +35,45 @@ Parse results with `python3 -c "import json,sys; ..."` inline — no need for jq
 
 ## Known schedules and teams
 
-Use these by default when the user refers to a team by name — no need to ask for IDs:
+Use these when the user refers to a team by name — no need to ask for IDs:
 
-| Name | Type | ID |
-|------|------|----|
-| Data Frameworks | Schedule | `PSLVNNV` |
+| Shorthand | Schedule Name | ID |
+|-----------|---------------|----|
+| frameworks, data frameworks | Data Frameworks Support Schedule | `PSLVNNV` |
+| data experience, DX | Data Experience Support Rotation | `PVG2F8H` |
+| data platform, DP | Data Platform Support Schedule (Tier 1) | `PJ7984H` |
+| data platform shadow | Data Platform Support Shadow | `P4RJK0A` |
+| data SRE | Data SRE Support (Tier 1) | `P1UB861` |
+| data USS, USS | Data USS Support (Tier 1) | `PV67K4N` |
+| data manager | Data Manager Oncall Schedule | `PK52I72` |
+| data privacy | Data Privacy Support | `P0GUW3A` |
+| data law, law enforcement | Data Law Enforcement Request Support | `P56HFPO` |
+| pipes | Pipes (now part of Data) Combined On-Call | `P0I07M8` |
 
-If the user says "frameworks", "data frameworks", or "who's on call for frameworks", use schedule `PSLVNNV`.
+### Finding any other schedule dynamically
+
+If the user asks about a team not in the table above, search for it:
+
+```bash
+TOKEN=$(cat ~/.config/pagerduty/token 2>/dev/null || echo "")
+curl -s "https://api.pagerduty.com/schedules?query=<SEARCH_TERM>&limit=10" \
+  -H "Authorization: Token token=${TOKEN}" \
+  -H "Accept: application/vnd.pagerduty+json;version=2"
+```
+
+Parse `schedules[].id` and `schedules[].name`. If multiple matches, list them and ask the user which one. If exactly one match, proceed directly.
+
+### Listing all schedules
+
+If the user asks "what schedules are there?" or "list all teams":
+
+```bash
+curl -s "https://api.pagerduty.com/schedules?limit=100" \
+  -H "Authorization: Token token=${TOKEN}" \
+  -H "Accept: application/vnd.pagerduty+json;version=2"
+```
+
+Paginate using `offset` if `more=true`. Present as a sorted table grouped by team area (Data, Commerce, NetEng, etc.).
 
 ## Common queries
 
