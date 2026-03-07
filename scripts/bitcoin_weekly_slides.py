@@ -59,18 +59,23 @@ def parse_digest(filepath):
         if m:
             actual_price = float(m.group(1).replace(",", ""))
 
-    # Fallback: first 5-digit dollar amount in a table row
+    # Heading style: ## 💰 当前价格\n**$69,131** 美元  or  **$68,308 美元**
+    if actual_price is None:
+        m = re.search(r"当前价格[^\n]*\n\*?\*?\$?\s*([\d,]+)\*?\*?", content)
+        if m:
+            actual_price = float(m.group(1).replace(",", ""))
+
+    # Fallback: first 5-digit dollar amount in a bold/table line (no pipe required)
     if actual_price is None:
         for line in content.splitlines():
-            if "|" in line:
-                m = re.search(r"\|\s*\*?\*?\$\s*([\d,]{5,})\s*\*?\*?\s*\|", line)
-                if m:
-                    actual_price = float(m.group(1).replace(",", ""))
-                    break
+            m = re.search(r"\*?\*?\$\s*([\d,]{5,})\*?\*?", line)
+            if m:
+                actual_price = float(m.group(1).replace(",", ""))
+                break
 
     # ── 24h change ────────────────────────────────────────────────────────
     change_24h = None
-    m = re.search(r"24小时涨跌幅[^\n]*?([+-]?\d+\.?\d*)\s*%", content)
+    m = re.search(r"24小时涨跌幅?[^\n]*?([+-]?\d+\.?\d*)\s*%", content)
     if m:
         change_24h = float(m.group(1))
     if change_24h is None:
@@ -108,8 +113,8 @@ def parse_digest(filepath):
             return f"${v:,.0f}", (v, v)
         return None, None
 
-    label_1w, range_1w = parse_forecast_line(r"(?:\*\*1周\*\*|1\s*Week)[^\n]+")
-    label_1m, range_1m = parse_forecast_line(r"(?:\*\*1个月\*\*|1\s*Month)[^\n]+")
+    label_1w, range_1w = parse_forecast_line(r"(?:\*\*1\s*周\*\*|1\s*Week)[^\n]+")
+    label_1m, range_1m = parse_forecast_line(r"(?:\*\*1\s*个月\*\*|1\s*Month)[^\n]+")
 
     # Year-end
     def parse_price_token(s):
@@ -138,16 +143,27 @@ def parse_digest(filepath):
 
     # ── News items ────────────────────────────────────────────────────────
     news_items = []
-    # Match bold headlines like **📉 ETF资金持续外流**
+
+    # Format A: **title**\nbody on next line
     for m in re.finditer(r"\*\*([^\*\n]{5,80})\*\*\n([^\n#]{20,300})", content):
         title = m.group(1).strip()
         body  = m.group(2).strip()
-        # Skip table rows and forecast lines
         if "|" in title or "$" in title[:3]:
             continue
         news_items.append({"title": title, "body": body})
         if len(news_items) >= 4:
             break
+
+    # Format B: **title**：body or **title**:body on same line (e.g. digest-2026-03-07 style)
+    if not news_items:
+        for m in re.finditer(r"\*\*([^\*\n]{5,80})\*\*[：:]\s*([^\n]{20,300})", content):
+            title = m.group(1).strip()
+            body  = m.group(2).strip()
+            if "|" in title or "$" in title[:3]:
+                continue
+            news_items.append({"title": title, "body": body})
+            if len(news_items) >= 4:
+                break
 
     # ── Plain language summary ────────────────────────────────────────────
     plain_summary = ""
@@ -231,14 +247,20 @@ def build_html(digests, historical_prices=None):
     if not digests:
         raise ValueError("No digest data found.")
 
-    first  = digests[0]
     latest = digests[-1]
     today  = datetime.date.today()
 
     week_num  = today.isocalendar()[1]
     year      = today.year
-    date_from = first["date"].strftime("%m月%d日")
-    date_to   = latest["date"].strftime("%m月%d日")
+
+    # Cover date range: always last 7 days regardless of how many digests exist
+    week_start = today - datetime.timedelta(days=7)
+    date_from  = week_start.strftime("%m月%d日")
+    date_to    = latest["date"].strftime("%m月%d日")
+
+    # Open price: digest closest to 7 days ago (first digest on or after week_start)
+    week_digests = [d for d in digests if d["date"] >= week_start]
+    first = week_digests[0] if week_digests else digests[0]
 
     open_price  = first["actual_price"]
     close_price = latest["actual_price"]

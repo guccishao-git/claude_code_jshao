@@ -2,7 +2,16 @@
 
 ## 步骤
 
-### 1. 运行周报脚本
+### 1. 检查摘要文件是否最新
+
+检查 `~/Documents/BitCoinNewsDaily/` 中最新的摘要文件日期：
+
+- 若最新摘要**距今超过 1 天**，或**完全没有摘要文件**：
+  1. 先执行 `/bitcoin` 技能，获取最新价格、新闻、预测，生成今日摘要
+  2. 完成后继续步骤 2
+- 若最新摘要是**今天或昨天**，直接执行步骤 2 即可
+
+### 2. 运行周报脚本
 
 ```
 ~/Documents/BitCoinNewsDaily/.venv/bin/python3 ~/Documents/GitHub1/claude_code_jshao/scripts/bitcoin_weekly_slides.py
@@ -16,7 +25,7 @@
 - 复制到 `docs/bitcoin-weekly.html` 并推送至 GitHub Pages
 - 在浏览器中自动打开本地预览
 
-### 2. 终端输出（简短摘要）
+### 3. 终端输出（简短摘要）
 
 脚本成功后打印：
 
@@ -26,15 +35,6 @@
    关键事件：{本周最重要的一句话新闻}
    在线地址：https://guccishao-git.github.io/claude_code_jshao/bitcoin-weekly.html
 ```
-
-### 3. 检查摘要文件是否最新
-
-运行脚本前，先检查 `~/Documents/BitCoinNewsDaily/` 中最新的摘要文件日期：
-
-- 若最新摘要**距今超过 2 天**，或**完全没有摘要文件**：
-  1. 先执行 `/bitcoin` 技能，生成今日每日摘要
-  2. 摘要生成完毕后，**继续执行步骤 1 和步骤 2**，完整跑完周报生成与发布流程
-- 若最新摘要在 2 天以内，直接执行步骤 1 和步骤 2 即可
 
 ---
 
