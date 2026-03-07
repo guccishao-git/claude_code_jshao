@@ -21,6 +21,7 @@ try:
 except ImportError:
     _HAS_REQUESTS = False
 
+
 DIGEST_DIR = os.path.expanduser("~/Documents/BitCoinNewsDaily")
 REPO_DIR   = os.path.expanduser("~/Documents/GitHub1/claude_code_jshao")
 PAGES_FILE = os.path.join(REPO_DIR, "docs", "bitcoin-weekly.html")
@@ -145,7 +146,7 @@ def parse_digest(filepath):
     news_items = []
 
     # Format A: **title**\nbody on next line
-    for m in re.finditer(r"\*\*([^\*\n]{5,80})\*\*\n([^\n#]{20,300})", content):
+    for m in re.finditer(r"\*\*([^\*\n]{5,80})\*\*\n([^\n#]{20,500})", content):
         title = m.group(1).strip()
         body  = m.group(2).strip()
         if "|" in title or "$" in title[:3]:
@@ -156,7 +157,7 @@ def parse_digest(filepath):
 
     # Format B: **title**：body or **title**:body on same line (e.g. digest-2026-03-07 style)
     if not news_items:
-        for m in re.finditer(r"\*\*([^\*\n]{5,80})\*\*[：:]\s*([^\n]{20,300})", content):
+        for m in re.finditer(r"\*\*([^\*\n]{5,80})\*\*[：:]\s*([^\n]{20,500})", content):
             title = m.group(1).strip()
             body  = m.group(2).strip()
             if "|" in title or "$" in title[:3]:
@@ -224,7 +225,105 @@ def fetch_historical_prices(days=365):
         return []
 
 
-# ── 3. Build HTML slides ──────────────────────────────────────────────────────
+# ── 3. Generate Claude's observations via API ─────────────────────────────────
+
+def generate_claude_observations(digests, weekly_pct, fc_1w, fc_1m, fc_1y):
+    """
+    Call Claude API to generate 3–4 genuine insight bullets for the last slide.
+    Returns a list of dicts: [{"icon": "...", "heading": "...", "body": "..."}]
+    Falls back to a static summary if API is unavailable.
+    """
+    # Build a concise context string from the week's data
+    price_lines = "\n".join(
+        f"  {d['date'].strftime('%m/%d')}: ${d['actual_price']:,.0f}  ({'+' if (d.get('change_24h') or 0) >= 0 else ''}{d.get('change_24h') or 0:.1f}%)"
+        for d in digests if d.get("actual_price")
+    )
+    news_lines = ""
+    seen = set()
+    for d in reversed(digests):
+        for item in d["news"]:
+            key = item["title"][:12]
+            if key not in seen:
+                safe_body = item['body'][:200].replace('"', "'").replace('`', "'")
+                news_lines += f"  - {item['title']}: {safe_body}\n"
+                seen.add(key)
+            if len(seen) >= 5:
+                break
+        if len(seen) >= 5:
+            break
+
+    prompt = f"""你是一位资深比特币市场分析师，有深厚的宏观经济和加密货币研究背景。
+
+以下是本周（过去7天）的比特币市场数据：
+
+【价格走势】
+{price_lines}
+周涨跌幅：{"+" if weekly_pct >= 0 else ""}{weekly_pct:.1f}%
+
+【机构预测】
+1周目标：{fc_1w}
+1月目标：{fc_1m}
+1年目标：{fc_1y}
+
+【本周主要新闻】
+{news_lines}
+
+请基于以上数据，结合你对比特币市场、宏观经济周期、链上数据规律和历史模式的深度理解，给出 3 条独立的深度洞察。
+
+要求：
+- 每条洞察必须有自己的判断和立场，不只是复述新闻
+- 可以对市场情绪、机构行为、技术面、或宏观背景做出你自己的解读
+- 可以提出市场忽略的风险或机会
+- 语言简洁有力，每条约40-60字
+- 输出格式（严格按此JSON）：
+[
+  {{"icon": "一个emoji", "heading": "小标题（5字以内）", "body": "正文内容"}},
+  {{"icon": "一个emoji", "heading": "小标题（5字以内）", "body": "正文内容"}},
+  {{"icon": "一个emoji", "heading": "小标题（5字以内）", "body": "正文内容"}}
+]
+
+只输出JSON数组，不要其他任何内容。"""
+
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        print("   ⚠️  ANTHROPIC_API_KEY not set — using fallback summary.")
+        print("      To enable AI insights: export ANTHROPIC_API_KEY=sk-ant-...")
+        return _fallback_observations(weekly_pct, fc_1w)
+
+    try:
+        import anthropic as _anthropic
+        import json as _json, re as _re
+        client = _anthropic.Anthropic(api_key=api_key)
+        msg = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=700,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = msg.content[0].text.strip()
+        # Strip markdown code fences if present
+        raw = _re.sub(r"^```[a-z]*\n?", "", raw).rstrip("`").strip()
+        # Extract JSON array
+        m = _re.search(r"\[.*\]", raw, _re.DOTALL)
+        if not m:
+            raise ValueError(f"No JSON array in response: {raw[:300]}")
+        observations = _json.loads(m.group(0))
+        print(f"   ✅ Claude观察 generated ({len(observations)} bullets)")
+        return observations
+    except Exception as e:
+        print(f"   ⚠️  Claude API call failed — {e}")
+        return _fallback_observations(weekly_pct, fc_1w)
+
+
+def _fallback_observations(weekly_pct, fc_1w):
+    direction = "上涨" if weekly_pct >= 0 else "下跌"
+    return [
+        {"icon": "📊", "heading": "本周走势", "body": f"BTC本周{direction} {abs(weekly_pct):.1f}%，市场情绪处于观望阶段，需关注宏观政策变化对流动性的影响。"},
+        {"icon": "🔮", "heading": "短期展望", "body": f"机构1周预测目标 {fc_1w}，但预测区间较宽，建议结合链上净流入数据综合判断方向性。"},
+        {"icon": "⚠️", "heading": "风险提示", "body": "加密市场波动剧烈，以上内容仅为数据整理，不构成投资建议。"},
+    ]
+
+
+# ── 4. Build HTML slides ──────────────────────────────────────────────────────
 
 def fmt_price(p):
     if p is None:
@@ -336,8 +435,9 @@ def build_html(digests, historical_prices=None):
         if len(all_news) >= 5:
             break
 
-    # Plain language summary from latest digest
-    plain = latest.get("plain_summary", "")
+    # Claude's original observations for slide 6
+    print("   🤖 Generating Claude观察 via API...")
+    claude_obs = generate_claude_observations(digests, weekly_pct, fc_1w, fc_1m, fc_1y)
 
     # Price journey rows
     price_rows_html = ""
@@ -358,7 +458,16 @@ def build_html(digests, historical_prices=None):
         <div class="news-card reveal">
           <div class="news-date mono">{item['date']}</div>
           <div class="news-title">{item['title']}</div>
-          <div class="news-body">{item['body'][:180]}</div>
+          <div class="news-body">{item['body'][:500]}</div>
+        </div>"""
+
+    # Claude观察 bullets HTML
+    claude_obs_html = ""
+    for obs in claude_obs:
+        claude_obs_html += f"""
+        <div class="summary-item reveal">
+          <span class="s-icon">{obs.get('icon', '💡')}</span>
+          <span class="s-text"><strong>{obs.get('heading', '')}</strong>　{obs.get('body', '')}</span>
         </div>"""
 
     generated_at = today.strftime("%Y-%m-%d")
@@ -915,39 +1024,24 @@ def build_html(digests, historical_prices=None):
 
 
   <!-- ════════════════════════════════════════
-       SLIDE 6 — PLAIN SUMMARY / 白话总结
+       SLIDE 6 — CLAUDE观察
        ════════════════════════════════════════ -->
-  <section class="slide" id="slide-6" aria-label="白话总结">
+  <section class="slide" id="slide-6" aria-label="Claude观察">
     <div class="grid-bg"></div>
     <div class="glow-magenta"></div>
     <div class="corner tl"></div>
     <div class="corner br"></div>
 
     <div class="slide-content">
-      <div class="tag reveal d1">一句话总结</div>
-      <h2 class="reveal d2">这周<span class="accent">说明了什么？</span></h2>
+      <div class="tag reveal d1">AI 深度洞察</div>
+      <h2 class="reveal d2">Claude<span class="accent">观察</span></h2>
 
       <div class="summary-list reveal d3">
-        <div class="summary-item">
-          <span class="s-icon">{'📈' if weekly_pct >= 0 else '📉'}</span>
-          <span class="s-text">
-            <strong>本周表现：</strong>
-            BTC 从 {fmt_price(open_price)} {'上涨' if weekly_pct >= 0 else '下跌'} 至 {fmt_price(close_price)}，
-            周涨跌幅 <strong class="{'up' if weekly_pct >= 0 else 'down'}">{weekly_sign}{weekly_pct:.1f}%</strong>。
-          </span>
-        </div>
-        <div class="summary-item">
-          <span class="s-icon">🔮</span>
-          <span class="s-text">
-            <strong>下周展望：</strong>
-            最新预测目标价 <strong>{fc_1w}</strong>，关注宏观数据与链上资金流向。
-          </span>
-        </div>
-        {'<div class="summary-item"><span class="s-icon">💬</span><span class="s-text">' + plain + '</span></div>' if plain else ''}
+        {claude_obs_html}
       </div>
 
       <div class="muted mono reveal d5" style="margin-top: clamp(1rem,2vh,2rem); font-size: var(--fs-tag);">
-        生成时间: {generated_at} &nbsp;·&nbsp; 数据来源: 每日摘要文件
+        生成时间: {generated_at} &nbsp;·&nbsp; 由 Claude Sonnet 4.6 独立分析 · 不构成投资建议
       </div>
     </div>
   </section>
