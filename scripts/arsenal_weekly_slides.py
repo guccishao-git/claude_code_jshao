@@ -189,7 +189,7 @@ Slide 1 — Cover:
     with a 32px red line before and a fading red line after filling remaining width)
   - A punchy 3-line <h1> headline (Syne 800, font-size clamp(2rem,5vw,4.2rem), line-height 1.05)
     distilling the week into 3 short lines — wrap the key stat/result in <em> styled color var(--red).
-    Use plain, clear English — avoid football jargon. Example: "Three Wins.<br><em>Seven Points</em><br>Ahead."
+    Use plain, clear English — avoid football jargon. Always use numerals not words (e.g. "3 Wins" not "Three Wins"). Example: "3 Wins.<br><em>7 Points</em><br>Ahead."
     Font size: clamp(2.8rem,7vw,6rem).
   - A short red→gold gradient divider bar (width clamp(40px,8vw,80px), height 3px)
   - Current date (Oswald, uppercase, letter-spacing 0.2em, muted color)
