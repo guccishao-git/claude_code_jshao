@@ -33,7 +33,7 @@ resource "databricks_user" "<short_name>" {
 Rules:
 - `<short_name>` is derived from the email prefix (the part before `@`), with any dots replaced by underscores. For example, `brett.garcia@activision.com` becomes `brett_garcia`, `jshao@demonware.net` becomes `jshao`.
 - `<email>` is the full email address provided.
-- `<Full Name>` is the display name provided by the user.
+- `<Full Name>` is the display name in Title Case (e.g. `Jason Shao`, `Brett Garcia`).
 
 ---
 
