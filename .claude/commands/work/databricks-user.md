@@ -1,6 +1,6 @@
-Generate Terraform resource blocks for new Databricks users, service principals, or groups.
+Generate Terraform resource blocks for new Databricks users, service principals, groups, or group memberships.
 
-Ask the user what they need to create: a **user**, a **service principal**, a **group**, or any combination.
+Ask the user what they need to create: a **user**, a **service principal**, a **group**, a **group membership**, or any combination.
 
 ## Step 1: Check for existing user
 
@@ -78,6 +78,32 @@ Rules:
 - `<display_name>` is the display name exactly as provided by the user.
 
 After generating the group resource block, append it to the bottom of `/Users/jason.shao/Documents/GitHub1/databricks-terraform/account/groups.tf`. Add a blank line before the new block if the file does not already end with one.
+
+---
+
+## Group Membership
+
+The user will provide: the user's email (or resource name) and the target group name.
+
+Steps:
+1. Search `groups.tf` for the group by display name to find its resource name (e.g. `dbx_grp_ap_ga_mobile_analytics_895627063053848`).
+2. Derive the `member_id` from `databricks_user.<short_name>.id` where `<short_name>` is the email prefix with dots removed.
+3. Generate the resource block and append it to the bottom of `/Users/jason.shao/Documents/GitHub1/databricks-terraform/account/groups.tf`.
+
+Template:
+
+```hcl
+resource "databricks_group_member" "<group_resource_name>_<short_name>" {
+  provider  = databricks.accounts
+  member_id = databricks_user.<short_name>.id
+  group_id  = databricks_group.<group_resource_name>.id
+}
+```
+
+Rules:
+- `<group_resource_name>` is the full Terraform resource name of the group found in `groups.tf`.
+- `<short_name>` is derived from the email prefix with dots removed (e.g. `brett.garcia` → `brett_garcia` for the resource suffix, `brettgarcia` for the member_id reference).
+- Add a blank line before the new block if the file does not already end with one.
 
 ---
 
