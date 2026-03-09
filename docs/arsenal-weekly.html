@@ -1184,9 +1184,6 @@ section.chart-slide .slide-content {
         <div class="injury-name">Ben White</div>
         <div class="injury-detail">Minor knock (nature undisclosed)</div>
         <div class="injury-status status-doubt">⚠ Doubt — Return: TBD
-I'll need to look up the latest Arsenal injury news to make sure the information is accurate and up to date.
-Here is the exact continuation of the HTML from where it was cut off:
-
 </div>
       </div>
       <div class="injury-card">
@@ -1211,6 +1208,24 @@ Here is the exact continuation of the HTML from where it was cut off:
     </p>
 
   </div><!-- /.container -->
+
+<script>
+(function () {
+  var slides = Array.from(document.querySelectorAll('section.slide'));
+  var dots   = Array.from(document.querySelectorAll('#navDots .nav-dot'));
+  function goTo(i) { if (slides[i]) slides[i].scrollIntoView({ behavior: 'smooth' }); }
+  dots.forEach(function (d) { d.addEventListener('click', function () { goTo(parseInt(this.dataset.idx, 10)); }); });
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { var i = slides.indexOf(e.target); dots.forEach(function (d, j) { d.classList.toggle('active', i === j); }); } });
+  }, { threshold: 0.5 });
+  slides.forEach(function (s) { obs.observe(s); });
+  document.addEventListener('keydown', function (e) {
+    var cur = slides.findIndex(function (s) { return s.getBoundingClientRect().top > -10; });
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo(Math.min(cur + 1, slides.length - 1));
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo(Math.max(cur - 1, 0));
+  });
+})();
+</script>
 
 </body>
 </html>
