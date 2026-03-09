@@ -1,0 +1,20 @@
+name: Keepalive
+
+on:
+  schedule:
+    - cron: '0 12 * * 3'   # Every Wednesday 12:00 UTC — keeps scheduled workflows alive
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Keep workflows enabled
+        uses: gautamkrishnar/keepalive-workflow@2.0.0
+        with:
+          use_api: true
