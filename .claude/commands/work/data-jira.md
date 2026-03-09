@@ -79,12 +79,16 @@ curl ... > /tmp/jira_out.json
 
 ```python
 # /tmp/jira_parse.py — always use this exact table format
-import json
+import json, os
 
 GREEN  = "\033[32m"
 YELLOW = "\033[33m"
 CYAN   = "\033[36m"
 RESET  = "\033[0m"
+
+def hyperlink(url, text):
+    """OSC 8 terminal hyperlink — clickable in iTerm2, VS Code, etc."""
+    return f"\033]8;;{url}\033\\{text}\033]8;;\033\\"
 
 def color_status(s):
     s = s.strip()
@@ -98,17 +102,24 @@ def color_status(s):
         return f"{s:<22}"
 
 data = json.load(open("/tmp/jira_out.json"))
+
+if "errorMessages" in data or "errors" in data:
+    print("Jira API error:")
+    print(json.dumps(data, indent=2))
+    exit(1)
+
 issues = data.get("issues", [])
 total = data.get("total", len(issues))
 
 # Set these before running:
 project_label = "DSHD / DWDF / DS"  # or specific project
 mode_label = "My open tickets"       # e.g. "Status: In Progress", "Label: dbt"
+jira_url = os.environ.get("JIRA_URL", "")
 
 print(f"\n📋 {project_label} — {mode_label} ({total} found)")
-print("─" * 90)
-print(f"{'KEY':<14} {'STATUS':<22} {'PRIORITY':<10} {'ASSIGNEE':<18} SUMMARY")
-print("─" * 90)
+print("─" * 100)
+print(f"{'KEY':<24} {'STATUS':<22} {'PRIORITY':<10} {'ASSIGNEE':<18} SUMMARY")
+print("─" * 100)
 
 if not issues:
     print("No tickets found for this query.")
@@ -120,14 +131,17 @@ else:
         priority = (fields.get("priority") or {}).get("name", "—")
         assignee = ((fields.get("assignee") or {}).get("displayName") or "Unassigned")[:16]
         summary = (fields.get("summary") or "")[:55]
-        print(f"{key:<14} {color_status(status):<22} {priority:<10} {assignee:<18} {summary}")
+        url = f"{jira_url}/browse/{key}"
+        key_linked = hyperlink(url, key)
+        # key_linked renders as key text but OSC 8 adds invisible bytes; pad with visible key width
+        print(f"{key_linked}{' ' * (24 - len(key))} {color_status(status)} {priority:<10} {assignee:<18} {summary}")
 
-print("─" * 90)
+print("─" * 100)
 print()
 ```
 
 ```bash
-/opt/homebrew/bin/python3 /tmp/jira_parse.py
+source ~/.jira_config && JIRA_URL=$JIRA_URL /opt/homebrew/bin/python3 /tmp/jira_parse.py
 ```
 
 Always include **KEY, STATUS, PRIORITY, ASSIGNEE, SUMMARY** columns. Color-code status: green=Done, yellow=In Progress/In Review, cyan=Waiting.*
