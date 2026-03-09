@@ -32,22 +32,16 @@ Create it with the following content (never commit this file):
 Get your API token at: https://id.atlassian.com/manage-profile/security/api-tokens
 ```
 
-## Step 2 — Ask the user to choose a query mode
+## Step 2 — Infer query mode from arguments (no interactive prompt)
 
-Present this menu:
+Do NOT present a menu or wait for user input. Infer the query mode directly from the ARGUMENTS:
 
-```
-Select query mode:
-  1. My open tickets
-  2. By status  (To Do / In Progress / In Review / Done)
-  3. By epic    (enter epic key, e.g. DATA-100)
-  4. By label   (enter label name)
-```
+- If arguments mention "my tickets", "assigned to me", or no specific filter → **Mode 1** (my open tickets)
+- If arguments mention a status (e.g. "in progress", "to do", "done") → **Mode 2**, use that status
+- If arguments mention an epic key (e.g. "DSHD-100") → **Mode 3**, use that epic key
+- If arguments mention a label → **Mode 4**, use that label
 
-Wait for the user's selection, then gather any additional input needed:
-- Mode 2: ask which status (To Do / In Progress / In Review / Done)
-- Mode 3: ask for the epic key
-- Mode 4: ask for the label
+Also infer the project from arguments: if a specific project is mentioned (DSHD, DWDF, DS), use it; otherwise use all projects from `$JIRA_PROJECTS`.
 
 ## Step 3 — Build the JQL and call the API
 
