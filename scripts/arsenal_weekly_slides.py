@@ -182,8 +182,11 @@ Animations: fadeUp reveal on slide content entry; beamSway on light beams; glowP
 **Slide structure (7 slides, all content in English with a professional, editorial tone):**
 
 Slide 1 — Cover:
-  Arsenal crest image (t3.png), large title "Arsenal Weekly", current date in English,
-  one-line TL;DR headline of the week.
+  Arsenal crest image (t3.png), "Arsenal Weekly" tag (.tag component), current date in English,
+  then the TL;DR headline of the week as a large hero <h1> (font-size clamp(1.4rem,3vw,2.4rem),
+  font-weight 700, max-width 820px, line-height 1.25).
+  DO NOT add a separate large "Arsenal Weekly" title — the .tag above the date is sufficient.
+  The TL;DR headline is the visual centrepiece of the cover.
 
 Slide 2 — Match Report:
   Last 1–2 results — score, competition, key goalscorers, brief tactical note.
