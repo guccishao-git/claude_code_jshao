@@ -223,6 +223,12 @@ Slide 5 — Title Race:
   Current 2nd-place team spotlight — their last 3 results with scores,
   next 2–3 fixtures with difficulty colour (green=easy/amber=medium/red=hard),
   points gap, one-line threat verdict in English.
+  Font rules (Stadium Lights theme — enforce exactly):
+  - Section labels like "LAST 3 RESULTS" and "CITY'S UPCOMING FIXTURES": font-family:'Oswald',sans-serif (NOT Syne)
+  - Difficulty spans (● Easy / ● Hard / ● Medium): add font-family:'Oswald',sans-serif inline
+  - Short disclaimer notes (e.g. "UCL opponents unverified"): font-family:'Oswald',sans-serif
+  - Standalone stats/scores (e.g. "−7 pts"): inherits Oswald from parent <p>; do NOT add redundant inner font-family
+  - Running verdict text: Inter (default body) is fine
 
 Slide 6 — Upcoming Fixtures:
   Next 2–3 Arsenal fixtures — opponent, date, competition,
