@@ -177,16 +177,27 @@ Example JS block:
   })();
   </script>
 
-Animations: fadeUp reveal on slide content entry; beamSway on light beams; glowPulse on center-glow; dotPulse on active nav dot
+Animations: fadeUp reveal on slide content entry; beamSway on light beams; glowPulse on center-glow; dotPulse on active nav dot; crestFloat 5s ease-in-out infinite (translateY 0 → -10px → 0) on the cover crest
 
 **Slide structure (7 slides, all content in English with a professional, editorial tone):**
 
 Slide 1 — Cover:
-  Arsenal crest image (t3.png), "Arsenal Weekly" tag (.tag component), current date in English,
-  then the TL;DR headline of the week as a large hero <h1> (font-size clamp(1.4rem,3vw,2.4rem),
-  font-weight 700, max-width 820px, line-height 1.25).
-  DO NOT add a separate large "Arsenal Weekly" title — the .tag above the date is sufficient.
-  The TL;DR headline is the visual centrepiece of the cover.
+  Use a two-column layout (.cover-layout, flexbox, space-between):
+
+  LEFT COLUMN (.cover-left):
+  - "ARSENAL WEEKLY" masthead (Oswald, uppercase, letter-spacing 0.35em, color var(--red),
+    with a 32px red line before and a fading red line after filling remaining width)
+  - A punchy 3-line <h1> headline (Syne 800, font-size clamp(2rem,5vw,4.2rem), line-height 1.05)
+    distilling the week into 3 short lines — wrap the key stat/result in <em> styled color var(--red).
+    Example structure: "Three Wins.<br><em>Seven Points</em><br>Clear."
+  - A short red→gold gradient divider bar (width clamp(40px,8vw,80px), height 3px)
+  - Current date (Oswald, uppercase, letter-spacing 0.2em, muted color)
+
+  RIGHT COLUMN (.cover-right):
+  - Arsenal crest <img> (t3.png), width clamp(120px,20vw,240px),
+    filter: drop-shadow red glow, animation: crestFloat 5s ease-in-out infinite
+
+  DO NOT add any body text or paragraph description on the cover — keep it minimal and sharp.
 
 Slide 2 — Match Report:
   Last 1–2 results — score, competition, key goalscorers, brief tactical note.
