@@ -229,8 +229,19 @@ Slide 6 — Upcoming Fixtures:
   difficulty stars (★☆☆–★★★), what's at stake.
 
 Slide 7 — Team News & Hot Take:
-  Injury/suspension bullet cards, then a bold Hot Take paragraph on Arsenal's
-  title chances.
+  Top half: injury/suspension cards (.injury-grid).
+
+  Bottom half: Hot Take section (.hot-take-section) with THREE components:
+
+  1. .hot-take-main — a bold italic quote in Syne 700, font-size clamp(1rem,2vw,1.35rem),
+     left red border (4px solid var(--red)), gradient background. One punchy opinionated
+     sentence about Arsenal's week or title chances — make it sharp and confident.
+
+  2. .hot-take-pills — two side-by-side cards (.hot-take-pill), each with:
+     - A .hot-take-pill-label (Oswald, gold, uppercase) naming the topic (e.g. "Title Race", "Key Battle", "Concern")
+     - A short 1-2 sentence take in Inter, muted text
+
+  Be opinionated and specific — reference actual players, opponents, and stats from the week.
 
 **Chart.js layout & styling rules (apply to the chart slide):**
 

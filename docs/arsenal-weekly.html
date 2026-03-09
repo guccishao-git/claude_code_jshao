@@ -475,26 +475,52 @@ strong { color: var(--text); }
 .status-return { color: #22c55e; }
 
 /* ── Hot Take ─────────────────────────────── */
-.hot-take {
-  background: linear-gradient(135deg, rgba(239,1,7,0.12), rgba(212,175,55,0.06));
-  border: 1px solid rgba(239,1,7,0.3);
-  border-radius: 8px;
-  padding: 1rem 1.2rem;
-  margin-top: 0.8rem;
+.hot-take-section {
+  margin-top: 1rem;
 }
-.hot-take-label {
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 0.4rem;
+.hot-take-main {
+  background: linear-gradient(135deg, rgba(239,1,7,0.14), rgba(212,175,55,0.05));
+  border-left: 4px solid var(--red);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.4rem;
+  margin-bottom: 0.7rem;
 }
-.hot-take p {
-  font-size: clamp(0.82rem, 1.35vw, 1rem);
+.hot-take-main p {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: 700;
   color: var(--text);
-  line-height: 1.7;
+  line-height: 1.5;
   font-style: italic;
+  margin: 0;
+  text-shadow: 0 0 30px rgba(239,1,7,0.2);
+}
+.hot-take-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.hot-take-pill {
+  background: rgba(239,1,7,0.08);
+  border: 1px solid var(--red-dim);
+  border-radius: 6px;
+  padding: 0.55rem 0.9rem;
+  flex: 1 1 calc(50% - 0.6rem);
+  min-width: 180px;
+}
+.hot-take-pill-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.25rem;
+}
+.hot-take-pill p {
+  font-size: clamp(0.78rem, 1.2vw, 0.92rem);
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin: 0;
 }
 
 /* ── Rival Result Pills ───────────────────── */
@@ -1287,9 +1313,22 @@ section.chart-slide .slide-content {
       </div>
     </div>
 
-    <p class="injury-note">
-      ℹ Last updated: 8 March 2026. All return dates are provisional and subject to change. Sources: Arsenal.com, Daily Cannon, Sports Mole, Read Arsenal.
-    </p>
+    <div class="hot-take-section">
+      <div class="tag" style="margin-bottom:0.6rem;">Hot Take</div>
+      <div class="hot-take-main">
+        <p>"Arsenal don't need Ødegaard to win the title — they just proved it three times in a row."</p>
+      </div>
+      <div class="hot-take-pills">
+        <div class="hot-take-pill">
+          <div class="hot-take-pill-label">Title Race</div>
+          <p>Seven points with 10 games left. City and Liverpool need Arsenal to slip — and right now, there's no sign of that happening.</p>
+        </div>
+        <div class="hot-take-pill">
+          <div class="hot-take-pill-label">Leverkusen Warning</div>
+          <p>Three doubtful starters heading into Tuesday's UCL tie. Arteta must rotate — but can he afford to against last season's treble hunters?</p>
+        </div>
+      </div>
+    </div>
 
   </div><!-- /.container -->
 
