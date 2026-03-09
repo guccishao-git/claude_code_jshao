@@ -121,7 +121,7 @@ Background FX on every slide (make them dramatic and vivid):
     background: radial-gradient(ellipse at 50% 20%, rgba(239,1,7,0.5) 0%, rgba(239,1,7,0.15) 40%, transparent 70%)
 
 Crest watermark on every slide:
-  <img src="https://resources.premierleague.com/premierleague/badges/100/t3.png"
+  <img src="https://resources.premierleague.com/premierleague/badges/t3@x2.png"
        onerror="this.style.display='none'" class="crest-watermark">
   opacity: 0.07, positioned right side, pointer-events: none
 
@@ -195,7 +195,7 @@ Slide 1 — Cover:
   - Current date (Oswald, uppercase, letter-spacing 0.2em, muted color)
 
   RIGHT COLUMN (.cover-right):
-  - Arsenal crest <img> (t3.png), width clamp(120px,20vw,240px),
+  - Arsenal crest <img> (use high-res: https://resources.premierleague.com/premierleague/badges/t3@x2.png), width clamp(160px,26vw,320px),
     filter: drop-shadow red glow, animation: crestFloat 5s ease-in-out infinite
 
   DO NOT add any body text or paragraph description on the cover — keep it minimal and sharp.
