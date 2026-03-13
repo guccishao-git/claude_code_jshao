@@ -114,8 +114,8 @@ def parse_digest(filepath):
             return f"${v:,.0f}", (v, v)
         return None, None
 
-    label_1w, range_1w = parse_forecast_line(r"(?:\*\*1\s*周\*\*|1\s*Week)[^\n]+")
-    label_1m, range_1m = parse_forecast_line(r"(?:\*\*1\s*个月\*\*|1\s*Month)[^\n]+")
+    label_1w, range_1w = parse_forecast_line(r"(?:\*\*1\s*周\*\*|\|\s*1\s*周\s*\||1\s*Week)[^\n]+")
+    label_1m, range_1m = parse_forecast_line(r"(?:\*\*1\s*个月\*\*|\|\s*1\s*个月\s*\||1\s*Month)[^\n]+")
 
     # Year-end
     def parse_price_token(s):
@@ -125,7 +125,7 @@ def parse_digest(filepath):
         return float(s)
 
     year_match = re.search(
-        r"(?:1\s*Year|年底\d{4}[（\(]?主流|年底\d{4})[^\n]*?\$([\d,K]+)[^\n–\-]*?[\-–]\s*\$([\d,K]+)",
+        r"(?:1\s*Year|\|\s*1\s*年\s*\||年底\d{4}[（\(]?主流|年底\d{4})[^\n]*?\$([\d,K]+)[^\n–\-]*?[\-–]\s*\$([\d,K]+)",
         content, re.IGNORECASE
     )
     label_1y = None
@@ -146,7 +146,7 @@ def parse_digest(filepath):
     news_items = []
 
     # Format A: **title**\nbody on next line
-    for m in re.finditer(r"\*\*([^\*\n]{5,80})\*\*\n([^\n#]{20,500})", content):
+    for m in re.finditer(r"\*\*([^\*\n]{2,80})\*\*\n([^\n#]{20,500})", content):
         title = m.group(1).strip()
         body  = m.group(2).strip()
         if "|" in title or "$" in title[:3]:
@@ -157,7 +157,18 @@ def parse_digest(filepath):
 
     # Format B: **title**：body or **title**:body on same line (e.g. digest-2026-03-07 style)
     if not news_items:
-        for m in re.finditer(r"\*\*([^\*\n]{5,80})\*\*[：:]\s*([^\n]{20,500})", content):
+        for m in re.finditer(r"\*\*([^\*\n]{2,80})\*\*[：:]\s*([^\n]{20,500})", content):
+            title = m.group(1).strip()
+            body  = m.group(2).strip()
+            if "|" in title or "$" in title[:3]:
+                continue
+            news_items.append({"title": title, "body": body})
+            if len(news_items) >= 4:
+                break
+
+    # Format C: **title** — body (em dash, e.g. digest-2026-03-13 style)
+    if not news_items:
+        for m in re.finditer(r"\*\*([^\*\n]{2,80})\*\*\s*[—–-]+\s*([^\n]{20,500})", content):
             title = m.group(1).strip()
             body  = m.group(2).strip()
             if "|" in title or "$" in title[:3]:
@@ -421,7 +432,7 @@ def build_html(digests, historical_prices=None):
         if fc_1w != "—" and fc_1m != "—" and fc_1y != "—":
             break
 
-    # Aggregate news (deduplicate by title prefix)
+    # News: fill up to 4 cards from newest digest first, then fall back to older ones
     all_news = []
     seen = set()
     for d in reversed(digests):
@@ -430,9 +441,7 @@ def build_html(digests, historical_prices=None):
             if key not in seen:
                 all_news.append({**item, "date": d["date"].strftime("%m/%d")})
                 seen.add(key)
-            if len(all_news) >= 5:
-                break
-        if len(all_news) >= 5:
+        if len(all_news) >= 4:
             break
 
     # Claude's original observations for slide 6
