@@ -45,7 +45,7 @@ Produce FOUR outputs.
 ### OUTPUT 1 — Terminal Summary (show this in the chat)
 
 Ultra-brief. One-liner TL;DR at the top, then each section as a short bullet list — one line per story, headline only, no elaboration. Sections:
-- Results & Fixtures
+- Results & Fixtures (include UK time + New Zealand time for upcoming matches)
 - League Standing (verify games played for all teams shown from premierleague.com/tables before displaying)
 - Team News (injuries/transfers)
 - Key Stats
@@ -82,7 +82,7 @@ Full write-up with the following sections:
 1. **Match Results** (last 7 days) — score, competition, key moments, player standouts, tactical notes
 2. **Starting XI** — for the most recent match only, show the confirmed lineup as an ASCII pitch diagram with formation, player names, and shirt numbers (same style as Output 1). Include substitutes listed below the pitch.
 3. **Premier League Standing** — Pull full table from premierleague.com/tables. Cross-check games played for Arsenal and rival team against BBC Sport table. Confirm P = W + D + L before displaying. Show current position, points, GD, gap to top/rivals, form table.
-4. **Upcoming Fixtures** (next 2-3 matches) — opponent, date, competition, difficulty rating, what's at stake
+4. **Upcoming Fixtures** (next 2-3 matches) — opponent, date, competition, difficulty rating, what's at stake. Always include both **UK time (GMT/BST)** and **New Zealand time (NZDT/NZST)** for each fixture. Note any upcoming clock changes (UK clocks spring forward last Sunday of March; NZ clocks fall back first Sunday of April).
 5. **Recent Form** (last 5 matches) — W/D/L breakdown with brief context per match
 6. **Team News** — injuries (player, issue, return estimate), transfers, suspensions, notable squad updates
 7. **Title Race Rival** — identify the current 2nd-place team and provide:
