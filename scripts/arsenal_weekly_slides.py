@@ -187,11 +187,14 @@ Slide 1 — 封面 (Cover):
   LEFT COLUMN (.cover-left):
   - "阿森纳本周快报" masthead (Oswald, uppercase, letter-spacing 0.35em, color var(--red),
     with a 32px red line before and a fading red line after filling remaining width)
-  - A punchy 3-line <h1> headline (Syne 800, font-size clamp(2rem,5vw,4.2rem), line-height 1.05)
+  - A punchy 3-line <h1> headline (Syne 800, font-size clamp(2.8rem,7vw,6rem), line-height 1.05)
     distilling the week into 3 short Chinese lines — wrap the key stat/result in <em> styled color var(--red).
     Always use numerals not Chinese characters for numbers (e.g. "3连胜" not "三连胜"). Make it funny like a meme caption.
     Example: "3胜.<br><em>领先7分</em><br>稳了？"
-    Font size: clamp(2.8rem,7vw,6rem).
+    CRITICAL FONT RULE: The h1 CSS must be font-family:'Noto Sans SC',sans-serif; font-weight:900 — NOT Syne.
+    Reason: Syne's Latin numerals have completely different optical weight from Chinese characters and look jarring.
+    Noto Sans SC covers both numerals and Chinese consistently at weight 900.
+    NEVER wrap numbers or <em> or <span> inside the h1 with any other font-family override.
   - A short red→gold gradient divider bar (width clamp(40px,8vw,80px), height 3px)
   - Current date in Chinese format (Oswald, uppercase, letter-spacing 0.2em, muted color)
 
@@ -575,7 +578,33 @@ def validate_and_fix(html: str) -> str:
             html = html[:last_sec + len("</section>")] + clean_between + "</body>" + html[body_end + len("</body>"):]
             fixes.append("Removed junk content appended after last </section>")
 
-    # ── 7. Nav dots: ensure Chinese titles ──────────────────────────────────
+    # ── 7. Cover h1: enforce Noto Sans SC weight 900, strip inner font overrides
+    # Syne numerals look jarring next to Chinese — h1 must use Noto Sans SC 900
+    html = re.sub(
+        r"(h1\s*\{[^}]*?)font-family:\s*'Syne'[^;]*;",
+        r"\1font-family: 'Noto Sans SC', sans-serif;",
+        html
+    )
+    html = re.sub(
+        r"(h1\s*\{[^}]*?)font-weight:\s*8\d\d;",
+        r"\1font-weight: 900;",
+        html
+    )
+    # Strip any font-family overrides inside the h1 element itself
+    h1_match = re.search(r'(<h1[^>]*>)(.*?)(</h1>)', html, re.DOTALL | re.IGNORECASE)
+    if h1_match:
+        h1_inner = h1_match.group(2)
+        fixed_inner = re.sub(r"(style=['\"][^'\"]*?)font-family:[^;'\"]+;?\s*", r"\1", h1_inner)
+        fixed_inner = re.sub(r'\s*style=[\'\"]\s*[\'\"]\s*', '', fixed_inner)
+        if fixed_inner != h1_inner:
+            html = html[:h1_match.start(2)] + fixed_inner + html[h1_match.end(2):]
+            fixes.append("Removed font-family overrides inside cover h1")
+    if "h1" in html and "Noto Sans SC" not in re.search(r'h1\s*\{[^}]*\}', html, re.DOTALL).group(0):
+        fixes.append("Enforced Noto Sans SC 900 on h1 (was Syne)")
+    else:
+        pass  # already correct
+
+    # ── 8. Nav dots: ensure Chinese titles ──────────────────────────────────
     en_titles = ['"Cover"', '"Match Report"', '"League Standing"',
                  '"Points Race"', '"Title Race"', '"Upcoming Fixtures"', '"Team News"']
     zh_titles = ['"封面"', '"本周战报"', '"积分榜"', '"积分追逐战"', '"积分竞争"', '"近期赛程"', '"球队动态"']
