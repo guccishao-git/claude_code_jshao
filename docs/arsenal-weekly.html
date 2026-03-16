@@ -1088,11 +1088,7 @@ section.chart-slide {
       <div class="injury-card">
         <div class="injury-name">本·怀特 🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
         <div class="injury-type">未知伤病</div>
-        <div class="injury-eta">已缺阵多场 · 艾蒂塔称
-I need to look up the latest Arsenal injury news to accurately complete the HTML with current information.
-Now I have enough current information to accurately complete the HTML. I'll continue exactly from where it was cut off:
-
-称"肌肉伤"· 回归时间不明</div>
+        <div class="injury-eta">已缺阵多场 · 称"肌肉伤" · 回归时间不明</div>
       </div>
       <div class="injury-card">
         <div class="injury-name">米克尔·梅里诺 🇪🇸</div>
@@ -1105,39 +1101,25 @@ Now I have enough current information to accurately complete the HTML. I'll cont
         <div class="injury-eta">已返回训练 · 欧冠主场存疑</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ── SUSPENSION NOTICE ── -->
-  <section class="section">
-    <h2 class="section-title">⚠️ 纪律风险</h2>
-    <p class="suspension-note">
-      马丁·苏比门迪 &amp; 克里斯蒂安·诺尔加德 —— 若本场吃到黄牌，将自动停赛欧冠八强首回合。
-    </p>
-  </section>
-
-  <!-- ── MATCH PREVIEW ── -->
-  <section class="section">
-    <h2 class="section-title">🏆 欧冠16强第二回合预览</h2>
-    <div class="match-preview">
-      <div class="match-teams">
-        <span class="team home">阿森纳</span>
-        <span class="vs">VS</span>
-        <span class="team away">勒沃库森</span>
-      </div>
-      <div class="match-meta">
-        📅 2026年3月17日（周二）· ⏰ 20:00 BST · 📍 酋长球场
-      </div>
-      <div class="match-agg">
-        第一回合结果：勒沃库森 1–1 阿森纳（点球追平）· 总比分持平
-      </div>
-    </div>
-  </section>
-
-  <!-- ── FOOTER ── -->
-  <footer class="footer">
-    <p>数据更新于 2026年3月16日 · 来源：Arsenal.com / Arseblog / Daily Cannon / Sports Mole</p>
-    <p>⚡ 伤病状态可能随时变化，请以官方公告为准</p>
-  </footer>
-
+<script>
+(function () {
+  var slides = Array.from(document.querySelectorAll('section.slide'));
+  var dots   = Array.from(document.querySelectorAll('#navDots .nav-dot'));
+  function goTo(i) { if (slides[i]) slides[i].scrollIntoView({ behavior: 'smooth' }); }
+  dots.forEach(function (d) { d.addEventListener('click', function () { goTo(parseInt(this.dataset.idx, 10)); }); });
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { var i = slides.indexOf(e.target); dots.forEach(function (d, j) { d.classList.toggle('active', i === j); }); } });
+  }, { threshold: 0.5 });
+  slides.forEach(function (s) { obs.observe(s); });
+  document.addEventListener('keydown', function (e) {
+    var cur = slides.findIndex(function (s) { return s.getBoundingClientRect().top > -10; });
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo(Math.min(cur + 1, slides.length - 1));
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo(Math.max(cur - 1, 0));
+  });
+})();
+</script>
 </body>
 </html>
