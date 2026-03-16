@@ -80,8 +80,8 @@ If a stat can only be found from one source, mark it "(unverified)".**
 
 Now generate a self-contained, full-screen scroll-snap HTML slide deck (7 slides) summarising
 the week in Arsenal. Use the **Stadium Lights theme** with the exact design spec below.
-**All text content must be in English with a professional, editorial tone. Output only the HTML — no markdown, no code fences.**
-**Arsenal's nickname is "the Gunners" — never use "the Red Army" (that refers to Liverpool).**
+**所有文字内容必须用中文，语气风趣幽默——像懂球的球迷在聊天，不是新闻通稿。适当使用足球黑话、轻度吐槽和搞笑评论。Output only the HTML — no markdown, no code fences.**
+**阿森纳的昵称是"枪手"，绝对不要写"红军"（那是利物浦的外号）。**
 
 **Design theme — Stadium Lights (preserve exactly):**
 
@@ -97,9 +97,9 @@ CSS variables:
 
 Fonts (load via Google Fonts):
   Syne 600–800 (display/headings)
-  Inter 300–700 (body text)
-  Oswald 400–700 (standalone stats/scores only — e.g. "3-1" score displays, labels, tags)
-  IMPORTANT: Never apply Oswald to running body text — use Inter for all paragraphs and descriptions.
+  Noto Sans SC 300–700 (Chinese body text — use for all Chinese paragraphs and descriptions)
+  Oswald 400–700 (standalone stats/scores only — e.g. "3-1" score displays, labels, tags, section labels)
+  IMPORTANT: Never apply Oswald to running Chinese body text — use Noto Sans SC for all Chinese paragraphs and descriptions.
 
 Chart.js (CDN): https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js
 
@@ -108,7 +108,7 @@ Layout:
   Each .slide = 100vw × 100dvh, scroll-snap-align: start
   CRITICAL — scroll container must be html ONLY:
     html { overflow-y: scroll; scroll-snap-type: y mandatory; background: var(--bg); }
-    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); }
+    body { font-family: 'Noto Sans SC', sans-serif; color: var(--text); background: var(--bg); }
   NEVER set overflow: hidden or height: 100% on body — doing so clips all slides beyond the first viewport, making only slide 1 visible.
   Never apply overflow-y: scroll or scroll-snap-type to body — doing so creates two scroll containers and breaks scrollIntoView() navigation.
 
@@ -144,13 +144,13 @@ Cards:
 Nav dots: fixed right side, active = var(--red) with pulsing red box-shadow animation (dotPulse 2s), inactive = var(--text-muted).
 MANDATORY: Place a <nav class="nav-dots" id="navDots"> element immediately after <body> with one <button class="nav-dot" data-idx="N"> per slide (N = 0-based index). First button gets class="nav-dot active". Example for 7 slides:
   <nav class="nav-dots" id="navDots">
-    <button class="nav-dot active" data-idx="0" title="Cover"></button>
-    <button class="nav-dot" data-idx="1" title="Match Report"></button>
-    <button class="nav-dot" data-idx="2" title="League Standing"></button>
-    <button class="nav-dot" data-idx="3" title="Points Race"></button>
-    <button class="nav-dot" data-idx="4" title="Title Race"></button>
-    <button class="nav-dot" data-idx="5" title="Upcoming Fixtures"></button>
-    <button class="nav-dot" data-idx="6" title="Team News"></button>
+    <button class="nav-dot active" data-idx="0" title="封面"></button>
+    <button class="nav-dot" data-idx="1" title="本周战报"></button>
+    <button class="nav-dot" data-idx="2" title="积分榜"></button>
+    <button class="nav-dot" data-idx="3" title="积分追逐战"></button>
+    <button class="nav-dot" data-idx="4" title="积分竞争"></button>
+    <button class="nav-dot" data-idx="5" title="近期赛程"></button>
+    <button class="nav-dot" data-idx="6" title="球队动态"></button>
   </nav>
 
 Nav JS: place a plain <script> block immediately before </body> (not in DOMContentLoaded). It must:
@@ -179,20 +179,21 @@ Example JS block:
 
 Animations: fadeUp reveal on slide content entry; beamSway on light beams; glowPulse on center-glow; dotPulse on active nav dot; crestFloat 5s ease-in-out infinite (translateY 0 → -10px → 0) on the cover crest
 
-**Slide structure (7 slides, all content in English with a professional, editorial tone):**
+**Slide structure (7 slides, all content in Chinese with witty football fan humor):**
 
-Slide 1 — Cover:
+Slide 1 — 封面 (Cover):
   Use a two-column layout (.cover-layout, flexbox, space-between):
 
   LEFT COLUMN (.cover-left):
-  - "ARSENAL WEEKLY" masthead (Oswald, uppercase, letter-spacing 0.35em, color var(--red),
+  - "阿森纳本周快报" masthead (Oswald, uppercase, letter-spacing 0.35em, color var(--red),
     with a 32px red line before and a fading red line after filling remaining width)
   - A punchy 3-line <h1> headline (Syne 800, font-size clamp(2rem,5vw,4.2rem), line-height 1.05)
-    distilling the week into 3 short lines — wrap the key stat/result in <em> styled color var(--red).
-    Use plain, clear English — avoid football jargon. Always use numerals not words (e.g. "3 Wins" not "Three Wins"). Example: "3 Wins.<br><em>7 Points</em><br>Ahead."
+    distilling the week into 3 short Chinese lines — wrap the key stat/result in <em> styled color var(--red).
+    Always use numerals not Chinese characters for numbers (e.g. "3连胜" not "三连胜"). Make it funny like a meme caption.
+    Example: "3胜.<br><em>领先7分</em><br>稳了？"
     Font size: clamp(2.8rem,7vw,6rem).
   - A short red→gold gradient divider bar (width clamp(40px,8vw,80px), height 3px)
-  - Current date (Oswald, uppercase, letter-spacing 0.2em, muted color)
+  - Current date in Chinese format (Oswald, uppercase, letter-spacing 0.2em, muted color)
 
   RIGHT COLUMN (.cover-right):
   - Arsenal crest <img> (use high-res: https://resources.premierleague.com/premierleague/badges/t3@x2.png), width clamp(160px,26vw,320px),
@@ -200,54 +201,58 @@ Slide 1 — Cover:
 
   DO NOT add any body text or paragraph description on the cover — keep it minimal and sharp.
 
-Slide 2 — Match Report:
+Slide 2 — 本周战报 (Match Report):
   Last 1–2 results — score, competition, key goalscorers, brief tactical note.
   Use large score display with Oswald font.
+  Add a funny one-liner reaction to each result in Chinese (e.g. "赢了！枪手再次证明自己是真的！" or "又平了？球迷心脏受不了。").
+  All labels, section headers, match info in Chinese.
 
-Slide 3 — League Standing:
+Slide 3 — 积分榜 (League Standing):
   PL table showing top 5 teams — Arsenal row highlighted with red background tint.
-  Columns: Pos, Club, P, W, D, L, GD, Pts
-  W/D/L form pills for last 5 (W=#22c55e, D=#f59e0b, L=#ef4444)
-  Points gap to 2nd noted below table.
+  Columns in Chinese: 排名, 球队, 赛, 胜, 平, 负, 净, 积分
+  W/D/L form pills for last 5 (W=#22c55e, D=#f59e0b, L=#ef4444) — label as 胜/平/负
+  Points gap to 2nd noted below table with a cheeky Chinese comment.
 
-Slide 4 — Points Race:
+Slide 4 — 积分追逐战 (Points Race):
   Chart.js line chart using data from step ⑦, two datasets:
   - Arsenal: borderColor #EF0107, backgroundColor rgba(239,1,7,0.1), fill true
-  - Chaser (current 2nd-place team name): borderColor #D4AF37, backgroundColor transparent, fill false, borderDash [6,3]
+  - 追赶者 (current 2nd-place team name in Chinese if known, else English): borderColor #D4AF37, backgroundColor transparent, fill false, borderDash [6,3]
   Both lines: borderWidth 2.5, pointRadius 3, pointHoverRadius 6, pointBackgroundColor matching borderColor, tension 0.3
   X-axis: gameweek labels (GW1, GW2…). Y-axis: cumulative points, position "right".
   Chart layout must NOT overflow the slide — see Chart.js layout spec below.
-  Points gap shown as a styled <p> tag below the legend, not inside canvas.
+  Points gap shown as a styled <p> tag below the legend in Chinese, not inside canvas.
 
-Slide 5 — Title Race:
+Slide 5 — 积分竞争 (Title Race):
   Current 2nd-place team spotlight — their last 3 results with scores,
   next 2–3 fixtures with difficulty colour (green=easy/amber=medium/red=hard),
-  points gap, one-line threat verdict in English.
+  points gap, one-line threat verdict in Chinese. Roast them a little if they're struggling.
+  All section labels, fixture info, and commentary in Chinese.
   Font rules (Stadium Lights theme — enforce exactly):
-  - Section labels like "LAST 3 RESULTS" and "CITY'S UPCOMING FIXTURES": font-family:'Oswald',sans-serif (NOT Syne)
-  - Difficulty spans (● Easy / ● Hard / ● Medium): add font-family:'Oswald',sans-serif inline
-  - Short disclaimer notes (e.g. "UCL opponents unverified"): font-family:'Oswald',sans-serif
-  - Standalone stats/scores (e.g. "−7 pts"): inherits Oswald from parent <p>; do NOT add redundant inner font-family
-  - Running verdict text: Inter (default body) is fine
+  - Section labels like "近3场战绩" and "接下来的赛程": font-family:'Oswald',sans-serif (NOT Syne)
+  - Difficulty spans (● 轻松 / ● 困难 / ● 中等): add font-family:'Oswald',sans-serif inline
+  - Short disclaimer notes: font-family:'Oswald',sans-serif
+  - Standalone stats/scores (e.g. "−7 分"): inherits Oswald from parent <p>; do NOT add redundant inner font-family
+  - Running verdict text: Noto Sans SC (default body) is fine
 
-Slide 6 — Upcoming Fixtures:
+Slide 6 — 近期赛程 (Upcoming Fixtures):
   Next 2–3 Arsenal fixtures — opponent, date, competition,
   difficulty stars (★☆☆–★★★), what's at stake.
+  All in Chinese with dramatic flair — hype up the big matches, mock the easy ones.
 
-Slide 7 — Team News & Hot Take:
-  Top half: injury/suspension cards (.injury-grid).
+Slide 7 — 球队动态与热评 (Team News & Hot Take):
+  Top half: injury/suspension cards (.injury-grid) with sympathetic or sarcastic Chinese commentary.
 
   Bottom half: Hot Take section (.hot-take-section) with THREE components:
 
   1. .hot-take-main — a bold italic quote in Syne 700, font-size clamp(1rem,2vw,1.35rem),
      left red border (4px solid var(--red)), gradient background. One punchy opinionated
-     sentence about Arsenal's week or title chances — make it sharp and confident.
+     sentence in Chinese about Arsenal's week or title chances — make it sharp, funny, and confident.
 
   2. .hot-take-pills — two side-by-side cards (.hot-take-pill), each with:
-     - A .hot-take-pill-label (Oswald, gold, uppercase) naming the topic (e.g. "Title Race", "Key Battle", "Concern")
-     - A short 1-2 sentence take in Inter, muted text
+     - A .hot-take-pill-label (Oswald, gold, uppercase) naming the topic in Chinese (e.g. "冠军争夺", "关键对决", "隐忧")
+     - A short 1-2 sentence take in Noto Sans SC, muted text, in Chinese
 
-  Be opinionated and specific — reference actual players, opponents, and stats from the week.
+  Be opinionated and specific — reference actual players, opponents, and stats from the week. Be funny and theatrical.
 
 **Chart.js layout & styling rules (apply to the chart slide):**
 
@@ -264,17 +269,17 @@ Chart.js config (both charts):
 - responsive:true, maintainAspectRatio:false (required for height-constrained wrapper)
 - animation: duration 800, easing "easeOutQuart"
 - plugins.legend.display:false — use a custom HTML legend instead
-- Tooltip: bg rgba(8,11,16,0.95), border rgba(239,1,7,0.4) 1px, title/body color #f0ede8, cornerRadius 6, titleFont Oswald 13px, bodyFont Inter 12px
+- Tooltip: bg rgba(8,11,16,0.95), border rgba(239,1,7,0.4) 1px, title/body color #f0ede8, cornerRadius 6, titleFont Oswald 13px, bodyFont 'Noto Sans SC' 12px
 - Both axes: grid.color rgba(255,255,255,0.05), grid.drawBorder false, border.display false, ticks.color rgba(240,237,232,0.5), ticks.font Oswald 11px, ticks.maxTicksLimit 10
 
-Custom HTML legend: a flex row below the canvas-wrap with 10px coloured dots (border-radius 50%) and Inter 0.75rem labels in rgba(240,237,232,0.7). For reference-line entries use a 16×2px rectangle dot instead of a circle.
+Custom HTML legend: a flex row below the canvas-wrap with 10px coloured dots (border-radius 50%) and 'Noto Sans SC' 0.75rem labels in rgba(240,237,232,0.7). For reference-line entries use a 16×2px rectangle dot instead of a circle.
 
 Slide 4 annotation: one line below legend — Oswald 0.8rem rgba(240,237,232,0.5) — showing "▲ AHEAD BY X PTS" (red) or "▼ BEHIND BY X PTS" (gold).
 
 **Important:**
 - The output must be a single complete HTML document starting with <!DOCTYPE html> and ending with </html>
 - No markdown, no code fences, no commentary — raw HTML only
-- All slide content in English with a professional, editorial tone
+- All slide content in Chinese with witty football fan humor — casual, funny, and opinionated
 - Embed everything inline (no external CSS files, no external JS files except Google Fonts CDN and Chart.js CDN)
 - Load Chart.js from: https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js
 - IMPORTANT: Initialise each chart with an inline <script> tag placed IMMEDIATELY after that slide's closing </section> tag — NOT in a DOMContentLoaded block at the end of the document. This ensures the chart JS is output early and survives any token truncation.

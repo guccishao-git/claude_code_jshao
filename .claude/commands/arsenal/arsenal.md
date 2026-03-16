@@ -96,7 +96,7 @@ Full write-up with the following sections:
 
 Each story 4-5 sentences. Use bullet points. TL;DR one-liner at the very top. Highlight action items or concerns with ⚠️. After saving, confirm the file path in chat.
 
-Last step: Present in Chinese with a sense of professionalism.
+Last step: Present in Chinese with a sense of humor — casual, witty, and entertaining. Use football slang, light sarcasm, and funny commentary where appropriate. Think: knowledgeable fan chatting with mates, not a press release.
 
 ---
 
@@ -147,11 +147,15 @@ Generate a self-contained, full-screen scroll-snap HTML slide deck summarising t
 
 | # | Title | Content |
 |---|-------|---------|
-| 1 | 封面 (Cover) | Arsenal crest, "阿森纳本周快报", date in Chinese, one-line TL;DR in Chinese |
-| 2 | 本周战报 (Match Results) | Last 1-2 results — score, competition, key goalscorers, brief tactical note. Use large score display with Oswald font. |
-| 3 | 积分榜 (League Standing) | PL table showing top 5 teams — Arsenal row highlighted with red background tint. Columns: 排名, 球队, 赛, 胜, 平, 负, 净, 积分. W/D/L form pills for last 5 (W=`#22c55e`, D=`#f59e0b`, L=`#ef4444`). Points gap to 2nd noted. |
-| 4 | 积分竞争 (Title Race Rival) | Current 2nd-place team spotlight — their last 3 results, next 2-3 fixtures with difficulty colour (green/amber/red), points gap, one-line threat verdict in Chinese |
-| 5 | 近期赛程 (Upcoming Fixtures) | Next 2-3 Arsenal fixtures — opponent, date, competition, difficulty stars (★☆☆–★★★), what's at stake. In Chinese. |
-| 6 | 球队动态与总结 (Team News & Hot Take) | Injury/suspension bullet cards, then a bold Hot Take paragraph on Arsenal's title chances. All in Chinese. |
+All slide text must be in **Chinese with a sense of humor** — think witty football fan banter, not formal journalism. Use fun metaphors, light sarcasm, punchy punchlines, and comedic takes where appropriate. Make it entertaining to read.
+
+| # | Title | Content |
+|---|-------|---------|
+| 1 | 封面 (Cover) | Arsenal crest, "阿森纳本周快报", date in Chinese, one-line TL;DR in Chinese — make it funny, like a meme caption |
+| 2 | 本周战报 (Match Results) | Last 1-2 results — score, competition, key goalscorers, brief tactical note with a humorous spin. Use large score display with Oswald font. Add a funny one-liner reaction to each result (e.g. "赢了！枪手又一次证明了自己。" or "又平了？球迷心脏不行了。") |
+| 3 | 积分榜 (League Standing) | PL table showing top 5 teams — Arsenal row highlighted with red background tint. Columns: 排名, 球队, 赛, 胜, 平, 负, 净, 积分. W/D/L form pills for last 5 (W=`#22c55e`, D=`#f59e0b`, L=`#ef4444`). Points gap noted with a cheeky comment. |
+| 4 | 积分竞争 (Title Race Rival) | Current 2nd-place team spotlight — their last 3 results, next 2-3 fixtures with difficulty colour (green/amber/red), points gap, one-line threat verdict with humor (roast them a little if they're struggling) |
+| 5 | 近期赛程 (Upcoming Fixtures) | Next 2-3 Arsenal fixtures — opponent, date, competition, difficulty stars (★☆☆–★★★), what's at stake. In Chinese with dramatic flair — hype up the big matches, mock the easy ones. |
+| 6 | 球队动态与总结 (Team News & Hot Take) | Injury/suspension bullet cards with sympathetic or sarcastic commentary, then a bold Hot Take paragraph on Arsenal's title chances — be opinionated, funny, and a little theatrical. All in Chinese. |
 
 After saving, run: `open ~/Documents/ArsenalWeekly/arsenal-<YYYY-MM-DD>-slides.html` to auto-open it in the browser. Confirm the file path in chat.
