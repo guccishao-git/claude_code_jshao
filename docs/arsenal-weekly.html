@@ -428,13 +428,17 @@ section.chart-slide {
 .fixture-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
 .fixture-item {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: clamp(8px,1.5vw,20px);
+  gap: clamp(6px,1vw,12px);
   padding: clamp(10px,1.5vw,16px);
   background: rgba(239,1,7,0.06);
   border: 1px solid var(--red-dim);
   border-radius: 8px;
   box-shadow: 0 4px 24px rgba(239,1,7,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.fixture-item > div[style*="flex:1"] {
+  min-width: 0;
 }
 .fixture-comp {
   font-family: 'Oswald', sans-serif;
@@ -443,6 +447,7 @@ section.chart-slide {
   letter-spacing: 0.15em;
   color: var(--gold);
   min-width: 60px;
+  flex-shrink: 0;
 }
 .fixture-vs { font-family: 'Syne', sans-serif; font-weight: 700; font-size: clamp(0.9rem,1.8vw,1.2rem); flex:1; }
 .fixture-date { font-family: 'Oswald', sans-serif; font-size: 0.75rem; color: var(--text-muted); min-width: 80px; text-align: right; }
