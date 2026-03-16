@@ -465,6 +465,136 @@ def extract_html(raw: str) -> str:
     sys.exit(1)
 
 
+# ── Post-generation validation & auto-fix ──────────────────────────────────────
+
+NAV_JS = """\
+<script>
+(function () {
+  var slides = Array.from(document.querySelectorAll('section.slide'));
+  var dots   = Array.from(document.querySelectorAll('#navDots .nav-dot'));
+  function goTo(i) { if (slides[i]) slides[i].scrollIntoView({ behavior: 'smooth' }); }
+  dots.forEach(function (d) { d.addEventListener('click', function () { goTo(parseInt(this.dataset.idx, 10)); }); });
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { var i = slides.indexOf(e.target); dots.forEach(function (d, j) { d.classList.toggle('active', i === j); }); } });
+  }, { threshold: 0.5 });
+  slides.forEach(function (s) { obs.observe(s); });
+  document.addEventListener('keydown', function (e) {
+    var cur = slides.findIndex(function (s) { return s.getBoundingClientRect().top > -10; });
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo(Math.min(cur + 1, slides.length - 1));
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo(Math.max(cur - 1, 0));
+  });
+})();
+</script>"""
+
+HOT_TAKE_FALLBACK = """\
+    <div class="hot-take-section" style="margin-top:14px;">
+      <div class="hot-take-main" style="border-left:4px solid var(--red);padding:12px 16px;background:rgba(239,1,7,0.06);border-radius:4px;margin-bottom:12px;">
+        <p style="font-family:'Syne',sans-serif;font-weight:700;font-style:italic;font-size:clamp(1rem,2vw,1.35rem);color:var(--text);margin:0;">没有最顽强，只有更顽强——这就是阿尔特塔的枪手。</p>
+      </div>
+      <div class="hot-take-pills" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="card hot-take-pill" style="padding:12px;">
+          <span class="hot-take-pill-label" style="font-family:'Oswald',sans-serif;color:var(--gold);text-transform:uppercase;font-size:0.7rem;letter-spacing:0.15em;display:block;margin-bottom:6px;">冠军争夺</span>
+          <p style="font-family:'Noto Sans SC',sans-serif;font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">积分领先，赛程在手——枪手只要稳住，奖杯就是囊中之物。</p>
+        </div>
+        <div class="card hot-take-pill" style="padding:12px;">
+          <span class="hot-take-pill-label" style="font-family:'Oswald',sans-serif;color:var(--gold);text-transform:uppercase;font-size:0.7rem;letter-spacing:0.15em;display:block;margin-bottom:6px;">关键隐忧</span>
+          <p style="font-family:'Noto Sans SC',sans-serif;font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">伤病室人满为患，阿尔特塔的轮换考验正式开始。</p>
+        </div>
+      </div>
+    </div>"""
+
+
+def validate_and_fix(html: str) -> str:
+    """
+    Post-generation checks and auto-fixes for recurring issues.
+    Runs after sanitise_html(). Prints a report of every fix applied.
+    """
+    fixes: list[str] = []
+
+    # ── 1. Font: ensure Noto Sans SC is loaded ──────────────────────────────
+    if "Noto+Sans+SC" not in html and "Noto Sans SC" not in html:
+        html = html.replace(
+            "family=Syne:",
+            "family=Noto+Sans+SC:wght@300;400;500;700&family=Syne:",
+        )
+        fixes.append("Added missing Noto Sans SC to Google Fonts link")
+
+    # ── 2. Font: ensure body uses Noto Sans SC, not Inter ───────────────────
+    if "font-family: 'Inter', sans-serif" in html or 'font-family:"Inter"' in html:
+        html = html.replace("font-family: 'Inter', sans-serif", "font-family: 'Noto Sans SC', sans-serif")
+        html = html.replace('font-family:"Inter"', 'font-family:"Noto Sans SC"')
+        fixes.append("Replaced Inter body font with Noto Sans SC")
+
+    # ── 3. Fixture card layout: flex-wrap on .fixture-item ──────────────────
+    # If .fixture-item CSS exists but lacks flex-wrap:wrap, inject it
+    fi_match = re.search(r'(\.fixture-item\s*\{[^}]*?\})', html, re.DOTALL)
+    if fi_match:
+        fi_css = fi_match.group(1)
+        if "flex-wrap" not in fi_css:
+            fixed_css = fi_css.replace("display: flex", "display: flex;\n  flex-wrap: wrap")
+            html = html.replace(fi_css, fixed_css)
+            fixes.append("Added flex-wrap:wrap to .fixture-item")
+        if "flex-shrink: 0" not in html and ".fixture-comp" in html:
+            # Inject flex-shrink into .fixture-comp
+            html = re.sub(
+                r'(\.fixture-comp\s*\{)',
+                r'\1\n  flex-shrink: 0;',
+                html
+            )
+            fixes.append("Added flex-shrink:0 to .fixture-comp")
+
+    # ── 4. Slide 7: ensure hot-take section is present ──────────────────────
+    slides = re.findall(r'<section[^>]+class="[^"]*slide[^"]*"', html)
+    n_slides = len(slides)
+    if n_slides >= 7 and "hot-take" not in html:
+        # Find the last slide's closing </div>\n</section> and insert hot-take before it
+        # Strategy: find the last </section> in the document
+        last_section_end = html.rfind("</section>")
+        if last_section_end != -1:
+            # Walk backwards to find the last </div> before </section>
+            insert_pos = html.rfind("</div>", 0, last_section_end)
+            if insert_pos != -1:
+                html = html[:insert_pos] + HOT_TAKE_FALLBACK + "\n" + html[insert_pos:]
+                fixes.append("Injected missing hot-take section into slide 7")
+
+    # ── 5. Nav JS: ensure IntersectionObserver block is present ─────────────
+    if "IntersectionObserver" not in html:
+        html = html.replace("</body>", NAV_JS + "\n</body>")
+        fixes.append("Injected missing nav JS (IntersectionObserver)")
+
+    # ── 6. Slide structure: remove junk appended after last </section> ───────
+    # Anything between the last </section> and </body> that is NOT a <script> block
+    last_sec = html.rfind("</section>")
+    body_end = html.rfind("</body>")
+    if last_sec != -1 and body_end != -1 and last_sec < body_end:
+        between = html[last_sec + len("</section>"):body_end]
+        # Keep only <script>…</script> blocks in that gap
+        scripts = re.findall(r'<script[\s\S]*?</script>', between, re.IGNORECASE)
+        clean_between = "\n\n" + "\n".join(scripts) + "\n" if scripts else "\n\n"
+        if clean_between.strip() != between.strip():
+            html = html[:last_sec + len("</section>")] + clean_between + "</body>" + html[body_end + len("</body>"):]
+            fixes.append("Removed junk content appended after last </section>")
+
+    # ── 7. Nav dots: ensure Chinese titles ──────────────────────────────────
+    en_titles = ['"Cover"', '"Match Report"', '"League Standing"',
+                 '"Points Race"', '"Title Race"', '"Upcoming Fixtures"', '"Team News"']
+    zh_titles = ['"封面"', '"本周战报"', '"积分榜"', '"积分追逐战"', '"积分竞争"', '"近期赛程"', '"球队动态"']
+    for en, zh in zip(en_titles, zh_titles):
+        if en in html:
+            html = html.replace(en, zh)
+            fixes.append(f"Fixed nav dot title {en} → {zh}")
+
+    # ── Report ───────────────────────────────────────────────────────────────
+    if fixes:
+        print(f"  [validate] Applied {len(fixes)} fix(es):")
+        for f in fixes:
+            print(f"    • {f}")
+    else:
+        print("  [validate] All checks passed — no fixes needed.")
+
+    return html
+
+
 # ── Main ───────────────────────────────────────────────────────────────────────
 
 def main():
@@ -475,6 +605,7 @@ def main():
     raw = generate_slides()
     html = extract_html(raw)
     html = sanitise_html(html)
+    html = validate_and_fix(html)
 
     os.makedirs(os.path.dirname(PAGES_FILE), exist_ok=True)
 
