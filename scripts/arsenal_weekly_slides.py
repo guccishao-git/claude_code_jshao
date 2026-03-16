@@ -238,21 +238,34 @@ Slide 6 — 近期赛程 (Upcoming Fixtures):
   Next 2–3 Arsenal fixtures — opponent, date, competition,
   difficulty stars (★☆☆–★★★), what's at stake.
   All in Chinese with dramatic flair — hype up the big matches, mock the easy ones.
+  FIXTURE CARD LAYOUT (critical — prevents text wrapping one character per line):
+  Each .fixture-item must use: display:flex; flex-wrap:wrap; align-items:center; gap: clamp(6px,1vw,12px);
+  The competition label (.fixture-comp): flex-shrink:0; min-width:60px;
+  The middle info column (flex:1): also add min-width:0 to prevent flex shrink collapse.
+  The stakes/description row: flex-basis:100% so it wraps to its own line below.
 
 Slide 7 — 球队动态与热评 (Team News & Hot Take):
   Top half: injury/suspension cards (.injury-grid) with sympathetic or sarcastic Chinese commentary.
 
-  Bottom half: Hot Take section (.hot-take-section) with THREE components:
+  Bottom half: Hot Take section (.hot-take-section) — THIS SECTION IS MANDATORY, never omit it.
+  It must contain THREE components in this exact order:
 
   1. .hot-take-main — a bold italic quote in Syne 700, font-size clamp(1rem,2vw,1.35rem),
      left red border (4px solid var(--red)), gradient background. One punchy opinionated
      sentence in Chinese about Arsenal's week or title chances — make it sharp, funny, and confident.
 
-  2. .hot-take-pills — two side-by-side cards (.hot-take-pill), each with:
+  2. .hot-take-pills — two or three side-by-side cards (.hot-take-pill), each with:
      - A .hot-take-pill-label (Oswald, gold, uppercase) naming the topic in Chinese (e.g. "冠军争夺", "关键对决", "隐忧")
      - A short 1-2 sentence take in Noto Sans SC, muted text, in Chinese
 
   Be opinionated and specific — reference actual players, opponents, and stats from the week. Be funny and theatrical.
+
+  CLOSING STRUCTURE FOR SLIDE 7 (must follow this exactly):
+    </div>  ← closes .hot-take-section
+  </div>  ← closes .slide-content (or equivalent wrapper div)
+</section>  ← closes the slide
+  Then immediately the nav JS <script> block, then </body></html>.
+  DO NOT add any extra <section>, <footer>, or <div class="container"> after the hot-take-section.
 
 **Chart.js layout & styling rules (apply to the chart slide):**
 
@@ -279,7 +292,10 @@ Slide 4 annotation: one line below legend — Oswald 0.8rem rgba(240,237,232,0.5
 **Important:**
 - The output must be a single complete HTML document starting with <!DOCTYPE html> and ending with </html>
 - No markdown, no code fences, no commentary — raw HTML only
+- NEVER output any reasoning, search notes, or status messages inside the HTML — if you need to search mid-generation, do it silently. Any stray text inside the HTML will corrupt the page.
 - All slide content in Chinese with witty football fan humor — casual, funny, and opinionated
+- Slide 7 MUST include the full hot-take section (.hot-take-main + .hot-take-pills) — do not truncate or omit it
+- After slide 7's </section>, output ONLY the nav JS block then </body></html> — no extra sections, footers, or wrappers
 - Embed everything inline (no external CSS files, no external JS files except Google Fonts CDN and Chart.js CDN)
 - Load Chart.js from: https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js
 - IMPORTANT: Initialise each chart with an inline <script> tag placed IMMEDIATELY after that slide's closing </section> tag — NOT in a DOMContentLoaded block at the end of the document. This ensures the chart JS is output early and survives any token truncation.
@@ -391,6 +407,40 @@ def generate_slides() -> str:
 
 # ── HTML extraction ────────────────────────────────────────────────────────────
 
+def sanitise_html(html: str) -> str:
+    """Remove any leaked model reasoning text from inside the HTML."""
+    # Pattern: text node content that looks like model commentary (English sentences
+    # appearing between HTML tags mid-document, not inside a <script>/<style> block)
+    # Strategy: remove lines that are pure prose English outside tag context
+    lines = html.splitlines()
+    cleaned = []
+    in_script_or_style = False
+    for line in lines:
+        stripped = line.strip()
+        # Track script/style blocks (skip sanitisation inside them)
+        if re.match(r'<(script|style)[\s>]', stripped, re.IGNORECASE):
+            in_script_or_style = True
+        if re.match(r'</(script|style)>', stripped, re.IGNORECASE):
+            in_script_or_style = False
+            cleaned.append(line)
+            continue
+        if in_script_or_style:
+            cleaned.append(line)
+            continue
+        # Drop lines that are plain English prose with no HTML tags
+        # (likely leaked model reasoning)
+        if (stripped
+                and not stripped.startswith('<')
+                and not stripped.startswith('//')
+                and re.search(r'[A-Za-z]{6,}', stripped)
+                and not re.search(r'[^\x00-\x7F]', stripped)  # no CJK = suspicious
+                and len(stripped) > 20):
+            print(f"  [sanitise] Removed leaked text: {stripped[:80]!r}", file=sys.stderr)
+            continue
+        cleaned.append(line)
+    return "\n".join(cleaned)
+
+
 def extract_html(raw: str) -> str:
     """Extract <!DOCTYPE html>…</html> block from the response."""
     # Strip markdown code fences if Claude wrapped it anyway
@@ -424,6 +474,7 @@ def main():
 
     raw = generate_slides()
     html = extract_html(raw)
+    html = sanitise_html(html)
 
     os.makedirs(os.path.dirname(PAGES_FILE), exist_ok=True)
 
