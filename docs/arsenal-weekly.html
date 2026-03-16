@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arsenal Weekly — 9 March 2026</title>
+<title>阿森纳本周快报 — 2026年3月9日</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
 :root {
@@ -29,7 +29,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans SC', sans-serif;
   color: var(--text);
   background: var(--bg);
 }
@@ -390,7 +390,7 @@ em { color: var(--red); font-style: normal; }
   font-size: clamp(0.72rem,1.1vw,0.88rem);
   color: var(--text-muted);
   line-height: 1.6;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans SC', sans-serif;
   font-weight: 300;
   padding: clamp(8px,1.5vh,14px) clamp(12px,2vw,20px);
   border-left: 3px solid var(--red-dim);
@@ -515,7 +515,7 @@ em { color: var(--red); font-style: normal; }
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.75rem;
   color: rgba(240,237,232,0.7);
 }
@@ -586,7 +586,7 @@ em { color: var(--red); font-style: normal; }
   align-items: center;
   padding: 5px 0;
   border-bottom: 1px solid rgba(255,255,255,0.05);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans SC', sans-serif;
   font-size: clamp(0.68rem,0.95vw,0.82rem);
   color: var(--text);
 }
@@ -621,7 +621,7 @@ em { color: var(--red); font-style: normal; }
 .tr-stat span { color: var(--text); }
 
 .verdict {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans SC', sans-serif;
   font-size: clamp(0.7rem,1.05vw,0.88rem);
   color: var(--text-muted);
   line-height: 1.55;
@@ -682,7 +682,7 @@ em { color: var(--red); font-style: normal; }
 }
 
 .fix-stake {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans SC', sans-serif;
   font-size: clamp(0.62rem,0.9vw,0.78rem);
   color: var(--text-muted);
   font-style: italic;
@@ -732,7 +732,7 @@ em { color: var(--red); font-style: normal; }
 }
 
 .inj-return {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans SC', sans-serif;
   font-size: clamp(0.62rem,0.9vw,0.78rem);
   color: var(--text-muted);
   line-height: 1.4;
@@ -784,7 +784,7 @@ em { color: var(--red); font-style: normal; }
 
 .hot-take-pill p {
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans SC', sans-serif;
   font-size: clamp(0.65rem,0.95vw,0.8rem);
   color: var(--text-muted);
   line-height: 1.5;
@@ -806,13 +806,13 @@ em { color: var(--red); font-style: normal; }
 <body>
 
 <nav class="nav-dots" id="navDots">
-  <button class="nav-dot active" data-idx="0" title="Cover"></button>
-  <button class="nav-dot" data-idx="1" title="Match Report"></button>
-  <button class="nav-dot" data-idx="2" title="League Standing"></button>
-  <button class="nav-dot" data-idx="3" title="Points Race"></button>
-  <button class="nav-dot" data-idx="4" title="Title Race"></button>
-  <button class="nav-dot" data-idx="5" title="Upcoming Fixtures"></button>
-  <button class="nav-dot" data-idx="6" title="Team News"></button>
+  <button class="nav-dot active" data-idx="0" title="封面"></button>
+  <button class="nav-dot" data-idx="1" title="本周战报"></button>
+  <button class="nav-dot" data-idx="2" title="积分榜"></button>
+  <button class="nav-dot" data-idx="3" title="积分追逐战"></button>
+  <button class="nav-dot" data-idx="4" title="积分竞争"></button>
+  <button class="nav-dot" data-idx="5" title="近期赛程"></button>
+  <button class="nav-dot" data-idx="6" title="球队动态"></button>
 </nav>
 
 <!-- ══════════════════════════════════════════════
@@ -834,16 +834,16 @@ em { color: var(--red); font-style: normal; }
     <div class="cover-left">
       <div class="masthead fade-up d1">
         <div class="masthead-line-before"></div>
-        <span class="masthead-text">Arsenal Weekly</span>
+        <span class="masthead-text">阿森纳本周快报</span>
         <div class="masthead-line-after"></div>
       </div>
 
       <h1 class="main-title fade-up d2">
-        7 Points<br><em>Clear.</em><br>22 Wins Away.
+        领先7分<br><em>就差</em><br>8场冠军！
       </h1>
 
       <div class="cover-divider fade-up d3"></div>
-      <span class="cover-date fade-up d4">9 March 2026</span>
+      <span class="cover-date fade-up d4">2026年3月9日</span>
     </div>
 
     <div class="cover-right">
@@ -870,43 +870,43 @@ em { color: var(--red); font-style: normal; }
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="match-content">
-    <div class="tag fade-up d1">Match Report — Premier League · GW30</div>
-    <h2 class="slide-title fade-up d2">Saka's Strike Seals a Title Race Blockbuster Week</h2>
+    <div class="tag fade-up d1">本周战报 — 英超 · 第30轮</div>
+    <h2 class="slide-title fade-up d2">萨卡一剑封喉，枪手冠军路继续！</h2>
 
     <!-- Brighton Result -->
     <div class="fade-up d3" style="width:100%; margin-bottom: clamp(8px,1.5vh,16px);">
       <div style="text-align:center; margin-bottom:6px;">
-        <span class="tag" style="margin-bottom:4px;">Brighton &amp; Hove Albion vs Arsenal · 4 March 2026 · PL</span>
+        <span class="tag" style="margin-bottom:4px;">布莱顿 vs 阿森纳 · 2026年3月4日 · 英超</span>
       </div>
       <div class="score-block">
         <div>
-          <div class="score-team">Brighton</div>
-          <div class="score-separator">Home</div>
+          <div class="score-team">布莱顿</div>
+          <div class="score-separator">主场</div>
         </div>
         <div class="score-display">0 – 1</div>
         <div>
-          <div class="score-team">Arsenal</div>
-          <div class="score-separator">Away</div>
+          <div class="score-team">阿森纳</div>
+          <div class="score-separator">客场</div>
         </div>
       </div>
 
       <div class="events-grid">
         <div class="card event-card">
-          <p class="ev-label">⚽ Goalscorer</p>
-          <p class="ev-player">Bukayo Saka</p>
-          <p class="ev-detail">9' — Open play (deflected off Baleba)</p>
-          <p class="ev-detail">Saka's 300th appearance for the club</p>
+          <p class="ev-label">⚽ 进球者</p>
+          <p class="ev-player">萨卡 (Saka)</p>
+          <p class="ev-detail">第9分钟 — 阵地进攻（折射贝莱巴入网）</p>
+          <p class="ev-detail">萨卡效力俱乐部第300场出场纪念日</p>
         </div>
         <div class="card event-card">
-          <p class="ev-label">📊 Key Stats</p>
-          <p class="ev-detail">Possession: Brighton 59% – Arsenal 41%</p>
-          <p class="ev-detail">Shots: Brighton 11 – Arsenal 7</p>
-          <p class="ev-detail">Arsenal's 14th clean sheet in 30 PL games</p>
+          <p class="ev-label">📊 关键数据</p>
+          <p class="ev-detail">控球率：布莱顿 59% — 阿森纳 41%</p>
+          <p class="ev-detail">射门：布莱顿 11 — 阿森纳 7</p>
+          <p class="ev-detail">本赛季英超30场第14次零封，守门如铁</p>
         </div>
       </div>
 
       <div class="card tactical-note fade-up d4">
-        <strong style="color:var(--text); font-family:'Inter',sans-serif;">Tactical verdict:</strong> Arsenal, without the injured Saliba and Ødegaard, were outplayed in possession but showed champions' resolve — digging in, slowing the game down, and capitalising on a moment of fortune. A win is a win. With Man City dropping two points at home to Forest the same night, the gap widened to 7 points.
+        <strong style="color:var(--text); font-family:'Noto Sans SC',sans-serif;">战术点评：</strong> 没有萨利巴和厄德高上阵，布莱顿控球碾压阿森纳，但枪手展现了冠军的意志——顶住压力、拖慢节奏、抓住运气球。赢了就是赢了！同一夜曼城主场被诺丁汉森林逼平，积分差瞬间扩大到7分。曼城的礼物，阿森纳笑纳了。
       </div>
     </div>
   </div>
@@ -928,28 +928,28 @@ em { color: var(--red); font-style: normal; }
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="table-content">
-    <div class="tag fade-up d1">Premier League Standings — GW30</div>
-    <h2 class="slide-title fade-up d2">The View from the Top</h2>
+    <div class="tag fade-up d1">英超积分榜 — 第30轮</div>
+    <h2 class="slide-title fade-up d2">高处不胜寒，枪手俯瞰天下</h2>
 
     <div class="card fade-up d3" style="padding: clamp(8px,1.5vh,16px) clamp(10px,2vw,20px); overflow-x: auto;">
       <table class="pl-table">
         <thead>
           <tr>
-            <th>Pos</th>
-            <th>Club</th>
-            <th>P</th>
-            <th>W</th>
-            <th>D</th>
-            <th>L</th>
-            <th>GD</th>
-            <th>Pts</th>
-            <th>Form</th>
+            <th>排名</th>
+            <th>球队</th>
+            <th>赛</th>
+            <th>胜</th>
+            <th>平</th>
+            <th>负</th>
+            <th>净</th>
+            <th>积分</th>
+            <th>近况</th>
           </tr>
         </thead>
         <tbody>
           <tr class="arsenal-row">
             <td>1</td>
-            <td>Arsenal</td>
+            <td>阿森纳</td>
             <td>30</td>
             <td>20</td>
             <td>7</td>
@@ -958,17 +958,17 @@ em { color: var(--red); font-style: normal; }
             <td>67</td>
             <td>
               <div class="form-pills">
-                <div class="form-pill pill-d">D</div>
-                <div class="form-pill pill-w">W</div>
-                <div class="form-pill pill-w">W</div>
-                <div class="form-pill pill-w">W</div>
-                <div class="form-pill pill-w">W</div>
+                <div class="form-pill pill-d">平</div>
+                <div class="form-pill pill-w">胜</div>
+                <div class="form-pill pill-w">胜</div>
+                <div class="form-pill pill-w">胜</div>
+                <div class="form-pill pill-w">胜</div>
               </div>
             </td>
           </tr>
           <tr>
             <td>2</td>
-            <td>Man City</td>
+            <td>曼城</td>
             <td>29</td>
             <td>18</td>
             <td>6</td>
@@ -977,17 +977,17 @@ em { color: var(--red); font-style: normal; }
             <td>60</td>
             <td>
               <div class="form-pills">
-                <div class="form-pill pill-w">W</div>
-                <div class="form-pill pill-w">W</div>
-                <div class="form-pill pill-w">W</div>
-                <div class="form-pill pill-w">W</div>
-                <div class="form-pill pill-d">D</div>
+                <div class="form-pill pill-w">胜</div>
+                <div class="form-pill pill-w">胜</div>
+                <div class="form-pill pill-w">胜</div>
+                <div class="form-pill pill-w">胜</div>
+                <div class="form-pill pill-d">平</div>
               </div>
             </td>
           </tr>
           <tr>
             <td>3</td>
-            <td>Man United</td>
+            <td>曼联</td>
             <td>29</td>
             <td>14</td>
             <td>9</td>
@@ -996,17 +996,17 @@ em { color: var(--red); font-style: normal; }
             <td>51</td>
             <td>
               <div class="form-pills">
-                <div class="form-pill pill-d">D</div>
-                <div class="form-pill pill-w">W</div>
-                <div class="form-pill pill-w">W</div>
-                <div class="form-pill pill-l">L</div>
-                <div class="form-pill pill-w">W</div>
+                <div class="form-pill pill-d">平</div>
+                <div class="form-pill pill-w">胜</div>
+                <div class="form-pill pill-w">胜</div>
+                <div class="form-pill pill-l">负</div>
+                <div class="form-pill pill-w">胜</div>
               </div>
             </td>
           </tr>
           <tr>
             <td>4</td>
-            <td>Aston Villa</td>
+            <td>阿斯顿维拉</td>
             <td>29</td>
             <td>15</td>
             <td>6</td>
@@ -1015,17 +1015,17 @@ em { color: var(--red); font-style: normal; }
             <td>51</td>
             <td>
               <div class="form-pills">
-                <div class="form-pill pill-w">W</div>
-                <div class="form-pill pill-d">D</div>
-                <div class="form-pill pill-l">L</div>
-                <div class="form-pill pill-l">L</div>
-                <div class="form-pill pill-w">W</div>
+                <div class="form-pill pill-w">胜</div>
+                <div class="form-pill pill-d">平</div>
+                <div class="form-pill pill-l">负</div>
+                <div class="form-pill pill-l">负</div>
+                <div class="form-pill pill-w">胜</div>
               </div>
             </td>
           </tr>
           <tr>
             <td>5</td>
-            <td>Chelsea</td>
+            <td>切尔西</td>
             <td>29</td>
             <td>13</td>
             <td>9</td>
@@ -1034,11 +1034,11 @@ em { color: var(--red); font-style: normal; }
             <td>48</td>
             <td>
               <div class="form-pills">
-                <div class="form-pill pill-w">W</div>
-                <div class="form-pill pill-d">D</div>
-                <div class="form-pill pill-d">D</div>
-                <div class="form-pill pill-l">L</div>
-                <div class="form-pill pill-w">W</div>
+                <div class="form-pill pill-w">胜</div>
+                <div class="form-pill pill-d">平</div>
+                <div class="form-pill pill-d">平</div>
+                <div class="form-pill pill-l">负</div>
+                <div class="form-pill pill-w">胜</div>
               </div>
             </td>
           </tr>
@@ -1047,7 +1047,7 @@ em { color: var(--red); font-style: normal; }
     </div>
 
     <p class="table-gap-note fade-up d4">
-      ▲ Arsenal lead Man City by <em style="color:var(--red); font-style:normal; font-family:'Oswald',sans-serif;">7 points</em> (Man City have 1 game in hand)
+      ▲ 阿森纳领先曼城 <em style="color:var(--red); font-style:normal; font-family:'Oswald',sans-serif;">7分</em>（曼城多赛1场）
     </p>
   </div>
 </section>
@@ -1067,8 +1067,8 @@ em { color: var(--red); font-style: normal; }
   <img src="https://resources.premierleague.com/premierleague/badges/t3@x2.png"
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
-  <div class="tag chart-tag fade-up d1" style="position:relative; z-index:1;">Points Race — 2025/26 Premier League</div>
-  <h2 class="slide-title chart-title fade-up d2" style="position:relative; z-index:1;">Arsenal vs Manchester City</h2>
+  <div class="tag chart-tag fade-up d1" style="position:relative; z-index:1;">积分追逐战 — 2025/26 英超赛季</div>
+  <h2 class="slide-title chart-title fade-up d2" style="position:relative; z-index:1;">阿森纳 vs 曼城</h2>
 
   <div class="card chart-card fade-up d3" style="position:relative; z-index:1;">
     <div class="canvas-wrap">
@@ -1078,15 +1078,15 @@ em { color: var(--red); font-style: normal; }
     <div class="chart-legend">
       <div class="legend-item">
         <div class="legend-dot" style="background:#EF0107;"></div>
-        Arsenal
+        阿森纳
       </div>
       <div class="legend-item">
         <div class="legend-dash" style="background:#D4AF37;"></div>
-        Manchester City
+        曼城
       </div>
     </div>
 
-    <p class="chart-annotation ahead">▲ ARSENAL LEAD BY 7 PTS (Man City have 1 game in hand)</p>
+    <p class="chart-annotation ahead">▲ 阿森纳领先 7 分（曼城多赛1场）</p>
   </div>
 </section>
 
@@ -1204,58 +1204,58 @@ em { color: var(--red); font-style: normal; }
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="slide-inner">
-    <div class="tag fade-up d1">Title Race</div>
-    <h2 class="slide-title fade-up d2">Chasing from Second: Man City</h2>
+    <div class="tag fade-up d1">积分竞争</div>
+    <h2 class="slide-title fade-up d2">追赶者聚焦：曼城</h2>
 
     <div class="fade-up d3">
       <div class="tr-stats-row" style="margin-bottom: clamp(6px,1.2vh,12px);">
-        <span class="tr-stat">P: <span>29</span></span>
-        <span class="tr-stat">W: <span>18</span></span>
-        <span class="tr-stat">D: <span>6</span></span>
-        <span class="tr-stat">L: <span>5</span></span>
-        <span class="tr-stat">GD: <span>+32</span></span>
-        <span class="tr-stat">Pts: <span style="color:var(--gold);font-family:'Oswald',sans-serif;">60</span></span>
-        <span class="tr-stat" style="color:var(--red);">Gap: <span style="color:var(--red); font-family:'Oswald',sans-serif;">−7 pts</span></span>
+        <span class="tr-stat">赛: <span>29</span></span>
+        <span class="tr-stat">胜: <span>18</span></span>
+        <span class="tr-stat">平: <span>6</span></span>
+        <span class="tr-stat">负: <span>5</span></span>
+        <span class="tr-stat">G平: <span>+32</span></span>
+        <span class="tr-stat">积分: <span style="color:var(--gold);font-family:'Oswald',sans-serif;">60</span></span>
+        <span class="tr-stat" style="color:var(--red);">差距: <span style="color:var(--red); font-family:'Oswald',sans-serif;">−7 pts</span></span>
       </div>
     </div>
 
     <div class="title-race-grid fade-up d3">
       <div class="card tr-card">
-        <span class="tr-label" style="font-family:'Oswald',sans-serif;">Last 3 Results</span>
+        <span class="tr-label" style="font-family:'Oswald',sans-serif;">近3场战绩</span>
         <div class="tr-result">
-          <span>vs Newcastle United</span>
-          <span class="tr-score">2–1 W</span>
+          <span>vs 纽卡斯尔（主）</span>
+          <span class="tr-score">2–1 胜</span>
         </div>
         <div class="tr-result">
-          <span>vs Leeds United (A)</span>
-          <span class="tr-score">1–0 W</span>
+          <span>vs 利兹联（客）</span>
+          <span class="tr-score">1–0 胜</span>
         </div>
         <div class="tr-result">
-          <span>vs Nottm Forest</span>
-          <span class="tr-score">2–2 D</span>
+          <span>vs 诺丁汉森林（主）</span>
+          <span class="tr-score">2–2 平</span>
         </div>
       </div>
 
       <div class="card tr-card">
-        <span class="tr-label" style="font-family:'Oswald',sans-serif;">City's Upcoming Fixtures</span>
+        <span class="tr-label" style="font-family:'Oswald',sans-serif;">曼城近期赛程</span>
         <div class="tr-fixture">
-          <span>West Ham (A) — Mar 14</span>
-          <span class="diff-pill diff-medium" style="font-family:'Oswald',sans-serif;">● Medium</span>
+          <span>西汉姆（客）— 3月14日</span>
+          <span class="diff-pill diff-medium" style="font-family:'Oswald',sans-serif;">● 中等</span>
         </div>
         <div class="tr-fixture">
-          <span>Crystal Palace (H) — Mar 21</span>
-          <span class="diff-pill diff-easy" style="font-family:'Oswald',sans-serif;">● Easy</span>
+          <span>水晶宫（主）— 3月21日</span>
+          <span class="diff-pill diff-easy" style="font-family:'Oswald',sans-serif;">● 轻松</span>
         </div>
         <div class="tr-fixture">
-          <span>Arsenal (H) — Apr 19</span>
-          <span class="diff-pill diff-hard" style="font-family:'Oswald',sans-serif;">● Hard</span>
+          <span>阿森纳（主）— 4月19日</span>
+          <span class="diff-pill diff-hard" style="font-family:'Oswald',sans-serif;">● 困难</span>
         </div>
-        <p style="margin-top:6px; font-family:'Oswald',sans-serif; font-size:0.65rem; color:var(--text-muted);">Also in UCL R16 vs Real Madrid (Mar 11 / Mar 18)</p>
+        <p style="margin-top:6px; font-family:'Oswald',sans-serif; font-size:0.65rem; color:var(--text-muted);">另有欧冠16强 vs 皇马（3月11日 / 3月18日）</p>
       </div>
     </div>
 
     <div class="verdict fade-up d4">
-      City remain dangerous — Haaland leads the league with 22 PL goals and Guardiola's side have won 4 of their last 5 across all competitions. But dropping points at home to relegation-threatened Forest was a telling lapse. The 19 April showdown at the Etihad now looms as the decisive day.
+      曼城依然危险——哈兰德英超22球领跑，瓜迪奥拉的球队近5场赢了4场。但主场被保级队诺丁汉逼平，暴露了致命破绽。4月19日客场德比，将是本赛季最关键的一战。届时枪手若能赢下，冠军基本稳了！
     </div>
   </div>
 </section>
@@ -1276,39 +1276,39 @@ em { color: var(--red); font-style: normal; }
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="slide-inner">
-    <div class="tag fade-up d1">Upcoming Fixtures</div>
-    <h2 class="slide-title fade-up d2">What's Next for the Gunners</h2>
+    <div class="tag fade-up d1">近期赛程</div>
+    <h2 class="slide-title fade-up d2">接下来，枪手要打谁？</h2>
 
     <div class="fixtures-list fade-up d3">
 
       <div class="card fixture-row">
-        <div class="fix-comp">UCL R16 L1</div>
-        <div class="fix-opp">Bayer Leverkusen <span style="font-family:'Oswald',sans-serif; font-size:0.75rem; color:var(--text-muted);">(Away)</span></div>
+        <div class="fix-comp">欧冠16强 首腿</div>
+        <div class="fix-opp">Bayer Leverkusen <span style="font-family:'Oswald',sans-serif; font-size:0.75rem; color:var(--text-muted);">（客场）</span></div>
         <div class="fix-stars">★★☆</div>
-        <div class="fix-date">Wed 11 Mar · 17:45 UK</div>
-        <div class="fix-stake">First leg of UCL R16 — all to play for at BayArena</div>
+        <div class="fix-date">3月11日（周三）· 17:45 英国时间</div>
+        <div class="fix-stake">欧冠16强首腿——客战勒沃库森，全力一搏！</div>
       </div>
 
       <div class="card fixture-row">
-        <div class="fix-comp">Premier League</div>
-        <div class="fix-opp">Everton <span style="font-family:'Oswald',sans-serif; font-size:0.75rem; color:var(--text-muted);">(Home)</span></div>
+        <div class="fix-comp">英超</div>
+        <div class="fix-opp">Everton <span style="font-family:'Oswald',sans-serif; font-size:0.75rem; color:var(--text-muted);">（主场）</span></div>
         <div class="fix-stars">★☆☆</div>
-        <div class="fix-date">Sat 14 Mar · 17:30 UK</div>
-        <div class="fix-stake">GW31 — 3 points to extend lead before UCL 2nd leg</div>
+        <div class="fix-date">3月14日（周六）· 17:30 英国时间</div>
+        <div class="fix-stake">第31轮——欧冠次腿前再拿3分，扩大领先！</div>
       </div>
 
       <div class="card fixture-row">
-        <div class="fix-comp">UCL R16 L2</div>
-        <div class="fix-opp">Bayer Leverkusen <span style="font-family:'Oswald',sans-serif; font-size:0.75rem; color:var(--text-muted);">(Home)</span></div>
+        <div class="fix-comp">欧冠16强 次腿</div>
+        <div class="fix-opp">Bayer Leverkusen <span style="font-family:'Oswald',sans-serif; font-size:0.75rem; color:var(--text-muted);">（主场）</span></div>
         <div class="fix-stars">★★☆</div>
-        <div class="fix-date">Tue 17 Mar · 20:00 UK</div>
-        <div class="fix-stake">2nd leg at Emirates — quarter-final place at stake</div>
+        <div class="fix-date">3月17日（周二）· 20:00 英国时间</div>
+        <div class="fix-stake">主场次腿——晋级八强就在此一举！</div>
       </div>
 
     </div>
 
     <p class="fade-up d4" style="font-family:'Oswald',sans-serif; font-size:clamp(0.62rem,0.9vw,0.78rem); color:var(--text-muted); margin-top:clamp(6px,1vh,12px);">
-      Fixture dates confirmed via arsenal.com/fixtures. Carabao Cup Final vs Man City: Sun 22 Mar at Wembley.
+      赛程来源：arsenal.com/fixtures。联赛杯决赛 vs 曼城：3月22日（周日）温布利。
     </p>
   </div>
 </section>
@@ -1329,96 +1329,72 @@ em { color: var(--red); font-style: normal; }
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="team-news-content">
-    <div class="tag fade-up d1">Team News &amp; Hot Take</div>
-    <h2 class="slide-title fade-up d2">Injury Room &amp; Final Word</h2>
+    <div class="tag fade-up d1">球队动态与热评</div>
+    <h2 class="slide-title fade-up d2">伤病室 &amp; 最终点评</h2>
 
     <div class="injury-grid fade-up d3">
       <div class="card injury-card">
-        <div class="inj-name">William Saliba</div>
-        <div class="inj-type">Ankle Injury</div>
-        <div class="inj-return">Target return: Leverkusen (11 Mar) — appears minor</div>
+        <div class="inj-name">萨利巴</div>
+        <div class="inj-type">脚踝伤势</div>
+        <div class="inj-return">目标复出：欧冠勒沃库森（3月11日）——伤势较轻</div>
       </div>
       <div class="card injury-card">
-        <div class="inj-name">Martin Ødegaard</div>
-        <div class="inj-type">Knee Injury</div>
-        <div class="inj-return">Norway boss: "Crucial in April–May." Return: late March (unverified)</div>
+        <div class="inj-name">厄德高</div>
+        <div class="inj-type">膝盖伤势</div>
+        <div class="inj-return">挪威主帅：「四五月份他很关键」复出：三月底（未经证实）</div>
       </div>
       <div class="card injury-card">
-        <div class="inj-name">Ben White</div>
-        <div class="inj-type">Minor Knock</div>
-        <div class="inj-return">Return date: TBD — Arteta offered no timeline</div>
+        <div class="inj-name">本·怀特</div>
+        <div class="inj-type">轻微撞伤</div>
+        <div class="inj-return">复出时间：待定——阿尔特塔拒绝给出时间表</div>
       </div>
       <div class="card injury-card">
-        <div class="inj-name">Mikel Merino</div>
-        <div class="inj-type">Foot Surgery (Long-term)</div>
-        <div class="inj-return">Return: TBD — "extended period" out; season in doubt</div>
+        <div class="inj-name">梅里诺</div>
+        <div class="inj-type">脚部手术（长期缺阵）</div>
+        <div class="inj-return">复出：待定——较长时间无法出战，本赛季或就此报销</div>
       </div>
     </div>
 
     <div class="hot-take-section fade-up d4">
       <div class="hot-take-main">
-        <blockquote>"Winning ugly at Brighton and the Amex without your two best players is exactly what champions do — Arsenal's resilience is scarier than their football right now."</blockquote>
+        <blockquote>没有萨利巴和厄德高，硬是在布莱顿抢下3分——这就是冠军该干的事。现在的阿森纳，意志比踢法还可怕。</blockquote>
       </div>
 
       <div class="hot-take-pills">
         <div class="card hot-take-pill">
-          <span class="hot-take-pill-label">Title Race</span>
-          <p>Seven points with a game in hand eaten away — City's Forest slip was the gift Arsenal needed. If Saliba and Ødegaard return fit for the Leverkusen double-header, Arteta's squad enters the decisive month in perfect position.</p>
-        </div>
-        <div class
-I'll research the current Arsenal situation to ensure the content is accurate and up to date.
-="card hot-take-pill">
-          <span class="hot-take-pill-label">Champions League</span>
-          <p>The Leverkusen double-header — away on March 11, home on the 17th — is the defining European test of Arteta's tenure. Arsenal's Champions League stats dwarf Bayer's, but Hjulmand's side are battle-hardened and dangerous on the counter.</p>
+          <span class="hot-take-pill-label">冠军争夺</span>
+          <p>7分领先还有多赛1场——曼城送礼，阿森纳照单全收。若萨利巴和厄德高能赶上欧冠双线，枪手将以最佳状态迎来决胜时刻。</p>
         </div>
         <div class="card hot-take-pill">
-          <span class="hot-take-pill-label">Squad Depth</span>
-          <p>Merino is Arsenal's only long-term absentee right now, grinding through rehab after foot surgery. Rice and Ødegaard back in harness gives Arteta his engine room — and that changes everything about how this team plays.</p>
+          <span class="hot-take-pill-label">欧冠之战</span>
+          <p>3月11日客场、17日主场——勒沃库森双线是阿尔特塔执教生涯最重要的欧战考验。枪手数据全面压制对手，但勒沃库森反击致命，不可轻视！</p>
+        </div>
+        <div class="card hot-take-pill">
+          <span class="hot-take-pill-label">阵容深度</span>
+          <p>梅里诺是目前唯一长期伤缺，正在艰难康复中。莱斯和厄德高归位意味着枪手发动机全速运转——这支球队完全换了一张脸。</p>
         </div>
       </div>
     </div>
 
-    <!-- UPCOMING FIXTURES -->
-    <section class="fixtures-section fade-up d5">
-      <h2 class="section-title">Upcoming Fixtures</h2>
-      <div class="fixtures-grid">
+  </div>
+</section>
 
-        <div class="card fixture-card">
-          <div class="fixture-meta">
-            <span class="fixture-comp ucl">UEFA Champions League</span>
-            <span class="fixture-date">Wed 11 Mar 2026</span>
-          </div>
-          <div class="fixture-teams">
-            <span class="fixture-team away">Bayer Leverkusen</span>
-            <span class="fixture-vs">vs</span>
-            <span class="fixture-team home">Arsenal</span>
-          </div>
-          <div class="fixture-venue">BayArena — Round of 16, 1st Leg</div>
-        </div>
-
-        <div class="card fixture-card">
-          <div class="fixture-meta">
-            <span class="fixture-comp ucl">UEFA Champions League</span>
-            <span class="fixture-date">Tue 17 Mar 2026</span>
-          </div>
-          <div class="fixture-teams">
-            <span class="fixture-team home">Arsenal</span>
-            <span class="fixture-vs">vs</span>
-            <span class="fixture-team away">Bayer Leverkusen</span>
-          </div>
-          <div class="fixture-venue">Emirates Stadium — Round of 16, 2nd Leg</div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="site-footer fade-up d6">
-      <p class="footer-text">Arsenal FC Injury &amp; Form Tracker &mdash; Updated March 2026. For editorial purposes only. Stats sourced from UEFA, Premier League &amp; ESPN.</p>
-      <p class="footer-disclaimer">This page is an independent fan resource and is not affiliated with Arsenal Football Club or the Premier League.</p>
-    </footer>
-
-  </div><!-- /.container -->
-
+<script>
+(function () {
+  var slides = Array.from(document.querySelectorAll('section.slide'));
+  var dots   = Array.from(document.querySelectorAll('#navDots .nav-dot'));
+  function goTo(i) { if (slides[i]) slides[i].scrollIntoView({ behavior: 'smooth' }); }
+  dots.forEach(function (d) { d.addEventListener('click', function () { goTo(parseInt(this.dataset.idx, 10)); }); });
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { var i = slides.indexOf(e.target); dots.forEach(function (d, j) { d.classList.toggle('active', i === j); }); } });
+  }, { threshold: 0.5 });
+  slides.forEach(function (s) { obs.observe(s); });
+  document.addEventListener('keydown', function (e) {
+    var cur = slides.findIndex(function (s) { return s.getBoundingClientRect().top > -10; });
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo(Math.min(cur + 1, slides.length - 1));
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo(Math.max(cur - 1, 0));
+  });
+})();
+</script>
 </body>
 </html>
