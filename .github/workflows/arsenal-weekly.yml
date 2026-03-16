@@ -2,8 +2,9 @@ name: Arsenal Weekly Slides
 
 on:
   schedule:
-    - cron: '59 23 * * 0'   # Sunday 23:59 UTC = Monday ~12:59 NZDT (Auckland)
-  workflow_dispatch:          # Manual trigger for testing
+    # 周日 23:15 UTC = 周一 12:15 NZDT，避开整点和高峰
+    - cron: '15 23 * * 0'
+  workflow_dispatch:
 
 jobs:
   update:
@@ -13,6 +14,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # 避免 git pull push 冲突
+
+      - name: Check if it's Monday NZ time
+        run: |
+          python - <<EOF
+          import datetime
+          from zoneinfo import ZoneInfo
+          import sys
+
+          nz = datetime.datetime.now(ZoneInfo("Pacific/Auckland"))
+          if nz.weekday() != 0:  # 0 = Monday
+              print("Not Monday in NZ, skipping workflow.")
+              sys.exit(0)
+          print("It's Monday in NZ, continue.")
+          EOF
 
       - uses: actions/setup-python@v5
         with:
@@ -46,9 +63,7 @@ jobs:
           subject: "⚽ 阿森纳周报已更新 — $(date -u +%Y-%m-%d)"
           body: |
             阿森纳本周快报已自动更新！
-
             查看地址：https://guccishao-git.github.io/claude_code_jshao/arsenal-weekly.html
-
             本邮件由 GitHub Actions 自动发送。
           to: ${{ secrets.EMAIL_TO }}
           from: "Arsenal Weekly Bot <${{ secrets.EMAIL_USERNAME }}>"
