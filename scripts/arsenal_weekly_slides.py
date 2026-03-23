@@ -187,7 +187,7 @@ Slide 1 — 封面 (Cover):
   LEFT COLUMN (.cover-left):
   - "阿森纳本周快报" masthead (Oswald, uppercase, letter-spacing 0.35em, color var(--red),
     with a 32px red line before and a fading red line after filling remaining width)
-  - A punchy 3-line <h1> headline (Syne 800, font-size clamp(2.8rem,7vw,6rem), line-height 1.05)
+  - A punchy 3-line <h1> headline (font-size clamp(4rem,10vw,9rem), line-height 0.95)
     distilling the week into 3 short Chinese lines — wrap the key stat/result in <em> styled color var(--red).
     Always use numerals not Chinese characters for numbers (e.g. "3连胜" not "三连胜"). Make it funny like a meme caption.
     Example: "3胜.<br><em>领先7分</em><br>稳了？"
@@ -612,6 +612,56 @@ def validate_and_fix(html: str) -> str:
         if en in html:
             html = html.replace(en, zh)
             fixes.append(f"Fixed nav dot title {en} → {zh}")
+
+    # ── 9. Crest watermark: fix truncated img tags missing closing > ─────────
+    # Pattern: <img src="...t3@x2.png"\n  (line ends at quote, no closing >)
+    # Fix: append onerror + class + alt + > to complete the tag
+    CREST_URL = "https://resources.premierleague.com/premierleague/badges/t3@x2.png"
+    broken_pattern = re.compile(
+        r'(<img\s[^>]*?' + re.escape(CREST_URL) + r'")\s*\n(\s*<)',
+        re.DOTALL
+    )
+    def fix_broken_crest(m):
+        tag_open = m.group(1)
+        next_tag = m.group(2)
+        # If this is the cover crest (has class="cover-crest" or is a multiline img block), skip
+        if 'crest-watermark' in tag_open or 'cover-crest' in tag_open:
+            return m.group(0)
+        return tag_open + ' onerror="this.style.display=\'none\'" class="crest-watermark" alt="">\n' + next_tag
+    fixed_html = broken_pattern.sub(fix_broken_crest, html)
+    if fixed_html != html:
+        html = fixed_html
+        fixes.append("Fixed truncated crest watermark img tags (missing closing >)")
+
+    # ── 10. Cover crest: ensure src is present ───────────────────────────────
+    cover_crest_no_src = re.search(
+        r'<img\s+(?!.*src=)[^>]*class=["\']cover-crest["\'][^>]*>',
+        html, re.DOTALL
+    )
+    if cover_crest_no_src:
+        html = html.replace(
+            cover_crest_no_src.group(0),
+            cover_crest_no_src.group(0).replace(
+                'class="cover-crest"',
+                f'src="{CREST_URL}" onerror="this.style.display=\'none\'" class="cover-crest"'
+            ).replace(
+                "class='cover-crest'",
+                f"src='{CREST_URL}' onerror=\"this.style.display='none'\" class='cover-crest'"
+            )
+        )
+        fixes.append("Added missing src to cover crest img")
+
+    # ── 11. Cover h1 size: enforce clamp(4rem,10vw,9rem) line-height 0.95 ────
+    html = re.sub(
+        r"(h1\s*\{[^}]*?)font-size\s*:\s*clamp\([^)]+\)\s*;",
+        r"\1font-size: clamp(4rem,10vw,9rem);",
+        html
+    )
+    html = re.sub(
+        r"(h1\s*\{[^}]*?)line-height\s*:\s*[0-9.]+\s*;",
+        r"\1line-height: 0.95;",
+        html
+    )
 
     # ── Report ───────────────────────────────────────────────────────────────
     if fixes:
