@@ -489,6 +489,36 @@ NAV_JS = """\
 })();
 </script>"""
 
+SLIDE7_FALLBACK = """\
+<section class="slide" id="slide-6">
+  <div class="beams">
+    <div class="beam"></div><div class="beam"></div>
+    <div class="beam"></div><div class="beam"></div>
+  </div>
+  <div class="pitch-bg"></div>
+  <div class="center-glow"></div>
+  <img src="https://resources.premierleague.com/premierleague/badges/t3@x2.png" onerror="this.style.display='none'" class="crest-watermark" alt="">
+  <div class="slide-content" style="overflow-y:auto;max-height:calc(100dvh - 40px);">
+    <div class="tag">球队动态 · 热评</div>
+    <h2 style="font-family:'Syne',sans-serif;">本周<em>总结</em></h2>
+    <div class="hot-take-section" style="margin-top:14px;">
+      <div class="hot-take-main" style="border-left:4px solid var(--red);padding:12px 16px;background:rgba(239,1,7,0.06);border-radius:4px;margin-bottom:12px;">
+        <p style="font-family:'Syne',sans-serif;font-weight:700;font-style:italic;font-size:clamp(1rem,2vw,1.35rem);color:var(--text);margin:0;">没有最顽强，只有更顽强——这就是阿尔特塔的枪手。积分领先，赛程在握，冠军来了。</p>
+      </div>
+      <div class="hot-take-pills" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="hot-take-pill" style="background:rgba(239,1,7,0.06);border:1px solid rgba(239,1,7,0.28);border-radius:8px;padding:12px;">
+          <div class="hot-take-pill-label" style="font-family:'Oswald',sans-serif;color:#D4AF37;text-transform:uppercase;font-size:0.7rem;letter-spacing:0.15em;margin-bottom:5px;">冠军争夺</div>
+          <p style="font-family:'Noto Sans SC',sans-serif;font-size:0.78rem;color:rgba(240,237,232,0.6);margin:0;line-height:1.5;">积分领先，赛程在手——枪手只要稳住，奖杯就是囊中之物。</p>
+        </div>
+        <div class="hot-take-pill" style="background:rgba(239,1,7,0.06);border:1px solid rgba(239,1,7,0.28);border-radius:8px;padding:12px;">
+          <div class="hot-take-pill-label" style="font-family:'Oswald',sans-serif;color:#D4AF37;text-transform:uppercase;font-size:0.7rem;letter-spacing:0.15em;margin-bottom:5px;">关键隐忧</div>
+          <p style="font-family:'Noto Sans SC',sans-serif;font-size:0.78rem;color:rgba(240,237,232,0.6);margin:0;line-height:1.5;">伤病室人满为患，阿尔特塔的轮换考验正式开始。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>"""
+
 HOT_TAKE_FALLBACK = """\
     <div class="hot-take-section" style="margin-top:14px;">
       <div class="hot-take-main" style="border-left:4px solid var(--red);padding:12px 16px;background:rgba(239,1,7,0.06);border-radius:4px;margin-bottom:12px;">
@@ -546,15 +576,17 @@ def validate_and_fix(html: str) -> str:
             )
             fixes.append("Added flex-shrink:0 to .fixture-comp")
 
-    # ── 4. Slide 7: ensure hot-take section is present ──────────────────────
+    # ── 4. Slide 7: ensure it exists and has a hot-take section ─────────────
     slides = re.findall(r'<section[^>]+class="[^"]*slide[^"]*"', html)
     n_slides = len(slides)
-    if n_slides >= 7 and "hot-take" not in html:
-        # Find the last slide's closing </div>\n</section> and insert hot-take before it
-        # Strategy: find the last </section> in the document
+    if n_slides < 7:
+        # Entire slide 7 is missing — insert full fallback before </body>
+        html = html.replace("</body>", SLIDE7_FALLBACK + "\n</body>")
+        fixes.append(f"Injected missing Slide 7 (only {n_slides} slides found)")
+    elif "hot-take" not in html:
+        # Slide 7 exists but hot-take section was truncated — add it inside last slide
         last_section_end = html.rfind("</section>")
         if last_section_end != -1:
-            # Walk backwards to find the last </div> before </section>
             insert_pos = html.rfind("</div>", 0, last_section_end)
             if insert_pos != -1:
                 html = html[:insert_pos] + HOT_TAKE_FALLBACK + "\n" + html[insert_pos:]
