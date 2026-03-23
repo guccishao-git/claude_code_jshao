@@ -187,7 +187,7 @@ Slide 1 — 封面 (Cover):
   LEFT COLUMN (.cover-left):
   - "阿森纳本周快报" masthead (Oswald, uppercase, letter-spacing 0.35em, color var(--red),
     with a 32px red line before and a fading red line after filling remaining width)
-  - A punchy 3-line <h1> headline (font-size clamp(4rem,10vw,9rem), line-height 0.95)
+  - A punchy 3-line <h1> headline (font-size clamp(2.8rem,5.5vw,5rem), line-height 0.95)
     distilling the week into 3 short Chinese lines — wrap the key stat/result in <em> styled color var(--red).
     Always use numerals not Chinese characters for numbers (e.g. "3连胜" not "三连胜"). Make it funny like a meme caption.
     Example: "3胜.<br><em>领先7分</em><br>稳了？"
@@ -683,15 +683,15 @@ def validate_and_fix(html: str) -> str:
         )
         fixes.append("Added missing src to cover crest img")
 
-    # ── 11. Cover h1 size: enforce clamp(4rem,10vw,9rem) line-height 0.95 ────
+    # ── 11. Cover h1 size: enforce clamp(2.8rem,5.5vw,5rem) line-height 1.05 ─
     html = re.sub(
         r"(h1\s*\{[^}]*?)font-size\s*:\s*clamp\([^)]+\)\s*;",
-        r"\1font-size: clamp(4rem,10vw,9rem);",
+        r"\1font-size: clamp(2.8rem,5.5vw,5rem);",
         html
     )
     html = re.sub(
         r"(h1\s*\{[^}]*?)line-height\s*:\s*[0-9.]+\s*;",
-        r"\1line-height: 0.95;",
+        r"\1line-height: 1.05;",
         html
     )
 
