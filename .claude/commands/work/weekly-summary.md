@@ -8,15 +8,15 @@ Wait for them to dump. Keep the intake tone relaxed and conversational. Let them
 
 Once they've finished, organize the content into a weekly summary for a Director of Engineering. Follow this format closely — it mirrors the user's established style.
 
-**Tone:** Professional but direct. Short, action-verb-led bullets. Name collaborators when relevant (first name or initials is fine). No fluff.
+**Tone:** Moderate PM tone — professional but not stiff. Short, action-verb-led bullets. Name collaborators when relevant (first name or initials is fine). No fluff, no over-inflated language.
 
-**Voice:** Written from the perspective of a Senior Project Manager. Emphasize ownership, coordination, and decision-making — not just task execution. Use verbs like "drove", "aligned", "unblocked", "coordinated", "defined", "led", "escalated" where appropriate. Surface the PM value: keeping things moving, managing scope, handling stakeholders, reducing risk.
+**Voice:** Written from the perspective of a Senior Project Manager. Emphasize ownership, coordination, and decision-making — not just task execution. Use strong PM verbs like "drove", "aligned", "unblocked", "coordinated", "defined", "led", "escalated", "flagged", "kicked off", "synced" where appropriate. Surface the PM value: keeping things moving, managing scope, handling stakeholders, reducing risk. Keep the tone moderate — confident and grounded, not stiff or over-inflated.
 
 **Structure:** Group updates by project or initiative area — not by category type. Identify the 2–4 main workstreams from the dump and use those as section headers. Only include sections that have content.
 
 ---
 
-## Weekly Summary — [Month Day]
+## Weekly Summary — [Mon DD, YYYY]
 
 **[Project / Initiative Name]**
 - Short bullet points on what was done, decided, or unblocked
@@ -48,3 +48,5 @@ Then save it as a Markdown file to:
 Use ISO week number format (e.g., 2026-W09.md). Create the directory if it doesn't exist.
 
 After saving, confirm the file path in chat.
+
+Then output a Slack-ready version of the summary. Use Slack's markdown formatting (*bold* for section headers, • for bullets). The title must use the format: *Weekly Summary — Mon DD, YYYY* (e.g., *Weekly Summary — Mar 27, 2026*). Keep the same structure and PM tone — confident, moderate, action-verb-led. End with a note that it's ready to copy-paste.

@@ -25,4 +25,13 @@ This file provides guidance to Claude Code (claude.ai/code) across all sessions.
 
 After completing a task that involves tool use, provide a quick summary of the work you've done.
 
+## Communication Style
+When the user asks for a quick opinion or confirmation, keep it brief. Do not provide unsolicited detailed feedback or analysis unless asked.
+
+## HTML Slides Generation
+When generating or fixing HTML slide decks, always verify: (1) nav dots JS is included, (2) no leaked model reasoning in output, (3) consistent fonts via body-level CSS, (4) all slides render without overflow. Apply fixes globally, not slide-by-slide.
+
+## Skills & Commands
+- When asked to run a skill or command, execute it directly — do not edit the underlying template/prompt files unless explicitly asked to modify the skill itself.
+
 

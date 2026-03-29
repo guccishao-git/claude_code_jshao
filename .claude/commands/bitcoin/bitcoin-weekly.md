@@ -2,23 +2,41 @@
 
 ## 步骤
 
-### 1. 检查摘要文件是否最新
+### 1. 网络抓取本周最新数据
 
-检查 `~/Documents/BitCoinNewsDaily/` 中最新的摘要文件日期：
+**直接从网络搜索以下内容，不依赖本地历史数据：**
 
-- 若最新摘要**距今超过 1 天**，或**完全没有摘要文件**：
-  1. 先执行 `/bitcoin` 技能，获取最新价格、新闻、预测，生成今日摘要
-  2. 完成后继续步骤 2
-- 若最新摘要是**今天或昨天**，直接执行步骤 2 即可
+使用 web_search 搜索以下关键词（中英文各一组）：
+- `Bitcoin price today 2026` — 获取当前价格、24h/7d 涨跌幅
+- `Bitcoin weekly news this week` — 本周重大事件（ETF、监管、机构动向）
+- `Bitcoin price prediction next week` — 短期（1周/1月）机构预测
+- `Bitcoin price forecast 2026 year end` — 年底目标价
+- `比特币本周行情` — 中文视角补充
 
-### 2. 运行周报脚本
+从搜索结果中提取并整理：
+- 当前价格（USD）
+- 本周涨跌幅（%）
+- 最重要的 4 条新闻（标题 + 摘要）
+- 1周、1月、年底预测价格区间
+- 市场情绪（Fear & Greed 或主观判断）
+
+**将以上数据写入今日摘要文件** `~/Documents/BitCoinNewsDaily/digest-YYYY-MM-DD.md`，格式与现有文件一致（含价格表格、新闻、预测、白话总结各节）。
+
+### 2. 参考历史每日摘要（补充上下文）
+
+读取 `~/Documents/BitCoinNewsDaily/` 中最近 7 天的摘要文件，作为辅助参考：
+- 补充历史价格走势
+- 对比本周与上周的新闻主题变化
+- 如有连续趋势（如连续下跌/反弹），在周报中体现
+
+### 3. 运行周报脚本
 
 ```
 ~/Documents/BitCoinNewsDaily/.venv/bin/python3 ~/Documents/GitHub1/claude_code_jshao/scripts/bitcoin_weekly_slides.py
 ```
 
 脚本自动完成：
-- 读取最近 14 天的每日摘要文件（`digest-YYYY-MM-DD.md`）
+- 读取步骤 1 写入的今日摘要 + 步骤 2 的历史摘要文件
 - 从 CoinGecko 拉取 1 年历史价格数据
 - 生成 6 页霓虹赛博风格幻灯片（含交互式走势图）
 - 保存本地副本至 `~/Documents/BitCoinNewsDaily/bitcoin-weekly-YYYY-Www.html`
