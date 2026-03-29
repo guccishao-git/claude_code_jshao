@@ -37,3 +37,33 @@ Full write-up with the following sections:
 8. **Sources** — all referenced articles linked at the bottom
 
 Each story 4-5 sentences. Use bullet points. TL;DR one-liner at the very top. Highlight action items with ⚠️. After saving, confirm the file path in chat.
+
+---
+Step 4:
+### OUTPUT 3 — Webpage (save to ~/Documents/GameNewsDaily/<YYYY-MM-DD>.html)
+
+Generate a single self-contained HTML file using the **Ops Briefing Terminal** aesthetic:
+
+**Design specs:**
+- Fonts: `Barlow Condensed` (headings, condensed labels) + `IBM Plex Mono` (meta, tags, sources) + `Barlow` (body) via Google Fonts
+- Colors: dark bg `#05080f`, CoD orange `#ff6b20`, Xbox green `#2ecc71`, Tech cyan `#00c8ff`, Industry red `#ff3c5a`, Hot takes purple `#c084fc`
+- Background: hex-grid SVG pattern + grain noise overlay + subtle radial color bleeds
+- Grain overlay: fixed `position`, SVG `feTurbulence` noise, `z-index: 9999`, `pointer-events: none`
+
+**Layout structure (top to bottom):**
+1. **Sticky topbar** — brand label `◈ GAME INTEL`, live dot + date + topics, scrolling intel ticker (color-coded by section), `PM USE ONLY` badge
+2. **Hero** — eyebrow `DAILY INTELLIGENCE BRIEFING // WEEK {N}`, large 3-line `Barlow Condensed 800` headline using the day's 3 biggest stories, TL;DR block with orange left border
+3. **4-section grid** (2×2) — CoD / Xbox / Tech / Industry, each with section number, colored title (`font-size: 20px`, `letter-spacing: 0.15em`), colored status dot, story cards
+4. **Hot Takes** — full-width purple section, 2×2 card grid with hover-lift effect
+5. **Sources** — collapsible toggle, monospace link chips
+6. **Footer** — left: date/internal label, right: PM attribution
+
+**Story cards:**
+- Regular: title `font-size: 20px`, bullet list `font-size: 15.5px`, hover → `translateX(4px)`
+- Warning (`⚠` stories): red border-left `3px solid var(--industry)`, red-tinted background, `⚠` icon prefix in title
+- Body base font-size: `17px`
+- Section titles: `font-size: 20px`, `letter-spacing: 0.15em`, uppercase
+
+**Ticker:** duplicate items for seamless loop, `animation: ticker 40s linear infinite`, color-coded tags per section, `mask-image` fade on edges
+
+After saving, open the file in the browser and confirm the file path in chat.
