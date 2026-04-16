@@ -1,7 +1,6 @@
 Search the web for the latest Arsenal FC news, match results, and upcoming fixtures using these trusted sources, and hide them in the result:
 
-- premierleague.com/tables (official standings — use this specific URL for the full table)
-- bbc.com/sport/football/premier-league/table (cross-check standings, especially games played)
+- **https://www.espn.com/soccer/standings** (single source of truth for all standings — GP, W, D, L, GF, GA, GD, PTS; always fetch this URL directly)
 - flashscore.com (live scores & match details)
 - sofascore.com (detailed stats & player ratings)
 - espn.com (news & highlights)
@@ -15,10 +14,10 @@ Search the web for the latest Arsenal FC news, match results, and upcoming fixtu
 - Confirm red cards, assist credits, and key events from match reports — do not guess
 
 **② Premier League Standings**
-- Fetch the full table from premierleague.com/tables
-- Cross-check games played (P), W, D, L for Arsenal AND the current 2nd-place team against a second source (espn.com or bbc.com/sport/football/premier-league/table)
-- Sanity check: Played must equal W + D + L for every team shown — if numbers don't add up, re-fetch and correct before continuing
-- Never infer or estimate match counts — only use confirmed figures from at least two sources
+- Fetch the full table by calling WebFetch on `https://www.espn.com/soccer/standings` — this is the single source of truth
+- Extract GP, W, D, L, GF, GA, GD, PTS for every team directly from that page; never infer or estimate
+- Sanity check: GP must equal W + D + L for every team shown — if numbers don't add up, re-fetch and correct before continuing
+- Display the standings table with all columns: 场次 | 胜 | 平 | 负 | 进 | 失 | 净胜球 | 积分
 
 **③ Form Table (Last 5)**
 - Verify each of Arsenal's last 5 results (opponent, score, W/D/L) from flashscore.com or sofascore.com
@@ -81,7 +80,7 @@ Adjust spacing so names are roughly evenly spread across each row. Label the dia
 Full write-up with the following sections:
 1. **Match Results** (last 7 days) — score, competition, key moments, player standouts, tactical notes
 2. **Starting XI** — for the most recent match only, show the confirmed lineup as an ASCII pitch diagram with formation, player names, and shirt numbers (same style as Output 1). Include substitutes listed below the pitch.
-3. **Premier League Standing** — Pull full table from premierleague.com/tables. Cross-check games played for Arsenal and rival team against BBC Sport table. Confirm P = W + D + L before displaying. Show current position, points, GD, gap to top/rivals, form table.
+3. **Premier League Standing** — Fetch via WebFetch on `https://www.espn.com/soccer/standings` (single source of truth). Display top 5 with all columns: 排名 | 球队 | 场次 | 胜 | 平 | 负 | 进 | 失 | 净胜球 | 积分. Confirm GP = W + D + L before displaying. Note points gap and games in hand vs 2nd place.
 4. **Upcoming Fixtures** (next 2-3 matches) — opponent, date, competition, difficulty rating, what's at stake. Always include both **UK time (GMT/BST)** and **New Zealand time (NZDT/NZST)** for each fixture. Note any upcoming clock changes (UK clocks spring forward last Sunday of March; NZ clocks fall back first Sunday of April).
 5. **Recent Form** (last 5 matches) — W/D/L breakdown with brief context per match
 6. **Team News** — injuries (player, issue, return estimate), transfers, suspensions, notable squad updates
