@@ -13,6 +13,18 @@ UNSPLASH_ACCESS_KEY = os.environ.get("UNSPLASH_ACCESS_KEY", "")
 WALLPAPER_DIR = Path.home() / "Pictures" / "Wallpapers"
 KEEP_LAST_N = 5
 CATEGORIES = ["nature", "architecture", "abstract", "city"]
+STAMP_FILE = Path.home() / ".wallpaper_last_run"
+
+
+def already_ran_this_week() -> bool:
+    if not STAMP_FILE.exists():
+        return False
+    last = datetime.fromisoformat(STAMP_FILE.read_text().strip())
+    return last.isocalendar()[:2] == datetime.now().isocalendar()[:2]
+
+
+def record_run() -> None:
+    STAMP_FILE.write_text(datetime.now().isoformat())
 
 
 def fetch_random_image_url(category: str) -> tuple[str, str]:
@@ -47,6 +59,10 @@ def cleanup_old_wallpapers(directory: Path, keep: int) -> None:
 
 
 def main() -> None:
+    if already_ran_this_week():
+        print("Already ran this week, skipping.")
+        return
+
     if not UNSPLASH_ACCESS_KEY:
         raise RuntimeError("UNSPLASH_ACCESS_KEY not set. Add it to ~/.zshrc and reload.")
 
@@ -68,6 +84,7 @@ def main() -> None:
     set_wallpaper(dest)
 
     cleanup_old_wallpapers(WALLPAPER_DIR, KEEP_LAST_N)
+    record_run()
     print("Done.")
 
 
