@@ -54,6 +54,7 @@ Document type rules:
 - "espp": Employee Share Purchase Plan / Share Scheme statement (share purchases or vesting)
 - "rental_income": rental income statement or record
 - "rental_expense": invoice or receipt for rental property costs (mortgage interest, rates, insurance, repairs, property management, accounting fees)
+- "pie_income": PIE (Portfolio Investment Entity) income statement — KiwiSaver annual return, myIR PIE income summary, or PIE income certificate showing gross PIE income and tax deducted at PIR
 - "other": everything else
 
 For payslip documents, extract ANNUAL totals (not per-period):
@@ -75,8 +76,12 @@ For property management statements (e.g. from Regis Property Management, Barfoot
 - Extract total GST on those fees → property_mgmt_gst
 - Do NOT extract repair/invoice pass-through amounts (those come from separate invoice PDFs)
 
+For pie_income documents (myIR PIE summary, KiwiSaver annual statement):
+- Extract total gross PIE income → pie_gross
+- Extract total tax deducted at PIR → pie_tax_withheld
+
 JSON structure (all amounts NZD, use null if not found):
-{"document_type":"...","description":"one line","data":{"gross_income":null,"paye_withheld":null,"kiwisaver_employee":null,"kiwisaver_employer":null,"acc_levy":null,"espp_benefit":null,"espp_tax_withheld":null,"espp_market_value":null,"espp_purchase_price":null,"rental_income":null,"property_address":null,"property_mgmt_fees":null,"property_mgmt_gst":null,"expense_type":null,"amount":null,"period":null}}"""
+{"document_type":"...","description":"one line","data":{"gross_income":null,"paye_withheld":null,"kiwisaver_employee":null,"kiwisaver_employer":null,"acc_levy":null,"espp_benefit":null,"espp_tax_withheld":null,"espp_market_value":null,"espp_purchase_price":null,"rental_income":null,"property_address":null,"property_mgmt_fees":null,"property_mgmt_gst":null,"expense_type":null,"amount":null,"period":null,"pie_gross":null,"pie_tax_withheld":null}}"""
 
 
 def extract_data_from_pdf(client: anthropic.Anthropic, pdf_path: Path) -> dict:
@@ -124,6 +129,7 @@ def process_pdfs(folder_path: Path) -> dict:
         "rental_income": [],
         "rental_expenses": [],
         "espp": [],
+        "pie_income": [],
         "other": [],
     }
 
@@ -144,6 +150,7 @@ def process_pdfs(folder_path: Path) -> dict:
             "rental_income": "rental_income",
             "rental_expense": "rental_expenses",
             "espp": "espp",
+            "pie_income": "pie_income",
         }
         bucket = bucket_map.get(doc_type, "other")
         results[bucket].append(extracted)
@@ -176,6 +183,9 @@ def calculate_summary(data: dict, rental_share: float = 1.0, mortgage_interest_f
         elif d.get("espp_market_value") and d.get("espp_purchase_price"):
             espp_benefit += d["espp_market_value"] - d["espp_purchase_price"]
         espp_tax_withheld += d.get("espp_tax_withheld") or 0
+
+    pie_gross = sum(r["data"].get("pie_gross") or 0 for r in data.get("pie_income", []))
+    pie_tax_withheld = sum(r["data"].get("pie_tax_withheld") or 0 for r in data.get("pie_income", []))
 
     raw_rental_income = sum(r["data"].get("rental_income") or 0 for r in data["rental_income"])
     raw_mgmt_fees = sum((r["data"].get("property_mgmt_fees") or 0) + (r["data"].get("property_mgmt_gst") or 0)
@@ -247,6 +257,8 @@ def calculate_summary(data: dict, rental_share: float = 1.0, mortgage_interest_f
         "tax_liability": tax_liability,
         "total_tax_paid": total_tax_paid,
         "tax_difference": tax_difference,
+        "pie_gross": pie_gross,
+        "pie_tax_withheld": pie_tax_withheld,
     }
 
 
@@ -348,7 +360,27 @@ def generate_report(summary: dict, data: dict) -> str:
         "",
         "---",
         "",
-        "## 四、税额计算",
+        "## 四、PIE 投资收入（KiwiSaver）",
+        "",
+    ]
+    if summary["pie_gross"] > 0:
+        lines += [
+            "| 项目 | 金额 (NZD) |",
+            "|------|-----------|",
+            f"| PIE 总收入（Gross PIE Income） | {fmt(summary['pie_gross'])} |",
+            f"| 已扣 PIR 税（Tax Deducted at PIR） | {fmt(summary['pie_tax_withheld'])} |",
+            "",
+            "> PIE 收入按 PIR 税率最终预扣，**不计入个人应税收入**，无需再缴进所得税。",
+            "> 在 IR3 的「Portfolio investment entity (PIE) income」栏填写以上数据。",
+            "> 若 myIR 已自动预填，核对数字一致即可。",
+        ]
+    else:
+        lines.append("*本年度未检测到 PIE 收入文件，如有请补充 myIR 年度 PIE 汇总 PDF 或 KiwiSaver 年度对账单。*")
+    lines += [
+        "",
+        "---",
+        "",
+        "## 五、税额计算",
         "",
         "**2025-26 税率**（2025年4月1日生效）:",
         "| 收入区间 | 税率 |",
@@ -376,7 +408,7 @@ def generate_report(summary: dict, data: dict) -> str:
         "",
         "---",
         "",
-        "## 五、IR3 / IR3R 填写指南",
+        "## 六、IR3 / IR3R 填写指南",
         "",
         "**IR3（个人税表）关键字段：**",
         "",
@@ -386,6 +418,8 @@ def generate_report(summary: dict, data: dict) -> str:
         f"| PAYE 已扣税 | {fmt(summary['paye_withheld'])} | 工资单合计 |",
         f"| ESS 收益 | {fmt(summary['espp_benefit'])} | 若雇主已申报可核对 |",
         f"| 租金净收益 | {fmt(max(summary['rental_net'], 0))} | 亏损填 0，亏损额结转 |",
+        f"| PIE 总收入 | {fmt(summary['pie_gross'])} | myIR「PIE income」栏（通常自动预填） |",
+        f"| PIR 已扣税 | {fmt(summary['pie_tax_withheld'])} | 核对 myIR 自动填入值 |",
         "",
         "**IR3R（租金收入附表）关键字段：**",
         "",
@@ -404,7 +438,7 @@ def generate_report(summary: dict, data: dict) -> str:
         "",
         "---",
         "",
-        "## 六、处理的文件清单",
+        "## 七、处理的文件清单",
         "",
     ]
 
@@ -439,6 +473,9 @@ def generate_report(summary: dict, data: dict) -> str:
     ])
     lines += file_section("租金支出凭证", data["rental_expenses"], [
         ("费用类型", "expense_type"), ("金额", "amount"), ("期间", "period"),
+    ])
+    lines += file_section("PIE 收入凭证", data.get("pie_income", []), [
+        ("期间", "period"), ("PIE 总收入", "pie_gross"), ("PIR 已扣税", "pie_tax_withheld"),
     ])
 
     if data["other"]:

@@ -3,14 +3,14 @@ Run the NZ tax filing assistant to help with your annual IR3 tax return.
 ## 用法
 
 ```bash
-/Users/jason.shao/Documents/GitHub1/claude_code_jshao/.venv/bin/python3 ~/Documents/GitHub1/claude_code_jshao/scripts/nz_tax.py <PDF文件夹路径> [--rental-share 0.5]
+/Users/jason.shao/Documents/GitHub1/claude_code_jshao/.venv/bin/python3 ~/Documents/GitHub1/claude_code_jshao/.claude/commands/nz-tax/nz_tax.py <PDF文件夹路径> [--rental-share 0.5]
 ```
 
 - `--rental-share` 可选，默认 `1.0`（100%）。若出租房产为联名共有，填持股比例。
 
 **实际用法（联名共有，各50%）：**
 ```bash
-/Users/jason.shao/Documents/GitHub1/claude_code_jshao/.venv/bin/python3 ~/Documents/GitHub1/claude_code_jshao/scripts/nz_tax.py ~/Documents/NZ/tax/JIa\ Shao --rental-share 0.5
+/Users/jason.shao/Documents/GitHub1/claude_code_jshao/.venv/bin/python3 ~/Documents/GitHub1/claude_code_jshao/.claude/commands/nz-tax/nz_tax.py ~/Documents/NZ/tax/JIa\ Shao --rental-share 0.5
 ```
 
 ## 支持的 PDF 类型
@@ -22,6 +22,7 @@ Run the NZ tax filing assistant to help with your annual IR3 tax return.
 - **租金收入记录** — 租金收入对账单或银行流水
 - **租金支出凭证** — 贷款利息单、rates 账单、保险单、维修收据、物业管理费发票
 - **ESPP 交易记录** — 如有员工股票购买计划收益，请提供相关对账单
+- **PIE 收入凭证** — myIR 年度 PIE 收入汇总 PDF（KiwiSaver 投资收益）或 KiwiSaver 年度对账单（Westpac/ANZ 等）。显示 Gross amount 和 Tax deducted at PIR 两栏。PIE 收入不计入应税收入，但需在 IR3 中申报。
 
 ## 输出
 
