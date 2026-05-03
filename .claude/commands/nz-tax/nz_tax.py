@@ -60,9 +60,12 @@ Document type rules:
 For payslip documents, extract ANNUAL totals (not per-period):
 - "Gross Earnings" / "Total Gross" → gross_income
 - "PAYE" / "PAYE/WT" / "Income Tax" → paye_withheld
+  NOTE: ACC/E.L. often appears as a sub-item under PAYE/WT (e.g. "included E.L. (ACC) $2,527.23").
+  Always extract the full PAYE/WT total line as paye_withheld — do NOT subtract the ACC sub-item.
+  The ACC amount is already included in the PAYE/WT figure.
 - "KiwiSaver Employee" → kiwisaver_employee
 - "KiwiSaver Company/Employer" → kiwisaver_employer
-- "ACC" / "E.L." → acc_levy
+- "ACC" / "E.L." / "included E.L. (ACC)" / "Earners Levy" → acc_levy
 
 For rental_expense documents (rates invoices, bills, receipts):
 - Extract the AMOUNT ACTUALLY DUE for THIS specific invoice only
