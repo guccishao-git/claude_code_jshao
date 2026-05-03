@@ -166,7 +166,8 @@ def best_payslip_value(records: list, key: str) -> float:
     return max(values) if values else 0.0
 
 
-def calculate_summary(data: dict, rental_share: float = 1.0, mortgage_interest_full: float = 0.0) -> dict:
+def calculate_summary(data: dict, rental_share: float = 1.0, mortgage_interest_full: float = 0.0,
+                      pie_gross_manual: float = 0.0, pie_tax_manual: float = 0.0) -> dict:
     gross_salary = best_payslip_value(data["payslips"], "gross_income")
     paye_withheld = best_payslip_value(data["payslips"], "paye_withheld")
     kiwisaver_employee = best_payslip_value(data["payslips"], "kiwisaver_employee")
@@ -184,8 +185,8 @@ def calculate_summary(data: dict, rental_share: float = 1.0, mortgage_interest_f
             espp_benefit += d["espp_market_value"] - d["espp_purchase_price"]
         espp_tax_withheld += d.get("espp_tax_withheld") or 0
 
-    pie_gross = sum(r["data"].get("pie_gross") or 0 for r in data.get("pie_income", []))
-    pie_tax_withheld = sum(r["data"].get("pie_tax_withheld") or 0 for r in data.get("pie_income", []))
+    pie_gross = sum(r["data"].get("pie_gross") or 0 for r in data.get("pie_income", [])) + pie_gross_manual
+    pie_tax_withheld = sum(r["data"].get("pie_tax_withheld") or 0 for r in data.get("pie_income", [])) + pie_tax_manual
 
     raw_rental_income = sum(r["data"].get("rental_income") or 0 for r in data["rental_income"])
     raw_mgmt_fees = sum((r["data"].get("property_mgmt_fees") or 0) + (r["data"].get("property_mgmt_gst") or 0)
@@ -506,6 +507,10 @@ def main():
                         help="你的租金持股比例，如联名共有各50%%填 0.5（默认 1.0）")
     parser.add_argument("--mortgage-interest", type=float, default=0.0,
                         help="全年贷款利息总额（NZD），脚本会按 --rental-share 自动分摊")
+    parser.add_argument("--pie-gross", type=float, default=0.0,
+                        help="PIE 总收入（NZD），无 PDF 时手动输入 myIR 上的 Gross amount")
+    parser.add_argument("--pie-tax-withheld", type=float, default=0.0,
+                        help="PIR 已扣税（NZD），无 PDF 时手动输入 myIR 上的 Tax deducted")
     args = parser.parse_args()
 
     folder_path = Path(args.folder).expanduser().resolve()
@@ -525,9 +530,12 @@ def main():
         print(f"  租金持股比例: {rental_share*100:.0f}%（联名共有）")
     if args.mortgage_interest > 0:
         print(f"  贷款利息（手动）: NZD ${args.mortgage_interest:,.2f}（全年），你的份额: ${args.mortgage_interest * rental_share:,.2f}")
+    if args.pie_gross > 0:
+        print(f"  PIE 收入（手动）: Gross ${args.pie_gross:,.2f}，PIR 已扣税 ${args.pie_tax_withheld:,.2f}")
 
     extracted = process_pdfs(folder_path)
-    summary = calculate_summary(extracted, rental_share, args.mortgage_interest)
+    summary = calculate_summary(extracted, rental_share, args.mortgage_interest,
+                                args.pie_gross, args.pie_tax_withheld)
     report = generate_report(summary, extracted)
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
