@@ -842,12 +842,12 @@ section.chart-slide .slide-content {
           <tr>
             <td><span class="rank-num" style="color:var(--text-muted)">2</span></td>
             <td class="team-name-cell">🔵 曼城</td>
-            <td>35</td>
+            <td>34</td>
             <td>21</td>
-            <td>9</td>
+            <td>8</td>
             <td>5</td>
             <td>+37</td>
-            <td style="font-family:'Oswald',sans-serif">72</td>
+            <td style="font-family:'Oswald',sans-serif">71</td>
             <td>
               <span class="form-pill w">胜</span>
               <span class="form-pill w">胜</span>
@@ -913,7 +913,7 @@ section.chart-slide .slide-content {
 
     <div class="fade-up fade-up-d3" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
       <p style="color:var(--text-muted);font-size:clamp(0.68rem,1.1vw,0.82rem)">
-        <span style="font-family:'Oswald',sans-serif;color:var(--red);font-size:1.1em">领先4分</span>
+        <span style="font-family:'Oswald',sans-serif;color:var(--red);font-size:1.1em">领先5分</span>
         （曼城还有1场补赛）——蓝月亮还没死透，但先看枪手赢3场再说吧。
         约克雷斯赛季已斩获<span style="color:var(--gold)">21球</span>，本世纪新援首季最多，人家值回票价。
       </p>
@@ -951,7 +951,7 @@ section.chart-slide .slide-content {
         </div>
       </div>
       <div class="chart-footer-note">
-        <span class="chart-gap-note">▲ <span class="gap-ahead">领先4分</span>（曼城有1场补赛）· 还剩3轮 · 加油！</span>
+        <span class="chart-gap-note">▲ <span class="gap-ahead">领先5分</span>（曼城有1场补赛）· 还剩3轮 · 加油！</span>
       </div>
     </div>
   </div>
@@ -961,7 +961,7 @@ section.chart-slide .slide-content {
 (function(){
   var labels = ['GW1','GW2','GW3','GW4','GW5','GW6','GW7','GW8','GW9','GW10','GW11','GW12','GW13','GW14','GW15','GW16','GW17','GW18','GW19','GW20','GW21','GW22','GW23','GW24','GW25','GW26','GW27','GW28','GW29','GW30','GW31','GW32','GW33','GW34','GW35'];
   var arsenalPts = [0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,42,45,48,48,51,54,57,60,60,63,63,66,69,69,70,70,73,73,73,76];
-  var rivalPts  = [3,3,6,9,9,12,15,18,21,24,27,30,33,36,36,36,39,42,45,45,48,51,54,57,57,60,63,63,66,66,66,67,69,71,72];
+  var rivalPts  = [3,3,6,9,9,12,15,18,21,24,27,30,33,36,36,36,39,42,45,45,48,51,54,57,57,60,63,63,66,66,66,67,69,71,null];
   var ctx = document.getElementById('pointsChart');
   if(!ctx) return;
   new Chart(ctx.getContext('2d'), {
