@@ -431,12 +431,17 @@ def sanitise_html(html: str) -> str:
             cleaned.append(line)
             continue
         # Drop lines that are plain English prose with no HTML tags
-        # (likely leaked model reasoning)
+        # (likely leaked model reasoning).
+        # Skip if the line is clearly an HTML attribute continuation
+        # (contains attr="value" syntax or ends a tag with '>') — these are
+        # legitimate parts of multi-line <img>/<a>/etc. tags.
         if (stripped
                 and not stripped.startswith('<')
                 and not stripped.startswith('//')
                 and re.search(r'[A-Za-z]{6,}', stripped)
                 and not re.search(r'[^\x00-\x7F]', stripped)  # no CJK = suspicious
+                and not re.search(r'=\s*["\']', stripped)     # has HTML attr syntax
+                and not stripped.endswith('>')                # closes a tag
                 and len(stripped) > 20):
             print(f"  [sanitise] Removed leaked text: {stripped[:80]!r}", file=sys.stderr)
             continue
@@ -631,10 +636,9 @@ def validate_and_fix(html: str) -> str:
         if fixed_inner != h1_inner:
             html = html[:h1_match.start(2)] + fixed_inner + html[h1_match.end(2):]
             fixes.append("Removed font-family overrides inside cover h1")
-    if "h1" in html and "Noto Sans SC" not in re.search(r'h1\s*\{[^}]*\}', html, re.DOTALL).group(0):
+    h1_css_match = re.search(r'h1\s*\{[^}]*\}', html, re.DOTALL)
+    if h1_css_match and "Noto Sans SC" not in h1_css_match.group(0):
         fixes.append("Enforced Noto Sans SC 900 on h1 (was Syne)")
-    else:
-        pass  # already correct
 
     # ── 8. Nav dots: ensure Chinese titles ──────────────────────────────────
     en_titles = ['"Cover"', '"Match Report"', '"League Standing"',
