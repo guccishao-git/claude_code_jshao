@@ -8,13 +8,123 @@ Outputs:
 """
 
 import anthropic
+import json
 import os
 import re
 import sys
 import time
+import urllib.request
 
 REPO_DIR   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGES_FILE = os.path.join(REPO_DIR, "docs", "arsenal-weekly.html")
+
+# ── ESPN standings fetcher (deterministic data source) ─────────────────────────
+# ESPN embeds the full PL standings as a JSON array in the page HTML, so we can
+# pull structured P / W / D / L / GD / Pts without asking the LLM to read prose.
+
+ESPN_STANDINGS_URL = "https://www.espn.com/soccer/standings/_/league/eng.1"
+_ESPN_UA = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/120.0.0.0 Safari/537.36"
+)
+
+# Map ESPN displayName → Chinese name for prompt injection
+ESPN_TEAM_ZH = {
+    "Arsenal": "阿森纳",
+    "Manchester City": "曼城",
+    "Manchester United": "曼联",
+    "Liverpool": "利物浦",
+    "Aston Villa": "阿斯顿维拉",
+    "Chelsea": "切尔西",
+    "Tottenham Hotspur": "热刺",
+    "Newcastle United": "纽卡斯尔",
+    "Brighton & Hove Albion": "布莱顿",
+    "West Ham United": "西汉姆联",
+    "Crystal Palace": "水晶宫",
+    "Fulham": "富勒姆",
+    "Brentford": "布伦特福德",
+    "Everton": "埃弗顿",
+    "Wolverhampton Wanderers": "狼队",
+    "Nottingham Forest": "诺丁汉森林",
+    "Bournemouth": "伯恩茅斯",
+    "Burnley": "伯恩利",
+    "Leeds United": "利兹联",
+    "Sunderland": "桑德兰",
+}
+
+
+def fetch_espn_standings(top_n: int = 5) -> list[dict]:
+    """
+    Pull the top-N PL standings from ESPN's embedded JSON.
+    Returns dicts with: rank, team_en, team_zh, p, w, d, l, gd, pts.
+    Raises RuntimeError on parse failure (caller decides whether to fall back).
+    """
+    req = urllib.request.Request(ESPN_STANDINGS_URL, headers={"User-Agent": _ESPN_UA})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        html = r.read().decode("utf-8", errors="replace")
+
+    m = re.search(r'"standings":\s*(\[\s*\{.+?\}\s*\])', html, re.DOTALL)
+    if not m:
+        raise RuntimeError("ESPN page format changed — could not find standings JSON")
+
+    rows = json.loads(m.group(1))
+    out: list[dict] = []
+    # ESPN stats array order observed: [0]=P, [1]=L, [2]=GD, [3]=Pts,
+    # [6]=D, [7]=W, [13]="W-D-L" record string. Trust the W-D-L string.
+    for i, row in enumerate(rows[:top_n], start=1):
+        team_en = row["team"]["displayName"]
+        stats = row["stats"]
+        p = int(stats[0])
+        gd = stats[2]  # already prefixed with +/-
+        pts = int(stats[3])
+        record = stats[13] if len(stats) > 13 else ""
+        try:
+            w, d, l = (int(x) for x in record.split("-"))
+        except (ValueError, AttributeError):
+            w = int(stats[7]); d = int(stats[6]); l = int(stats[1])
+        if w + d + l != p:
+            raise RuntimeError(
+                f"ESPN data inconsistent for {team_en}: P={p} but W+D+L={w+d+l}"
+            )
+        out.append({
+            "rank": i,
+            "team_en": team_en,
+            "team_zh": ESPN_TEAM_ZH.get(team_en, team_en),
+            "p": p, "w": w, "d": d, "l": l,
+            "gd": gd, "pts": pts,
+        })
+    return out
+
+
+def build_standings_prompt_block(standings: list[dict]) -> str:
+    """Format the standings as a ground-truth block to prepend to the prompt."""
+    header = (
+        "**⚠️ GROUND TRUTH — PREMIER LEAGUE STANDINGS (verified from ESPN, "
+        "use these EXACT numbers in Slide 3 — do NOT modify, recalculate, "
+        "or replace with web_search results):**\n\n"
+        "| 排名 | 球队 (EN / 中) | 赛 | 胜 | 平 | 负 | 净 | 积分 |\n"
+        "|------|----------------|----|----|----|----|----|------|\n"
+    )
+    lines = [
+        f"| {s['rank']} | {s['team_en']} / {s['team_zh']} | "
+        f"{s['p']} | {s['w']} | {s['d']} | {s['l']} | {s['gd']} | {s['pts']} |"
+        for s in standings
+    ]
+    note = (
+        "\n\n**Important rules tied to this ground-truth table:**\n"
+        "- Use the Chinese team names shown above in Slide 3.\n"
+        "- The number of matches played (赛) may differ between teams "
+        "(games in hand). DO NOT homogenise — use the exact P shown.\n"
+        "- Slide 3's points-gap line: gap = (1st 积分) − (2nd 积分). Compute "
+        "from the table above, do not invent.\n"
+        "- Slide 4's chart `rivalPts` array: the final element must equal "
+        "the rival's Pts above ONLY IF the rival has played the same number "
+        "of GWs as Arsenal. If rival's P is less than Arsenal's P, the final "
+        "element of `rivalPts` must be `null` (game not yet played) and the "
+        "previous element must equal the rival's current Pts.\n\n"
+    )
+    return header + "\n".join(lines) + note
 
 # ── Prompt ─────────────────────────────────────────────────────────────────────
 
@@ -310,11 +420,11 @@ Slide 4 annotation: one line below legend — Oswald 0.8rem rgba(240,237,232,0.5
 
 # ── Agentic loop ───────────────────────────────────────────────────────────────
 
-def generate_slides() -> str:
+def generate_slides(prompt: str = PROMPT) -> str:
     """Call Claude with web_search in an agentic loop; return full HTML string."""
     client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
-    messages = [{"role": "user", "content": PROMPT}]
+    messages = [{"role": "user", "content": prompt}]
 
     print("Starting Arsenal weekly slides generation…")
 
@@ -542,12 +652,15 @@ HOT_TAKE_FALLBACK = """\
     </div>"""
 
 
-def validate_and_fix(html: str) -> str:
+def validate_and_fix(html: str, espn_standings: list[dict] | None = None) -> str:
     """
     Post-generation checks and auto-fixes for recurring issues.
     Runs after sanitise_html(). Prints a report of every fix applied.
+    If espn_standings is provided, also performs a numeric cross-check
+    against the rendered .pl-table.
     """
     fixes: list[str] = []
+    warnings: list[str] = []
 
     # ── 1. Font: ensure Noto Sans SC is loaded ──────────────────────────────
     if "Noto+Sans+SC" not in html and "Noto Sans SC" not in html:
@@ -699,6 +812,61 @@ def validate_and_fix(html: str) -> str:
         html
     )
 
+    # ── 12. Standings table sanity & ESPN cross-check ───────────────────────
+    # Parse the rendered .pl-table and verify P = W+D+L per row, plus that
+    # the rendered numbers match the ESPN ground-truth (if provided).
+    table_match = re.search(r'<table class="pl-table">(.+?)</table>', html, re.DOTALL)
+    if table_match:
+        body = re.search(r'<tbody[^>]*>(.+?)</tbody>', table_match.group(1), re.DOTALL)
+        rows_html = body.group(1) if body else table_match.group(1)
+        tr_blocks = re.findall(r'<tr[^>]*>(.*?)</tr>', rows_html, re.DOTALL)
+        parsed_rows: list[tuple] = []
+        for tr in tr_blocks:
+            cells = [
+                re.sub(r'<[^>]+>', '', c).strip()
+                for c in re.findall(r'<td[^>]*>(.*?)</td>', tr, re.DOTALL)
+            ]
+            # Expected order: rank, team, P, W, D, L, GD, Pts, [form pills]
+            if len(cells) < 8:
+                continue
+            try:
+                rank = int(re.sub(r'\D', '', cells[0]) or "0")
+                p = int(cells[2]); w = int(cells[3])
+                d = int(cells[4]); l = int(cells[5])
+                pts = int(cells[7])
+            except ValueError:
+                continue
+            team_label = cells[1]
+            parsed_rows.append((rank, team_label, p, w, d, l, pts))
+            # Per-row arithmetic
+            if w + d + l != p:
+                warnings.append(
+                    f"Row {rank} ({team_label}): P={p} but W+D+L={w+d+l}"
+                )
+
+        # Top-2 P difference must be ≤ 1 (one game in hand max)
+        if len(parsed_rows) >= 2:
+            diff = abs(parsed_rows[0][2] - parsed_rows[1][2])
+            if diff > 1:
+                warnings.append(
+                    f"Top-2 difference in matches played is {diff} "
+                    f"(expected ≤ 1 — likely error)"
+                )
+
+        # Cross-check against ESPN ground truth row-by-row
+        if espn_standings:
+            for rendered, truth in zip(parsed_rows, espn_standings):
+                _, label, rp, rw, rd, rl, rpts = rendered
+                if (rp, rw, rd, rl, rpts) != (truth["p"], truth["w"],
+                                              truth["d"], truth["l"],
+                                              truth["pts"]):
+                    warnings.append(
+                        f"Row '{label}' diverges from ESPN: "
+                        f"rendered P={rp} W={rw} D={rd} L={rl} Pts={rpts}, "
+                        f"ESPN P={truth['p']} W={truth['w']} D={truth['d']} "
+                        f"L={truth['l']} Pts={truth['pts']}"
+                    )
+
     # ── Report ───────────────────────────────────────────────────────────────
     if fixes:
         print(f"  [validate] Applied {len(fixes)} fix(es):")
@@ -706,6 +874,11 @@ def validate_and_fix(html: str) -> str:
             print(f"    • {f}")
     else:
         print("  [validate] All checks passed — no fixes needed.")
+
+    if warnings:
+        print(f"  [validate] {len(warnings)} WARNING(S) — manual review recommended:")
+        for w in warnings:
+            print(f"    ⚠ {w}", file=sys.stderr)
 
     return html
 
@@ -717,10 +890,25 @@ def main():
         print("ERROR: ANTHROPIC_API_KEY environment variable not set.", file=sys.stderr)
         sys.exit(1)
 
-    raw = generate_slides()
+    # Pre-fetch ground-truth PL standings from ESPN so the LLM doesn't have to
+    # extract numbers from web_search prose. Falls back gracefully on failure.
+    prompt = PROMPT
+    espn_standings: list[dict] | None = None
+    try:
+        espn_standings = fetch_espn_standings(top_n=5)
+        print("Fetched ESPN standings (top 5):")
+        for s in espn_standings:
+            print(f"  #{s['rank']:>2} {s['team_en']:<20} P={s['p']} "
+                  f"W={s['w']} D={s['d']} L={s['l']} GD={s['gd']:>4} Pts={s['pts']}")
+        prompt = build_standings_prompt_block(espn_standings) + PROMPT
+    except Exception as e:
+        print(f"WARNING: Failed to fetch ESPN standings ({e}); "
+              f"falling back to web_search-only extraction.", file=sys.stderr)
+
+    raw = generate_slides(prompt)
     html = extract_html(raw)
     html = sanitise_html(html)
-    html = validate_and_fix(html)
+    html = validate_and_fix(html, espn_standings)
 
     os.makedirs(os.path.dirname(PAGES_FILE), exist_ok=True)
 
