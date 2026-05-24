@@ -47,10 +47,10 @@ def download_image(image_url: str, dest: Path) -> None:
 
 
 def set_wallpaper(path: Path) -> None:
-    script = f'tell application "System Events" to tell every desktop to set picture to "{path}"'
-    subprocess.run(["osascript", "-e", script], check=True)
-    # macOS 14+ silently no-ops the AppleScript; killing WallpaperAgent forces a reload.
-    subprocess.run(["killall", "WallpaperAgent"], check=False)
+    # osascript + killall WallpaperAgent doesn't reliably refresh the visible
+    # desktop when run from launchd on macOS 14+. The `wallpaper` CLI talks to
+    # the modern WallpaperKit store and works in both contexts.
+    subprocess.run(["/opt/homebrew/bin/wallpaper", "set", str(path)], check=True)
 
 
 def cleanup_old_wallpapers(directory: Path, keep: int) -> None:
@@ -76,8 +76,10 @@ def main() -> None:
     image_url, author = fetch_random_image_url(category)
     print(f"Photo by: {author}")
 
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    dest = WALLPAPER_DIR / f"wallpaper_{date_str}.jpg"
+    # Include H%M%S so reruns within a day get a unique path — WallpaperKit
+    # dedupes by path and won't refresh if the filename is unchanged.
+    stamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    dest = WALLPAPER_DIR / f"wallpaper_{stamp}.jpg"
 
     print(f"Downloading to {dest} ...")
     download_image(image_url, dest)
