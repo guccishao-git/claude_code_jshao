@@ -49,6 +49,8 @@ def download_image(image_url: str, dest: Path) -> None:
 def set_wallpaper(path: Path) -> None:
     script = f'tell application "System Events" to tell every desktop to set picture to "{path}"'
     subprocess.run(["osascript", "-e", script], check=True)
+    # macOS 14+ silently no-ops the AppleScript; killing WallpaperAgent forces a reload.
+    subprocess.run(["killall", "WallpaperAgent"], check=False)
 
 
 def cleanup_old_wallpapers(directory: Path, keep: int) -> None:

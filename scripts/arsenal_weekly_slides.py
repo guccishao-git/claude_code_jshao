@@ -22,7 +22,7 @@ PAGES_FILE = os.path.join(REPO_DIR, "docs", "arsenal-weekly.html")
 # ESPN embeds the full PL standings as a JSON array in the page HTML, so we can
 # pull structured P / W / D / L / GD / Pts without asking the LLM to read prose.
 
-ESPN_STANDINGS_URL = "https://www.espn.com/soccer/standings/_/league/eng.1"
+ESPN_STANDINGS_URL = "https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings"
 _ESPN_UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -56,37 +56,45 @@ ESPN_TEAM_ZH = {
 
 def fetch_espn_standings(top_n: int = 5) -> list[dict]:
     """
-    Pull the top-N PL standings from ESPN's embedded JSON.
+    Pull the top-N PL standings from ESPN's public site API.
     Returns dicts with: rank, team_en, team_zh, p, w, d, l, gd, pts.
     Raises RuntimeError on parse failure (caller decides whether to fall back).
     """
     req = urllib.request.Request(ESPN_STANDINGS_URL, headers={"User-Agent": _ESPN_UA})
     with urllib.request.urlopen(req, timeout=20) as r:
-        html = r.read().decode("utf-8", errors="replace")
+        data = json.loads(r.read().decode("utf-8", errors="replace"))
 
-    m = re.search(r'"standings":\s*(\[\s*\{.+?\}\s*\])', html, re.DOTALL)
-    if not m:
-        raise RuntimeError("ESPN page format changed — could not find standings JSON")
+    entries = data.get("standings", {}).get("entries")
+    if not entries:
+        children = data.get("children", [])
+        if children:
+            entries = children[0].get("standings", {}).get("entries")
+    if not entries:
+        raise RuntimeError("ESPN API format changed — could not find standings entries")
 
-    rows = json.loads(m.group(1))
-    out: list[dict] = []
-    # ESPN stats array order observed: [0]=P, [1]=L, [2]=GD, [3]=Pts,
-    # [6]=D, [7]=W, [13]="W-D-L" record string. Trust the W-D-L string.
-    for i, row in enumerate(rows[:top_n], start=1):
-        team_en = row["team"]["displayName"]
-        stats = row["stats"]
-        p = int(stats[0])
-        gd = stats[2]  # already prefixed with +/-
-        pts = int(stats[3])
-        record = stats[13] if len(stats) > 13 else ""
+    def to_int(v):
         try:
-            w, d, l = (int(x) for x in record.split("-"))
-        except (ValueError, AttributeError):
-            w = int(stats[7]); d = int(stats[6]); l = int(stats[1])
+            return int(round(float(v)))
+        except (TypeError, ValueError):
+            return None
+
+    out: list[dict] = []
+    for i, e in enumerate(entries[:top_n], start=1):
+        team_en = e["team"]["displayName"]
+        stats = {s["name"]: s for s in e.get("stats", [])}
+        p = to_int(stats.get("gamesPlayed", {}).get("value"))
+        w = to_int(stats.get("wins", {}).get("value"))
+        d = to_int(stats.get("ties", {}).get("value"))
+        l = to_int(stats.get("losses", {}).get("value"))
+        pts = to_int(stats.get("points", {}).get("value"))
+        gd_raw = to_int(stats.get("pointDifferential", {}).get("value"))
+        if None in (p, w, d, l, pts, gd_raw):
+            raise RuntimeError(f"ESPN API missing fields for {team_en}")
         if w + d + l != p:
             raise RuntimeError(
                 f"ESPN data inconsistent for {team_en}: P={p} but W+D+L={w+d+l}"
             )
+        gd = f"+{gd_raw}" if gd_raw >= 0 else str(gd_raw)
         out.append({
             "rank": i,
             "team_en": team_en,
