@@ -51,8 +51,15 @@ $PY -m dining.core link <provider> <venue_id> <YYYY-MM-DDTHH:MM> <party>
    requested time. For ResDiary / Now Book It (no server-side availability), say
    "availability shown on opening the link".
 
-4. **Present** a tight table: restaurant · platform · **available slots near the time** ·
+4. **Present** a tight table — these columns are **required, in this order**:
+   restaurant · **provider/platform** · area · **available slots near the time** ·
    **[预订 / Book]** link (from `dining_build_booking_link` or the result's `booking_link`).
+   - **Always include the provider/platform column** (e.g. `sevenrooms`, `firsttable`,
+     `resdiary`, `nowbookit`) for **every** row — name it even when a venue is off-platform
+     (label it e.g. "自有渠道 / direct"). Never omit it; the user relies on knowing which
+     platform each booking goes through.
+   - In any follow-up re-summary, keep the provider/platform column too — don't drop it
+     when compressing.
    If nothing is free near the requested time, say so and offer the nearest slots or
    alternatives — don't pad.
 
