@@ -44,11 +44,20 @@ def _split_venue_id(venue_id: str):
             slug = part
     return numeric, slug
 
+# The endpoint 403s without a same-origin Origin/Referer; restaurantIds is [Int],
+# and slots live under `availableTimes` (the old `sessions`/`[ID!]` schema is gone).
+_GQL_HEADERS = {
+    "Content-Type": "application/json",
+    "Origin": SITE,
+    "Referer": SITE + "/",
+}
+
 _QUERY = """
-query Avail($ids: [ID!]!, $date: String!, $people: Int!) {
+query Avail($ids: [Int]!, $date: String!, $people: Int!) {
   allAvailabilitySearch(restaurantIds: $ids, date: $date, people: $people) {
-    restaurantId
-    sessions { time available price }
+    id
+    available
+    availableTimes { time available deal dealDescription }
   }
 }
 """
@@ -94,24 +103,32 @@ class FirstTable(Provider):
                         "open the page to see discounted slots.")
             return res
         try:
-            r = httpx.post(GRAPHQL, headers={**BROWSER_HEADERS,
-                           "Content-Type": "application/json"},
+            r = httpx.post(GRAPHQL, headers={**BROWSER_HEADERS, **_GQL_HEADERS},
                            json={"query": _QUERY, "variables": {
-                               "ids": [numeric], "date": date, "people": int(party_size)}},
+                               "ids": [int(numeric)], "date": date,
+                               "people": int(party_size)}},
                            timeout=HTTP_TIMEOUT)
-            rows = (r.json().get("data") or {}).get("allAvailabilitySearch") or []
+            payload = r.json()
+            rows = (payload.get("data") or {}).get("allAvailabilitySearch") or []
         except Exception as e:
             res.degraded = True
             res.note = f"GraphQL fetch failed ({type(e).__name__}); open the page."
             return res
+        if payload.get("errors"):
+            res.degraded = True
+            res.note = (f"GraphQL error: {payload['errors'][0].get('message')}; "
+                        "open the page.")
+            return res
         for row in rows:
-            for s in row.get("sessions", []):
+            for s in row.get("availableTimes", []):
                 if s.get("available") and s.get("time"):
-                    res.slots.append(Slot(time=s["time"][:5],
-                                          datetime_iso=f"{date}T{s['time'][:5]}",
+                    hhmm = s["time"][:5]
+                    label = s.get("dealDescription") or s.get("deal") or "First Table"
+                    res.slots.append(Slot(time=hhmm,
+                                          datetime_iso=f"{date}T{hhmm}",
                                           bookable=True,
-                                          label="First Table discount"))
+                                          label=label))
         res.slots.sort(key=lambda s: s.time)
         res.available = bool(res.slots)
-        res.note = f"{len(res.slots)} discounted slot(s) on {date}."
+        res.note = f"{len(res.slots)} bookable slot(s) on {date}."
         return res
