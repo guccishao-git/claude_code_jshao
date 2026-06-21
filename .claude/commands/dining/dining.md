@@ -56,14 +56,20 @@ $PY -m dining.core link <provider> <venue_id> <YYYY-MM-DDTHH:MM> <party>
    "availability shown on opening the link".
 
 4. **Present** a tight table — these columns are **required, in this order**:
-   restaurant · **provider/platform** · area · **available slots near the time** ·
+   restaurant · **provider/platform** · area · **bookable time slots** ·
    **[预订 / Book]** link (from `dining_build_booking_link` or the result's `booking_link`).
    - **Always include the provider/platform column** (e.g. `sevenrooms`, `firsttable`,
      `resdiary`, `nowbookit`) for **every** row — name it even when a venue is off-platform
      (label it e.g. "自有渠道 / direct"). Never omit it; the user relies on knowing which
      platform each booking goes through.
-   - In any follow-up re-summary, keep the provider/platform column too — don't drop it
-     when compressing.
+   - **Always include the bookable-time-slots column** with the **actual times returned**
+     by `dining_check_availability` (e.g. `19:00 / 19:30 / 20:00`), not a vague "available".
+     List the real slots near the requested time; if there are many, show the ones around
+     the target plus the range. For providers/dates with **no server-side availability or a
+     `degraded` result**, put "以页面为准 / shown on opening link" in this column — never
+     leave it blank or invent times.
+   - In any follow-up re-summary, keep **both** the provider/platform and the
+     bookable-time-slots columns — don't drop them when compressing.
    If nothing is free near the requested time, say so and offer the nearest slots or
    alternatives — don't pad.
 
