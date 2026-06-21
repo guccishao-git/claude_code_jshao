@@ -16,7 +16,7 @@ Backed by `scripts/dining/` (also the `dining` MCP server). OpenTable is intenti
 |----------|----------|--------------------|-----------------|
 | **sevenrooms** | Fine dining (SkyCity, Ahi, Esther, Botswana Butchery) | ✅ live JSON | slug, e.g. `botswanabutcheryauckland` |
 | **resdiary** | Broad NZ (Savor, Ostro, Nourish) | deep-link (widget shows slots) | `VenueName/VenueId` |
-| **firsttable** | Off-peak 50%-off deals | ✅ GraphQL | numeric restaurant id |
+| **firsttable** | Off-peak 50%-off deals | ✅ GraphQL | `region/suburb/slug` **and** numeric id, joined `\|` — e.g. `auckland/mount-eden/maya-hotpot-dominion-road\|6401` |
 | **nowbookit** | Independent venues | deep-link | `accountid[:venueid]` |
 
 ## How to run
@@ -41,7 +41,11 @@ $PY -m dining.core link <provider> <venue_id> <YYYY-MM-DDTHH:MM> <party>
    **web search** to find real venues and which platform they use, plus the `venue_id`:
    - SevenRooms: search `sevenrooms.com/explore <restaurant> Auckland` → slug in the URL.
    - ResDiary: `booking.resdiary.com <restaurant>` → `VenueName/VenueId` in the widget URL.
-   - First Table: `firsttable.co.nz/auckland <restaurant>`.
+   - First Table: `firsttable.co.nz/auckland <restaurant>` → keep the **full
+     `region/suburb/slug` path** from the result URL (that's the only working venue
+     page; the numeric id has no page route and 404s). For live availability also grab
+     the numeric id (in the page's `"id":<n>` JSON) and pass venue_id as
+     `region/suburb/slug|<id>` so both the link and the GraphQL check work.
    - Now Book It: the venue's own site's booking widget (`bookings.nowbookit.com?accountid=`).
    Never invent ids — confirm from a real URL.
 

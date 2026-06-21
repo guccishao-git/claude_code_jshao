@@ -22,6 +22,28 @@ from .base import (Provider, Slot, AvailabilityResult, BROWSER_HEADERS, HTTP_TIM
 GRAPHQL = "https://api.firsttable.net/graphql"
 SITE = "https://www.firsttable.co.nz"
 
+
+def _split_venue_id(venue_id: str):
+    """First Table needs two different keys: a numeric restaurantId for the
+    availability GraphQL, and a `region/suburb/slug` path for the (only) working
+    venue page URL. There is no numeric page route — `/restaurant/<id>` 404s.
+
+    So `venue_id` may carry both, in either order, joined by `|`:
+        "6401|auckland/mount-eden/maya-hotpot-dominion-road"
+        "auckland/mount-eden/maya-hotpot-dominion-road|6401"
+    or just one of them. Returns (numeric_id_or_None, slug_path_or_None).
+    """
+    numeric, slug = None, None
+    for part in str(venue_id).split("|"):
+        part = part.strip().strip("/")
+        if not part:
+            continue
+        if part.isdigit():
+            numeric = part
+        elif "/" in part:
+            slug = part
+    return numeric, slug
+
 _QUERY = """
 query Avail($ids: [ID!]!, $date: String!, $people: Int!) {
   allAvailabilitySearch(restaurantIds: $ids, date: $date, people: $people) {
@@ -39,22 +61,34 @@ class FirstTable(Provider):
     home = SITE
 
     def build_booking_link(self, venue_id: str, datetime_iso: str, party_size: int) -> dict:
-        # First Table has no public prefilled /book route; link to the restaurant page.
-        # `venue_id` here may be a "region/suburb/slug" path or a numeric id.
-        path = venue_id if "/" in venue_id else f"restaurant/{venue_id}"
-        link = f"{SITE}/{path.strip('/')}"
+        # First Table has no public prefilled /book route AND no numeric-id page
+        # route (`/restaurant/<id>` 404s). The only working venue URL is the
+        # `region/suburb/slug` path, so a slug is required to build a real link.
+        numeric, slug = _split_venue_id(venue_id)
+        if slug:
+            link = f"{SITE}/{slug}"
+            note = "First Table restaurant page (pick the discounted slot on-site)."
+        else:
+            # Only a numeric id was supplied — we cannot build a working venue page.
+            link = f"{SITE}/auckland"
+            note = ("No slug path supplied — numeric ids have no working First Table "
+                    "page URL. Search this listing for the venue, or re-run with "
+                    "venue_id='<region/suburb/slug>|<id>'.")
         return {
             "provider": self.name, "venue_id": venue_id, "datetime": datetime_iso,
             "party_size": int(party_size),
             "links": {"primary": link},
-            "note": "First Table restaurant page (pick the discounted slot on-site).",
+            "note": note,
         }
 
     def check_availability(self, venue_id: str, date: str, party_size: int,
                            time: Optional[str] = None) -> AvailabilityResult:
         res = AvailabilityResult(provider=self.name, venue_id=venue_id, date=date,
                                  party_size=int(party_size))
-        if httpx is None or not str(venue_id).isdigit():
+        numeric, slug = _split_venue_id(venue_id)
+        if slug:
+            res.booking_link = f"{SITE}/{slug}"
+        if httpx is None or not numeric:
             res.degraded = True
             res.note = ("First Table availability needs a numeric restaurantId; "
                         "open the page to see discounted slots.")
@@ -63,7 +97,7 @@ class FirstTable(Provider):
             r = httpx.post(GRAPHQL, headers={**BROWSER_HEADERS,
                            "Content-Type": "application/json"},
                            json={"query": _QUERY, "variables": {
-                               "ids": [venue_id], "date": date, "people": int(party_size)}},
+                               "ids": [numeric], "date": date, "people": int(party_size)}},
                            timeout=HTTP_TIMEOUT)
             rows = (r.json().get("data") or {}).get("allAvailabilitySearch") or []
         except Exception as e:
