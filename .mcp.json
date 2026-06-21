@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "dining": {
+      "command": "/Users/jason.shao/Documents/GitHub1/claude_code_jshao/.venv/bin/python",
+      "args": [
+        "/Users/jason.shao/Documents/GitHub1/claude_code_jshao/scripts/dining/mcp_server.py"
+      ]
+    }
+  }
+}
