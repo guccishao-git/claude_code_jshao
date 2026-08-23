@@ -23,11 +23,10 @@ PAGES_FILE = os.path.join(REPO_DIR, "docs", "arsenal-weekly.html")
 # pull structured P / W / D / L / GD / Pts without asking the LLM to read prose.
 
 ESPN_STANDINGS_URL = "https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings"
-_ESPN_UA = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/120.0.0.0 Safari/537.36"
-)
+# IMPORTANT: do NOT send a browser-like User-Agent here. ESPN's edge/WAF
+# returns 403 for requests whose UA looks like a real browser (Chrome,
+# Firefox, generic "Mozilla/5.0", even an empty UA header) but allows the
+# default UA sent by urllib/curl through cleanly. Verified 2026-08-23.
 
 # Map ESPN displayName → Chinese name for prompt injection
 ESPN_TEAM_ZH = {
@@ -48,9 +47,13 @@ ESPN_TEAM_ZH = {
     "Wolverhampton Wanderers": "狼队",
     "Nottingham Forest": "诺丁汉森林",
     "Bournemouth": "伯恩茅斯",
+    "AFC Bournemouth": "伯恩茅斯",
     "Burnley": "伯恩利",
     "Leeds United": "利兹联",
     "Sunderland": "桑德兰",
+    "Hull City": "赫尔城",
+    "Ipswich Town": "伊普斯维奇",
+    "Coventry City": "考文垂城",
 }
 
 
@@ -60,8 +63,7 @@ def fetch_espn_standings(top_n: int = 5) -> list[dict]:
     Returns dicts with: rank, team_en, team_zh, p, w, d, l, gd, pts.
     Raises RuntimeError on parse failure (caller decides whether to fall back).
     """
-    req = urllib.request.Request(ESPN_STANDINGS_URL, headers={"User-Agent": _ESPN_UA})
-    with urllib.request.urlopen(req, timeout=20) as r:
+    with urllib.request.urlopen(ESPN_STANDINGS_URL, timeout=20) as r:
         data = json.loads(r.read().decode("utf-8", errors="replace"))
 
     entries = data.get("standings", {}).get("entries")
@@ -460,15 +462,23 @@ def generate_slides(prompt: str = PROMPT) -> str:
         iteration += 1
         print(f"  API call #{iteration} (stop_reason pending)…")
 
-        # Retry up to 5 times on rate limit errors with exponential backoff
+        # Retry up to 5 times on rate limit errors with exponential backoff.
+        # Streaming (not .create()) is required at this max_tokens: the SDK
+        # refuses non-streaming calls whose max_tokens implies >10min of
+        # possible generation time, which 32000 tokens exceeds for this
+        # model. .stream()'s get_final_message() returns the same Message
+        # shape as .create(), so nothing downstream needs to change.
         for attempt in range(5):
             try:
-                response = client.messages.create(
+                with client.messages.stream(
                     model="claude-sonnet-4-6",
-                    max_tokens=16000,
+                    max_tokens=32000,
                     tools=[{"type": "web_search_20250305", "name": "web_search"}],
                     messages=messages,
-                )
+                ) as stream:
+                    for _ in stream:
+                        pass
+                    response = stream.get_final_message()
                 break
             except anthropic.RateLimitError as e:
                 wait = 60 * (2 ** attempt)  # 60s, 120s, 240s, 480s, 960s
@@ -546,26 +556,11 @@ def generate_slides(prompt: str = PROMPT) -> str:
 
 # ── HTML extraction ────────────────────────────────────────────────────────────
 
-def sanitise_html(html: str) -> str:
-    """Remove any leaked model reasoning text from inside the HTML."""
-    # Pattern: text node content that looks like model commentary (English sentences
-    # appearing between HTML tags mid-document, not inside a <script>/<style> block)
-    # Strategy: remove lines that are pure prose English outside tag context
-    lines = html.splitlines()
+def _sanitise_prose_lines(text: str) -> str:
+    """Drop lines that look like leaked model commentary between HTML tags."""
     cleaned = []
-    in_script_or_style = False
-    for line in lines:
+    for line in text.splitlines():
         stripped = line.strip()
-        # Track script/style blocks (skip sanitisation inside them)
-        if re.match(r'<(script|style)[\s>]', stripped, re.IGNORECASE):
-            in_script_or_style = True
-        if re.match(r'</(script|style)>', stripped, re.IGNORECASE):
-            in_script_or_style = False
-            cleaned.append(line)
-            continue
-        if in_script_or_style:
-            cleaned.append(line)
-            continue
         # Drop lines that are plain English prose with no HTML tags
         # (likely leaked model reasoning).
         # Skip if the line is clearly an HTML attribute continuation
@@ -583,6 +578,68 @@ def sanitise_html(html: str) -> str:
             continue
         cleaned.append(line)
     return "\n".join(cleaned)
+
+
+def _sanitise_script_lines(text: str) -> str:
+    """
+    Drop leaked-prose lines from inside a <script>…</script> body.
+    A single such line — e.g. "I'll continue the HTML exactly from where it
+    was cut off:" — silently breaks the whole script's syntax, which kills
+    nav-dot click handlers AND the IntersectionObserver; the active dot then
+    never updates and stays frozen wherever the static markup first set it.
+    Deliberately conservative: only drops a line that both (a) reads as
+    multi-word English prose and (b) contains NONE of the punctuation real
+    JS statements almost always have, so it must never eat legitimate code.
+    Quotes are excluded from that punctuation set — contractions like
+    "I'll" / "it's" make quote characters useless as a code signal.
+    """
+    js_syntax_chars = ('(', ')', '{', '}', ';', '=', '.', '/')
+    cleaned = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if (stripped
+                and not stripped.startswith('//')
+                and not any(ch in stripped for ch in js_syntax_chars)
+                and re.search(r'[A-Za-z]{4,}\s+[A-Za-z]{2,}', stripped)  # multi-word prose
+                and not re.search(r'[^\x00-\x7F]', stripped)):  # no CJK = suspicious
+            print(f"  [sanitise] Removed leaked text inside <script>: {stripped[:80]!r}", file=sys.stderr)
+            continue
+        cleaned.append(line)
+    return "\n".join(cleaned)
+
+
+def sanitise_html(html: str) -> str:
+    """
+    Remove any leaked model reasoning text from inside the HTML.
+
+    Splits the document into <script>/<style> blocks and everything else,
+    then sanitises each segment with a filter appropriate to its content.
+    This block-extraction approach (rather than line-by-line open/close
+    state tracking) avoids a real failure mode: a closing tag that shares a
+    line with code (e.g. "})();</script>") doesn't match an anchored
+    line-start regex, so naive state tracking can get stuck "inside script"
+    for the rest of the document and start deleting legitimate CSS/HTML.
+    """
+    block_re = re.compile(
+        r'<script[^>]*>[\s\S]*?</script>|<style[^>]*>[\s\S]*?</style>',
+        re.IGNORECASE,
+    )
+    out = []
+    pos = 0
+    for m in block_re.finditer(html):
+        out.append(_sanitise_prose_lines(html[pos:m.start()]))
+        block = m.group(0)
+        if block.lower().startswith('<script'):
+            open_end = block.index('>') + 1
+            close_start = block.rfind('</script')
+            out.append(block[:open_end]
+                       + _sanitise_script_lines(block[open_end:close_start])
+                       + block[close_start:])
+        else:
+            out.append(block)  # <style> blocks are left untouched
+        pos = m.end()
+    out.append(_sanitise_prose_lines(html[pos:]))
+    return "".join(out)
 
 
 def extract_html(raw: str) -> str:
@@ -778,16 +835,41 @@ def validate_and_fix(html: str, espn_standings: list[dict] | None = None) -> str
             html = html[:last_sec + len("</section>")] + clean_between + "</body>" + html[body_end + len("</body>"):]
             fixes.append("Removed junk content appended after last </section>")
 
-    # ── 5. Slide 7: ensure it exists and has a hot-take section ─────────────
+    # ── 5. Slide count: enforce exactly EXPECTED_SLIDE_COUNT slides ──────────
     # IMPORTANT: count only *complete* section blocks (opening tag AND its
     # matching </section>). Counting opening tags alone lets a truncated final
     # slide — cut off mid-generation with no closing tag — pass as "present",
-    # which both skips this fallback and (via check #4 above) gets its
-    # dangling content silently deleted as trailing junk.
-    slides = re.findall(r'<section[^>]+class="[^"]*slide[^"]*"[^>]*>.*?</section>', html, re.DOTALL)
+    # which both skips the "missing slide" fallback below and (via check #4
+    # above) gets its dangling content silently deleted as trailing junk.
+    slide_matches = list(re.finditer(
+        r'<section[^>]+class="[^"]*slide[^"]*"[^>]*>.*?</section>', html, re.DOTALL
+    ))
+    n_slides = len(slide_matches)
+
+    if n_slides > EXPECTED_SLIDE_COUNT:
+        # The model sometimes adds bonus slides beyond the mandated count.
+        # The nav dots (built from a fixed 7-item list — see PROMPT) only
+        # cover indices 0-6, so any extra slide has no dot: scrolling into it
+        # leaves every dot un-highlighted (looks like the "active dot" is
+        # broken). Trim back to exactly the mandated count, preserving
+        # whatever followed the true last slide (nav script, etc.).
+        keep_end = slide_matches[EXPECTED_SLIDE_COUNT - 1].end()
+        tail = html[slide_matches[-1].end():]
+        dropped = n_slides - EXPECTED_SLIDE_COUNT
+        html = html[:keep_end] + tail
+        fixes.append(
+            f"Trimmed {dropped} extra slide(s) beyond the mandated "
+            f"{EXPECTED_SLIDE_COUNT} (model generated {n_slides}) so nav "
+            f"dots stay 1:1 with slides"
+        )
+        slide_matches = list(re.finditer(
+            r'<section[^>]+class="[^"]*slide[^"]*"[^>]*>.*?</section>', html, re.DOTALL
+        ))
+
+    slides = [m.group(0) for m in slide_matches]
     n_slides = len(slides)
     has_last_slide_hot_take = bool(slides) and "hot-take" in slides[-1]
-    if n_slides < 7:
+    if n_slides < EXPECTED_SLIDE_COUNT:
         # Entire slide 7 is missing — insert full fallback before </body>
         html = html.replace("</body>", SLIDE7_FALLBACK + "\n</body>")
         fixes.append(f"Injected missing Slide 7 (only {n_slides} complete slides found)")
@@ -804,6 +886,27 @@ def validate_and_fix(html: str, espn_standings: list[dict] | None = None) -> str
     if "IntersectionObserver" not in html:
         html = html.replace("</body>", NAV_JS + "\n</body>")
         fixes.append("Injected missing nav JS (IntersectionObserver)")
+    else:
+        # Belt-and-braces: even if sanitise_html's line-level filter missed a
+        # leaked-text injection inside the nav script, a syntactically broken
+        # script silently kills ALL nav behaviour (clicks + active-dot
+        # tracking) with no visible error. Find the script block that drives
+        # the nav dots and, if its braces/parens don't balance, replace that
+        # one block wholesale with the known-good fallback rather than
+        # shipping a dead script.
+        nav_script_match = None
+        for m in re.finditer(r'<script(?![^>]*src=)[^>]*>([\s\S]*?)</script>', html, re.IGNORECASE):
+            if 'navDots' in m.group(1) or 'IntersectionObserver' in m.group(1):
+                nav_script_match = m
+        if nav_script_match:
+            body = nav_script_match.group(1)
+            balanced = (
+                body.count('(') == body.count(')')
+                and body.count('{') == body.count('}')
+            )
+            if not balanced:
+                html = html[:nav_script_match.start()] + NAV_JS + html[nav_script_match.end():]
+                fixes.append("Replaced syntactically broken nav script (unbalanced braces/parens) with fallback")
 
     # ── 7. Cover h1: enforce Noto Sans SC weight 900, strip inner font overrides
     # Syne numerals look jarring next to Chinese — h1 must use Noto Sans SC 900
