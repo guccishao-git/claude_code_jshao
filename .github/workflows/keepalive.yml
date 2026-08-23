@@ -9,12 +9,23 @@ jobs:
   keepalive:
     runs-on: ubuntu-latest
     permissions:
-      actions: write
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Keep workflows enabled
-        uses: gautamkrishnar/keepalive-workflow@2.0.0
         with:
-          use_api: true
+          fetch-depth: 0
+
+      - name: Touch keepalive marker
+        run: |
+          mkdir -p .github/keepalive
+          date -u +%Y-%m-%dT%H:%M:%SZ > .github/keepalive/last-ping.txt
+
+      - name: Commit and push
+        run: |
+          git config user.name "Keepalive Bot"
+          git config user.email "keepalive-bot@users.noreply.github.com"
+          git add .github/keepalive/last-ping.txt
+          git diff --staged --quiet || git commit -m "chore: keepalive ping $(date -u +%Y-%m-%d)"
+          git pull --rebase origin main
+          git push
