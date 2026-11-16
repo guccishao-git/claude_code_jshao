@@ -3,718 +3,787 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>阿森纳本周快报 — 2026年11月第2周</title>
+<title>阿森纳本周快报 — 2026年11月16日</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Noto+Sans+SC:wght@300;400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script><style>
-  :root {
-    --bg: #0B1730;
-    --navy-hi: #16264A;
-    --crimson: #C8102E;
-    --crimson-dim: rgba(200,16,46,0.25);
-    --crimson-glow: rgba(200,16,46,0.5);
-    --bronze: #A9863F;
-    --bronze-hi: #D4B876;
-    --gold: #E8B84B;
-    --gold-dim: rgba(232,184,75,0.2);
-    --text: #F2EEE6;
-    --text-muted: rgba(242,238,230,0.6);
-  }
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Noto+Sans+SC:wght@300;400;700;900&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script><style>
+:root {
+  --bg: #0B1730;
+  --navy-hi: #16264A;
+  --crimson: #C8102E;
+  --crimson-dim: rgba(200,16,46,0.25);
+  --crimson-glow: rgba(200,16,46,0.5);
+  --bronze: #A9863F;
+  --bronze-hi: #D4B876;
+  --gold: #E8B84B;
+  --gold-dim: rgba(232,184,75,0.2);
+  --text: #F2EEE6;
+  --text-muted: rgba(242,238,230,0.6);
+}
 
-  html {
-    overflow-y: scroll;
-    scroll-snap-type: y mandatory;
-    background: var(--bg);
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Noto Sans SC', sans-serif;
-    color: var(--text);
-    background: var(--bg);
-  }
+html {
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  background: var(--bg);
+}
 
-  /* ── NAV DOTS ── */
-  .nav-dots {
-    position: fixed;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 100;
-  }
-  .nav-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: none;
-    background: var(--text-muted);
-    cursor: pointer;
-    padding: 0;
-    transition: background 0.3s, box-shadow 0.3s;
-  }
-  .nav-dot.active {
-    background: var(--gold);
-    animation: dotPulse 2s ease-in-out infinite;
-  }
-  @keyframes dotPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(232,184,75,0.6); }
-    50% { box-shadow: 0 0 0 5px rgba(232,184,75,0); }
-  }
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
 
-  /* ── KIT STRIPE ── */
-  .kit-stripe {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 50;
-    height: 8px;
-    display: flex;
-  }
-  .kit-stripe span:nth-child(1) { flex: 1; background: var(--crimson); }
-  .kit-stripe span:nth-child(2) { flex: 0.4; background: var(--gold); }
-  .kit-stripe span:nth-child(3) { flex: 1; background: var(--crimson); }
+/* ── KIT STRIPE ── */
+.kit-stripe {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 8px;
+  z-index: 50;
+  display: flex;
+}
+.kit-stripe span:nth-child(1) { flex: 1; background: var(--crimson); }
+.kit-stripe span:nth-child(2) { flex: 0.4; background: var(--gold); }
+.kit-stripe span:nth-child(3) { flex: 1; background: var(--crimson); }
 
-  /* ── SLIDE BASE ── */
-  .slide {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-    scroll-snap-align: start;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-  }
+/* ── NAV DOTS ── */
+.nav-dots {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.nav-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+  padding: 0;
+}
+.nav-dot.active {
+  background: var(--gold);
+  animation: dotPulse 2s infinite;
+}
+@keyframes dotPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(232,184,75,0.5); }
+  50%      { box-shadow: 0 0 0 5px rgba(232,184,75,0); }
+}
 
-  /* ── BACKGROUND FX ── */
-  .chevrons {
-    position: absolute;
-    inset: 0;
-    background:
-      repeating-linear-gradient(135deg, rgba(255,255,255,0.022) 0px, rgba(255,255,255,0.022) 1px, transparent 1px, transparent 40px),
-      repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 40px);
-    opacity: 0.5;
-    pointer-events: none;
-    z-index: 0;
-  }
+/* ── SLIDES ── */
+section.slide {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
-  .beams {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-  }
-  .beam {
-    position: absolute;
-    top: -10%;
-    width: clamp(80px, 12vw, 180px);
-    height: 70%;
-    background: linear-gradient(180deg, rgba(232,184,75,0.4) 0%, rgba(200,16,46,0.18) 60%, transparent 100%);
-    mix-blend-mode: screen;
-    transform-origin: top center;
-    animation: beamSway 6s ease-in-out infinite;
-    border-radius: 0 0 50% 50%;
-  }
-  .beam:nth-child(1) { left: 10%; opacity: 0.75; animation-delay: 0s; }
-  .beam:nth-child(2) { left: 30%; opacity: 0.5; animation-delay: -2s; }
-  .beam:nth-child(3) { left: 60%; opacity: 0.6; animation-delay: -4s; }
-  .beam:nth-child(4) { left: 80%; opacity: 0.75; animation-delay: -1s; }
-  @keyframes beamSway {
-    0%, 100% { transform: rotate(-8deg) scaleX(1); }
-    50% { transform: rotate(8deg) scaleX(1.15); }
-  }
+/* ── BACKGROUND FX ── */
+.chevrons {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 2px, transparent 2px, transparent 40px),
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 40px);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 1;
+}
+.pitch-bg {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 30%;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 60px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 60px);
+  pointer-events: none;
+  z-index: 1;
+}
+.center-glow {
+  position: absolute;
+  top: -15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110%;
+  height: 70%;
+  background: radial-gradient(ellipse at 50% 20%, rgba(232,184,75,0.35) 0%, rgba(200,16,46,0.14) 40%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  animation: glowPulse 4s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%,100% { opacity: 0.75; }
+  50%      { opacity: 1; }
+}
+.beams {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+.beam {
+  position: absolute;
+  top: 0;
+  width: clamp(80px,12vw,180px);
+  height: 60%;
+  transform-origin: top center;
+  mix-blend-mode: screen;
+  animation: beamSway 6s ease-in-out infinite;
+}
+.beam:nth-child(1) { left: 10%; background: linear-gradient(180deg, rgba(232,184,75,0.4) 0%, rgba(200,16,46,0.18) 60%, transparent 100%); opacity: 0.75; animation-delay: 0s; }
+.beam:nth-child(2) { left: 30%; background: linear-gradient(180deg, rgba(232,184,75,0.3) 0%, rgba(200,16,46,0.12) 60%, transparent 100%); opacity: 0.5; animation-delay: -1.5s; }
+.beam:nth-child(3) { left: 60%; background: linear-gradient(180deg, rgba(232,184,75,0.35) 0%, rgba(200,16,46,0.15) 60%, transparent 100%); opacity: 0.6; animation-delay: -3s; }
+.beam:nth-child(4) { left: 80%; background: linear-gradient(180deg, rgba(232,184,75,0.3) 0%, rgba(200,16,46,0.1) 60%, transparent 100%); opacity: 0.45; animation-delay: -4.5s; }
+@keyframes beamSway {
+  0%,100% { transform: rotate(0deg) scaleX(1); }
+  25%      { transform: rotate(8deg) scaleX(1.15); }
+  75%      { transform: rotate(-8deg) scaleX(1.15); }
+}
+.crest-watermark {
+  position: absolute;
+  right: -2%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(180px, 28vw, 380px);
+  opacity: 0.07;
+  pointer-events: none;
+  z-index: 2;
+  user-select: none;
+}
 
-  .pitch-bg {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 30%;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 1;
-  }
+/* ── TYPOGRAPHY ── */
+.tag {
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
+}
+.tag::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: var(--gold);
+  flex-shrink: 0;
+}
 
-  .center-glow {
-    position: absolute;
-    top: -15%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 110%;
-    height: 70%;
-    background: radial-gradient(ellipse at 50% 20%, rgba(232,184,75,0.35) 0%, rgba(200,16,46,0.14) 40%, transparent 70%);
-    pointer-events: none;
-    z-index: 1;
-    animation: glowPulse 4s ease-in-out infinite;
-  }
-  @keyframes glowPulse {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; }
-  }
+h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.75rem);
+  font-weight: 800;
+  text-shadow: 0 0 40px rgba(232,184,75,0.25), 0 2px 4px rgba(0,0,0,0.5);
+  line-height: 1.1;
+}
 
-  .crest-watermark {
-    position: absolute;
-    right: -2%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: clamp(180px, 28vw, 360px);
-    opacity: 0.07;
-    pointer-events: none;
-    z-index: 2;
-    filter: grayscale(1);
-  }
+.bronze-text {
+  background: linear-gradient(180deg, var(--bronze-hi) 0%, var(--bronze) 55%, #7a5f2b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
-  /* ── SLIDE CONTENT ── */
-  .slide-content {
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    max-width: 1100px;
-    padding: clamp(32px, 5vw, 60px) clamp(20px, 5vw, 60px);
-    box-sizing: border-box;
-  }
+/* ── CARDS ── */
+.card {
+  background: rgba(169,134,63,0.07);
+  border: 1px solid var(--crimson-dim);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(200,16,46,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+  padding: clamp(12px, 2vw, 20px);
+}
 
-  /* ── TAG ── */
-  .tag {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.25em;
-    color: var(--gold);
-    font-size: clamp(0.65rem, 1.1vw, 0.85rem);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .tag::before {
-    content: '';
-    display: inline-block;
-    width: 18px;
-    height: 2px;
-    background: var(--gold);
-    flex-shrink: 0;
-  }
+/* ── SCORE DISPLAY ── */
+.score-display {
+  font-family: 'Oswald', sans-serif;
+  color: var(--gold);
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-weight: 700;
+  text-shadow: 0 0 30px rgba(232,184,75,0.5), 0 0 60px rgba(232,184,75,0.15);
+  line-height: 1;
+}
+.score-team {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+  color: var(--text);
+  text-shadow: 0 0 20px rgba(232,184,75,0.25);
+}
 
-  /* ── TYPOGRAPHY ── */
-  h1 {
-    font-family: 'Noto Sans SC', sans-serif;
-    font-weight: 900;
-    font-size: clamp(2.8rem,5.5vw,5rem);
-    line-height: 1.05;
-    margin: 0 0 16px;
-    text-shadow: 0 0 60px rgba(232,184,75,0.35), 0 2px 4px rgba(0,0,0,0.6);
-  }
-  h2 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(1.5rem, 3.5vw, 2.75rem);
-    margin: 0 0 20px;
-    text-shadow: 0 0 40px rgba(232,184,75,0.25), 0 2px 4px rgba(0,0,0,0.5);
-  }
-  p {
-    font-size: clamp(0.78rem, 1.3vw, 1rem);
-    font-family: 'Noto Sans SC', sans-serif;
-    line-height: 1.6;
-  }
+/* ── SLIDE CONTENT ── */
+.slide-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1100px;
+  padding: clamp(16px, 3vw, 48px) clamp(20px, 4vw, 60px);
+  padding-top: clamp(24px, 4vw, 56px);
+}
 
-  .bronze-text {
-    background: linear-gradient(180deg, var(--bronze-hi) 0%, var(--bronze) 55%, #7a5f2b 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.slide-content > * {
+  animation: fadeUp 0.6s ease both;
+}
+.slide-content > *:nth-child(2) { animation-delay: 0.1s; }
+.slide-content > *:nth-child(3) { animation-delay: 0.2s; }
+.slide-content > *:nth-child(4) { animation-delay: 0.3s; }
+.slide-content > *:nth-child(5) { animation-delay: 0.4s; }
+.slide-content > *:nth-child(6) { animation-delay: 0.5s; }
 
-  .divider-bar {
-    width: clamp(40px, 8vw, 80px);
-    height: 3px;
-    background: linear-gradient(90deg, var(--crimson), var(--gold));
-    margin: 16px 0;
-    border-radius: 2px;
-  }
+/* ── SLIDE 1 — COVER ── */
+.cover-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 4vw, 60px);
+  width: 100%;
+}
+.cover-left {
+  flex: 1;
+  min-width: 0;
+}
+.cover-right {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.masthead {
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  font-size: clamp(0.65rem, 1.1vw, 0.9rem);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: clamp(16px, 2.5vw, 32px);
+}
+.masthead::before {
+  content: '';
+  display: inline-block;
+  width: 32px;
+  height: 2px;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+.masthead::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+.cover-h1 {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.8rem,5.5vw,5rem);
+  line-height: 1.05;
+  margin-bottom: clamp(16px, 2vw, 24px);
+}
+.cover-h1 em {
+  font-style: normal;
+  background: linear-gradient(180deg, var(--bronze-hi) 0%, var(--bronze) 55%, #7a5f2b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.divider-bar {
+  width: clamp(40px, 8vw, 80px);
+  height: 3px;
+  background: linear-gradient(90deg, var(--crimson), var(--gold));
+  margin-bottom: clamp(10px, 1.5vw, 16px);
+  border-radius: 2px;
+}
+.cover-date {
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  font-size: clamp(0.7rem, 1vw, 0.9rem);
+}
+.cover-crest {
+  width: clamp(160px, 26vw, 320px);
+  filter: drop-shadow(0 0 30px rgba(232,184,75,0.6)) drop-shadow(0 0 60px rgba(232,184,75,0.3));
+  animation: crestFloat 5s ease-in-out infinite;
+}
+@keyframes crestFloat {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
 
-  /* ── CARDS ── */
-  .card {
-    background: rgba(169,134,63,0.07);
-    border: 1px solid var(--crimson-dim);
-    border-radius: 8px;
-    box-shadow: 0 4px 24px rgba(200,16,46,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
-    padding: clamp(12px, 2vw, 24px);
-  }
+/* ── SLIDE 2 — MATCH REPORT ── */
+.match-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(10px, 2vw, 20px);
+  margin-top: 1rem;
+}
+@media (max-width: 600px) {
+  .match-grid { grid-template-columns: 1fr; }
+}
+.match-card {
+  background: rgba(169,134,63,0.07);
+  border: 1px solid var(--crimson-dim);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(200,16,46,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+  padding: clamp(12px, 2vw, 20px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.match-meta {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.match-teams {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.match-funny {
+  font-size: clamp(0.72rem, 1.1vw, 0.85rem);
+  color: var(--gold);
+  font-style: italic;
+  border-left: 3px solid var(--crimson);
+  padding-left: 10px;
+  line-height: 1.4;
+}
+.scorers-list {
+  font-size: clamp(0.68rem, 1vw, 0.8rem);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.scorers-list strong {
+  color: var(--text);
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
 
-  /* ── FADE UP ANIMATION ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(28px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .fade-up { animation: fadeUp 0.7s ease forwards; }
-  .fade-up-2 { animation: fadeUp 0.7s 0.15s ease both; }
-  .fade-up-3 { animation: fadeUp 0.7s 0.3s ease both; }
-  .fade-up-4 { animation: fadeUp 0.7s 0.45s ease both; }
+/* ── SLIDE 3 — STANDINGS ── */
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(0.68rem, 1.1vw, 0.9rem);
+  margin-top: 0.75rem;
+}
+.standings-table th {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--crimson-dim);
+  text-align: center;
+}
+.standings-table th:nth-child(2) { text-align: left; }
+.standings-table td {
+  padding: 7px 8px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+}
+.standings-table td:nth-child(2) {
+  text-align: left;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: clamp(0.7rem, 1vw, 0.85rem);
+}
+.standings-table .pts-cell {
+  font-weight: 700;
+  color: var(--gold);
+  font-size: 1.05em;
+}
+.row-arsenal {
+  background: rgba(169,134,63,0.14);
+  border-radius: 4px;
+}
+.rank-num {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  color: var(--bronze-hi);
+}
+.form-pills {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+}
+.pill {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border-radius: 3px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.pill-w { background: #22c55e; }
+.pill-d { background: #f59e0b; }
+.pill-l { background: #ef4444; }
+.gap-note {
+  margin-top: 0.75rem;
+  font-size: clamp(0.72rem, 1vw, 0.85rem);
+  color: var(--text-muted);
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.gap-note strong {
+  color: var(--gold);
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1em;
+}
 
-  /* ═══════════════ SLIDE 1 — COVER ═══════════════ */
-  .cover-layout {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: clamp(20px, 4vw, 60px);
-    width: 100%;
-  }
-  .cover-left { flex: 1; min-width: 0; }
-  .cover-right {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .masthead {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.35em;
-    color: var(--gold);
-    font-size: clamp(0.6rem, 1vw, 0.8rem);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .masthead::before {
-    content: '';
-    display: inline-block;
-    width: 32px;
-    height: 2px;
-    background: var(--gold);
-    flex-shrink: 0;
-  }
-  .masthead::after {
-    content: '';
-    display: block;
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--gold), transparent);
-  }
-  .crest-main {
-    width: clamp(160px, 26vw, 320px);
-    filter: drop-shadow(0 0 20px rgba(232,184,75,0.5)) drop-shadow(0 0 40px rgba(232,184,75,0.25));
-    animation: crestFloat 5s ease-in-out infinite;
-  }
-  @keyframes crestFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  .cover-date {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--text-muted);
-    font-size: clamp(0.65rem, 1vw, 0.8rem);
-    margin-top: 8px;
-  }
+/* ── SLIDE 4 — POINTS RACE (chart) ── */
+section.chart-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.chart-slide .slide-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: clamp(20px, 3.5vw, 48px);
+}
+.chart-slide .tag,
+.chart-slide h2 { flex: 0 0 auto; }
+.chart-card {
+  flex: 1 1 0;
+  min-height: 0;
+  margin-top: 0.75rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(200,16,46,0.18);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(10px,1.5vw,16px);
+  gap: 8px;
+}
+.canvas-wrap {
+  position: relative;
+  height: clamp(160px,42vh,360px);
+  min-height: clamp(160px,42vh,360px);
+  flex: 0 0 auto;
+}
+@media (max-height: 700px) {
+  .canvas-wrap { height: clamp(120px,38vh,260px); min-height: clamp(120px,38vh,260px); }
+}
+.canvas-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+.chart-legend {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 0 0 auto;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.75rem;
+  color: rgba(242,238,230,0.7);
+}
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.chart-annotation {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.8rem;
+  color: rgba(242,238,230,0.5);
+  flex: 0 0 auto;
+}
+.chart-annotation.ahead { color: var(--gold); }
+.chart-annotation.behind { color: var(--crimson); }
+.pts-gap-note {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: clamp(0.72rem, 1vw, 0.85rem);
+  color: var(--text-muted);
+  flex: 0 0 auto;
+}
 
-  /* ═══════════════ SLIDE 2 — MATCH REPORT ═══════════════ */
-  .match-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(10px, 2vw, 20px);
-    margin-top: 16px;
-  }
-  @media (max-width: 680px) {
-    .match-grid { grid-template-columns: 1fr; }
-  }
-  .match-card {
-    background: rgba(169,134,63,0.07);
-    border: 1px solid var(--crimson-dim);
-    border-radius: 8px;
-    box-shadow: 0 4px 24px rgba(200,16,46,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
-    padding: clamp(14px, 2vw, 22px);
-  }
-  .match-comp {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--gold);
-    font-size: 0.72rem;
-    margin-bottom: 8px;
-  }
-  .score-display {
-    font-family: 'Oswald', sans-serif;
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
-    font-weight: 700;
-    color: var(--gold);
-    text-shadow: 0 0 30px rgba(232,184,75,0.5), 0 0 60px rgba(232,184,75,0.15);
-    line-height: 1;
-    margin: 4px 0;
-  }
-  .score-team {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: clamp(1rem, 2vw, 1.4rem);
-    color: var(--text);
-    text-shadow: 0 0 20px rgba(232,184,75,0.25);
-  }
-  .score-vs {
-    font-family: 'Oswald', sans-serif;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 4px 0;
-  }
-  .scorers {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    margin-top: 8px;
-    font-family: 'Noto Sans SC', sans-serif;
-  }
-  .scorers span { color: var(--gold); font-family: 'Oswald', sans-serif; }
-  .match-reaction {
-    margin-top: 10px;
-    font-size: clamp(0.72rem, 1.1vw, 0.9rem);
-    color: var(--bronze-hi);
-    font-style: italic;
-    border-left: 3px solid var(--crimson);
-    padding-left: 10px;
-    font-family: 'Noto Sans SC', sans-serif;
-  }
-  .tactical-note {
-    margin-top: 8px;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-family: 'Noto Sans SC', sans-serif;
-  }
+/* ── SLIDE 5 — TITLE RACE ── */
+.title-race-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(10px,2vw,20px);
+  margin-top: 0.75rem;
+}
+@media (max-width: 650px) {
+  .title-race-grid { grid-template-columns: 1fr; }
+}
+.rival-results { display: flex; flex-direction: column; gap: 6px; }
+.rival-result-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(0.7rem, 1vw, 0.82rem);
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 5px;
+  border-left: 3px solid var(--crimson-dim);
+}
+.rival-result-row.win  { border-left-color: #22c55e; }
+.rival-result-row.draw { border-left-color: #f59e0b; }
+.rival-result-row.loss { border-left-color: #ef4444; }
+.rival-score-badge {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.fixture-upcoming { display: flex; flex-direction: column; gap: 6px; }
+.fixture-upcoming-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(0.68rem, 0.95vw, 0.8rem);
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 5px;
+}
+.diff-dot {
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+.diff-easy   { color: #22c55e; }
+.diff-medium { color: #f59e0b; }
+.diff-hard   { color: #ef4444; }
+.section-label-oswald {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.verdict-box {
+  margin-top: 0.6rem;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: rgba(200,16,46,0.08);
+  border: 1px solid var(--crimson-dim);
+  font-size: clamp(0.72rem, 1vw, 0.85rem);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.pts-gap-badge {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: var(--gold);
+  font-weight: 700;
+}
 
-  /* ═══════════════ SLIDE 3 — STANDINGS ═══════════════ */
-  .standings-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: clamp(0.68rem, 1.1vw, 0.9rem);
-    margin-top: 12px;
-  }
-  .standings-table th {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    font-size: 0.7rem;
-    padding: 8px 10px;
-    text-align: center;
-    border-bottom: 1px solid var(--crimson-dim);
-  }
-  .standings-table th:nth-child(2) { text-align: left; }
-  .standings-table td {
-    padding: 9px 10px;
-    text-align: center;
-    color: var(--text);
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    font-family: 'Noto Sans SC', sans-serif;
-  }
-  .standings-table td:nth-child(2) { text-align: left; font-weight: 700; }
-  .standings-table tr.arsenal-row td {
-    background: rgba(169,134,63,0.14);
-    color: var(--gold);
-  }
-  .standings-table tr.arsenal-row td:nth-child(2) {
-    font-weight: 900;
-  }
-  .form-pills {
-    display: flex;
-    gap: 3px;
-    justify-content: center;
-  }
-  .pill {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.6rem;
-    font-weight: 700;
-    font-family: 'Oswald', sans-serif;
-    letter-spacing: 0;
-  }
-  .pill-w { background: #22c55e; color: #fff; }
-  .pill-d { background: #f59e0b; color: #fff; }
-  .pill-l { background: #ef4444; color: #fff; }
-  .gap-note {
-    margin-top: 14px;
-    font-size: clamp(0.72rem, 1.1vw, 0.88rem);
-    color: var(--text-muted);
-    font-family: 'Noto Sans SC', sans-serif;
-    text-align: center;
-  }
-  .gap-note strong { color: var(--gold); font-family: 'Oswald', sans-serif; }
+/* ── SLIDE 6 — FIXTURES ── */
+.fixtures-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px,1.5vw,14px);
+  margin-top: 0.75rem;
+}
+.fixture-item {
+  background: rgba(169,134,63,0.07);
+  border: 1px solid var(--crimson-dim);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(200,16,46,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+  padding: clamp(10px,1.5vw,16px) clamp(12px,2vw,20px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(6px,1vw,12px);
+}
+.fixture-comp {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  flex-shrink: 0;
+  min-width: 60px;
+  background: rgba(232,184,75,0.1);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(232,184,75,0.2);
+}
+.fixture-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fixture-opponent {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fixture-date {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+.fixture-stars {
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  color: var(--gold);
+}
+.fixture-stakes {
+  flex-basis: 100%;
+  font-size: clamp(0.68rem, 0.95vw, 0.8rem);
+  color: var(--text-muted);
+  font-style: italic;
+  font-family: 'Noto Sans SC', sans-serif;
+  line-height: 1.4;
+}
 
-  /* ═══════════════ SLIDE 4 — CHART ═══════════════ */
-  .chart-slide .slide-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding-top: clamp(28px, 4vh, 50px);
-    padding-bottom: clamp(16px, 2vh, 30px);
-  }
-  .chart-slide .tag,
-  .chart-slide h2 { flex: 0 0 auto; }
-  .chart-card {
-    flex: 1 1 0;
-    min-height: 0;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(200,16,46,0.18);
-    border-radius: 8px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    padding: clamp(10px, 2vh, 20px);
-    box-sizing: border-box;
-    gap: 10px;
-  }
-  .canvas-wrap {
-    position: relative;
-    height: clamp(160px, 42vh, 360px);
-    min-height: clamp(160px, 42vh, 360px);
-    flex: 0 0 auto;
-  }
-  @media (max-height: 700px) {
-    .canvas-wrap { height: clamp(120px, 38vh, 260px); min-height: clamp(120px, 38vh, 260px); }
-  }
-  .canvas-wrap canvas { width: 100% !important; height: 100% !important; display: block; }
-  .chart-legend {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Noto Sans SC', sans-serif;
-    font-size: 0.75rem;
-    color: rgba(242,238,230,0.7);
-  }
-  .legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .chart-annotation {
-    font-family: 'Oswald', sans-serif;
-    font-size: 0.8rem;
-    color: rgba(242,238,230,0.5);
-    margin-top: 4px;
-  }
-  .chart-annotation.ahead { color: var(--gold); }
-
-  /* ═══════════════ SLIDE 5 — TITLE RACE ═══════════════ */
-  .rival-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(10px, 2vw, 20px);
-    margin-top: 14px;
-  }
-  @media (max-width: 640px) { .rival-grid { grid-template-columns: 1fr; } }
-  .rival-results-list { list-style: none; padding: 0; margin: 8px 0 0; }
-  .rival-results-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.8rem;
-    font-family: 'Noto Sans SC', sans-serif;
-    color: var(--text-muted);
-  }
-  .rival-results-list li:last-child { border-bottom: none; }
-  .rl-score { font-family: 'Oswald', sans-serif; color: var(--gold); font-size: 0.85rem; }
-  .rl-wdl { font-family: 'Oswald', sans-serif; font-size: 0.72rem; font-weight: 700; padding: 2px 6px; border-radius: 3px; }
-  .rl-wdl.w { background: #22c55e; color: #fff; }
-  .rl-wdl.d { background: #f59e0b; color: #fff; }
-  .rl-wdl.l { background: #ef4444; color: #fff; }
-  .fixture-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.78rem;
-    font-family: 'Noto Sans SC', sans-serif;
-    color: var(--text-muted);
-  }
-  .fixture-row:last-child { border-bottom: none; }
-  .diff-dot { font-family: 'Oswald', sans-serif; font-size: 1rem; }
-  .diff-easy { color: #22c55e; }
-  .diff-medium { color: #f59e0b; }
-  .diff-hard { color: #ef4444; }
-  .rival-verdict {
-    margin-top: 14px;
-    font-size: clamp(0.72rem, 1.1vw, 0.88rem);
-    color: var(--text-muted);
-    font-family: 'Noto Sans SC', sans-serif;
-    border-left: 3px solid var(--bronze);
-    padding-left: 12px;
-    font-style: italic;
-  }
-
-  /* ═══════════════ SLIDE 6 — FIXTURES ═══════════════ */
-  .fixture-list { display: flex; flex-direction: column; gap: clamp(8px, 1.5vh, 14px); margin-top: 14px; }
-  .fixture-item {
-    background: rgba(169,134,63,0.07);
-    border: 1px solid var(--crimson-dim);
-    border-radius: 8px;
-    box-shadow: 0 4px 24px rgba(200,16,46,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
-    padding: clamp(10px, 1.5vw, 18px) clamp(12px, 2vw, 22px);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: clamp(6px, 1vw, 12px);
-  }
-  .fixture-comp {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--crimson);
-    font-size: 0.65rem;
-    flex-shrink: 0;
-    min-width: 60px;
-    background: var(--crimson-dim);
-    padding: 3px 8px;
-    border-radius: 4px;
-  }
-  .fixture-comp.ucl { color: #60a5fa; background: rgba(96,165,250,0.15); }
-  .fixture-info { flex: 1; min-width: 0; }
-  .fixture-opponent {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: clamp(0.9rem, 1.8vw, 1.3rem);
-    color: var(--text);
-  }
-  .fixture-meta {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    font-family: 'Noto Sans SC', sans-serif;
-    margin-top: 2px;
-  }
-  .fixture-stars {
-    font-size: clamp(0.7rem, 1.2vw, 0.9rem);
-    color: var(--gold);
-    flex-shrink: 0;
-  }
-  .fixture-stakes {
-    flex-basis: 100%;
-    font-size: clamp(0.68rem, 1vw, 0.82rem);
-    color: var(--bronze-hi);
-    font-style: italic;
-    font-family: 'Noto Sans SC', sans-serif;
-    padding-top: 4px;
-    border-top: 1px solid rgba(255,255,255,0.05);
-  }
-
-  /* ═══════════════ SLIDE 7 — TEAM NEWS ═══════════════ */
-  .injury-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: clamp(8px, 1.5vw, 14px);
-    margin-top: 12px;
-  }
-  .injury-card {
-    background: rgba(169,134,63,0.07);
-    border: 1px solid var(--crimson-dim);
-    border-radius: 8px;
-    padding: clamp(10px, 1.5vw, 16px);
-    box-shadow: 0 4px 24px rgba(200,16,46,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
-  }
-  .injury-name {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-  .injury-type {
-    font-size: 0.72rem;
-    color: var(--crimson);
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 4px;
-  }
-  .injury-type.suspended { color: var(--gold); }
-  .injury-return {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    font-family: 'Noto Sans SC', sans-serif;
-  }
-  .injury-comment {
-    font-size: 0.68rem;
-    color: var(--bronze-hi);
-    font-style: italic;
-    margin-top: 4px;
-    font-family: 'Noto Sans SC', sans-serif;
-  }
-  .hot-take-section {
-    margin-top: clamp(14px, 2.5vh, 24px);
-  }
-  .hot-take-main {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-style: italic;
-    font-size: clamp(1rem, 2vw, 1.35rem);
-    border-left: 4px solid var(--crimson);
-    padding: 12px 16px;
-    background: linear-gradient(90deg, rgba(200,16,46,0.12), rgba(169,134,63,0.06));
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 12px;
-    color: var(--text);
-    line-height: 1.4;
-  }
-  .hot-take-pills {
-    display: flex;
-    gap: clamp(8px, 1.5vw, 16px);
-    flex-wrap: wrap;
-  }
-  .hot-take-pill {
-    flex: 1;
-    min-width: 150px;
-    background: rgba(169,134,63,0.07);
-    border: 1px solid var(--crimson-dim);
-    border-radius: 8px;
-    padding: clamp(10px, 1.5vw, 16px);
-    box-shadow: 0 4px 24px rgba(200,16,46,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
-  }
-  .hot-take-pill-label {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    font-size: 0.72rem;
-    margin-bottom: 6px;
-  }
-  .hot-take-pill p {
-    font-size: clamp(0.68rem, 1vw, 0.82rem);
-    color: var(--text-muted);
-    margin: 0;
-    line-height: 1.5;
-    font-family: 'Noto Sans SC', sans-serif;
-  }
-
-  /* ── section-label override for slide 5 ── */
-  .section-label {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    font-size: 0.75rem;
-    margin-bottom: 6px;
-  }
+/* ── SLIDE 7 — TEAM NEWS ── */
+.slide7-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px,1.5vw,16px);
+  width: 100%;
+}
+.injury-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: clamp(8px,1.2vw,14px);
+}
+.injury-card {
+  background: rgba(169,134,63,0.07);
+  border: 1px solid var(--crimson-dim);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(200,16,46,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+  padding: clamp(10px,1.5vw,14px);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.injury-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+}
+.injury-type {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.injury-type.injured  { color: #ef4444; }
+.injury-type.suspended { color: #f59e0b; }
+.injury-return {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.injury-comment {
+  font-size: 0.7rem;
+  color: var(--gold);
+  font-style: italic;
+  font-family: 'Noto Sans SC', sans-serif;
+  margin-top: 2px;
+}
+.hot-take-section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px,1.2vw,14px);
+}
+.hot-take-label {
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hot-take-label::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: var(--gold);
+}
+.hot-take-main {
+  border-left: 4px solid var(--crimson);
+  padding: clamp(10px,1.5vw,16px) clamp(12px,2vw,18px);
+  background: linear-gradient(135deg, rgba(200,16,46,0.08) 0%, rgba(169,134,63,0.06) 100%);
+  border-radius: 0 8px 8px 0;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  line-height: 1.4;
+  color: var(--text);
+}
+.hot-take-pills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: clamp(8px,1.2vw,14px);
+}
+.hot-take-pill {
+  background: rgba(169,134,63,0.07);
+  border: 1px solid var(--crimson-dim);
+  border-radius: 8px;
+  padding: clamp(10px,1.5vw,14px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hot-take-pill-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.hot-take-pill p {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: clamp(0.68rem, 0.95vw, 0.8rem);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
 </style>
 </head>
 <body>
@@ -731,286 +800,279 @@
   <button class="nav-dot" data-idx="6" title="球队动态"></button>
 </nav>
 
-<!-- ═══════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════════
      SLIDE 1 — 封面
-═══════════════════════════════════════════════════════ -->
+══════════════════════════════════════════════════════ -->
 <section class="slide" id="slide-0">
   <div class="chevrons"></div>
   <div class="beams">
     <div class="beam"></div><div class="beam"></div>
     <div class="beam"></div><div class="beam"></div>
   </div>
-  <div class="pitch-bg"></div>
   <div class="center-glow"></div>
+  <div class="pitch-bg"></div>
   <img src="https://resources.premierleague.com/premierleague/badges/t3@x2.png"
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="slide-content">
     <div class="cover-layout">
-      <div class="cover-left fade-up">
+      <div class="cover-left">
         <div class="masthead">阿森纳本周快报</div>
-        <h1>
-          9胜<br>
-          <em class="bronze-text">领先5分</em><br>
-          放假了，稳了？
+        <h1 class="cover-h1">
+          10胜<em>9</em>场<br>
+          <em>领先5分</em><br>
+          冠军他们的！
         </h1>
         <div class="divider-bar"></div>
-        <div class="cover-date">2026年11月9日 — 国际比赛日前夕</div>
+        <div class="cover-date">2026年11月16日</div>
       </div>
-      <div class="cover-right fade-up-2">
+      <div class="cover-right">
         <img src="https://resources.premierleague.com/premierleague/badges/t3@x2.png"
              onerror="this.style.display='none'"
-             class="crest-main" alt="Arsenal FC">
+             class="cover-crest" alt="Arsenal FC">
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════════
      SLIDE 2 — 本周战报
-═══════════════════════════════════════════════════════ -->
+══════════════════════════════════════════════════════ -->
 <section class="slide" id="slide-1">
   <div class="chevrons"></div>
-  <div class="beams"><div class="beam"></div><div class="beam"></div><div class="beam"></div><div class="beam"></div></div>
-  <div class="pitch-bg"></div>
+  <div class="beams">
+    <div class="beam"></div><div class="beam"></div>
+    <div class="beam"></div><div class="beam"></div>
+  </div>
   <div class="center-glow"></div>
+  <div class="pitch-bg"></div>
   <img src="https://resources.premierleague.com/premierleague/badges/t3@x2.png"
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="slide-content">
-    <div class="tag fade-up">本周战报</div>
-    <h2 class="fade-up-2">枪手<em class="bronze-text">双线开炮</em>，国际周前笑着躺平</h2>
+    <div class="tag">本周战报</div>
+    <h2>枪手双<span class="bronze-text">连胜</span>，安菲尔德封神</h2>
 
-    <div class="match-grid fade-up-3">
+    <div class="match-grid">
       <!-- Match 1: Liverpool 0-1 Arsenal -->
       <div class="match-card">
-        <div class="match-comp">英超 · 第9轮 · 安菲尔德</div>
-        <div class="score-team">利物浦</div>
-        <div class="score-display">0 — 1</div>
-        <div class="score-vs">
-          <span style="color:var(--gold);font-family:'Oswald',sans-serif;">阿森纳</span>
+        <div class="match-meta">英超 第9轮 · 2026年11月1日 · 安菲尔德</div>
+        <div class="match-teams">
+          <span class="score-team">利物浦</span>
+          <span class="score-display">0 – 1</span>
+          <span class="score-team" style="color:var(--gold)">阿森纳</span>
         </div>
-        <div class="scorers">进球：<span>奥登加德（待核实分钟）</span></div>
-        <div class="match-reaction">在安菲尔德赢球？枪手已经不是那个在这里哭着回家的枪手了！</div>
-        <div class="tactical-note">📅 2026年11月1日｜阿森纳在上半场进球后低线防守，把利物浦急死在门外</div>
+        <div class="scorers-list">
+          <strong>进球：</strong>哈弗茨 16'（赖斯助攻）
+        </div>
+        <div class="match-funny">
+          14年了！14年！枪手终于在安菲尔德赢球了——比等待戈多还久，但甜得多🎯
+        </div>
       </div>
 
       <!-- Match 2: Arsenal 1-0 Hull City -->
       <div class="match-card">
-        <div class="match-comp">英超 · 第10轮 · 酋长球场</div>
-        <div class="score-team">阿森纳</div>
-        <div class="score-display">1 — 0</div>
-        <div class="score-vs">
-          <span style="color:var(--text-muted);font-family:'Oswald',sans-serif;">赫尔城</span>
+        <div class="match-meta">英超 第10轮 · 2026年11月7日 · 酋长球场</div>
+        <div class="match-teams">
+          <span class="score-team" style="color:var(--gold)">阿森纳</span>
+          <span class="score-display">1 – 0</span>
+          <span class="score-team">赫尔城</span>
         </div>
-        <div class="scorers">进球：<span>奥登加德</span> 72' — 马杜艾克助攻打门后反弹</div>
-        <div class="match-reaction">赢了但赢得惊心动魄？赫尔城门将有19次扑救！这叫什么，险胜美学！</div>
-        <div class="tactical-note">📅 2026年11月7日｜VAR风波后奥队长一脚定乾坤，连续7场主场必胜</div>
+        <div class="scorers-list">
+          <strong>进球：</strong>厄德高 72'（马杜埃克助攻）
+        </div>
+        <div class="match-funny">
+          赫尔城差点让场面变得很难看，好在队长永远在正确的时间出现✨ 枪手靠1-0就把积分榜顶端扩到6分领先，艺高人胆大！
+        </div>
       </div>
     </div>
 
-    <!-- Champions League bonus -->
-    <div class="match-card fade-up-4" style="margin-top:clamp(8px,1.5vh,14px);">
-      <div class="match-comp">欧冠 · 第4轮 · 布拉格</div>
-      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-        <div>
-          <div class="score-team" style="font-size:clamp(0.9rem,1.5vw,1.2rem);">斯拉维亚布拉格</div>
-          <div class="score-display" style="font-size:clamp(1.6rem,3.5vw,2.5rem);">1 — 2</div>
-          <div class="score-vs"><span style="color:var(--gold);font-family:'Oswald',sans-serif;">阿森纳</span></div>
-        </div>
-        <div style="flex:1;min-width:140px;">
-          <div class="match-reaction" style="margin-top:0;">布拉格客场拿3分，枪手的欧冠征途越来越有感觉了！下一个：多特蒙德！</div>
-          <div class="tactical-note">📅 2026年11月4日｜上半场2球奠定胜局，客场英雄本色</div>
-        </div>
+    <div style="margin-top:0.75rem; padding: 10px 14px; background: rgba(169,134,63,0.07); border:1px solid var(--crimson-dim); border-radius:8px;">
+      <div style="font-family:'Oswald',sans-serif;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">欧冠附加 · 11月4日</div>
+      <div class="match-teams">
+        <span style="font-family:'Noto Sans SC',sans-serif;font-size:0.85rem;color:var(--text-muted)">布拉格斯拉维亚</span>
+        <span style="font-family:'Oswald',sans-serif;color:var(--gold);font-size:1.6rem;font-weight:700;">1 – 2</span>
+        <span style="font-family:'Noto Sans SC',sans-serif;font-size:0.85rem;color:var(--gold)">阿森纳</span>
       </div>
+      <div style="font-size:0.72rem;color:var(--text-muted);font-style:italic;margin-top:4px;">欧冠客场赢球，枪手欧洲战线依然不败，连萨拉赫手上的戒指你们也买不走 💍</div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════════
      SLIDE 3 — 积分榜
-═══════════════════════════════════════════════════════ -->
+══════════════════════════════════════════════════════ -->
 <section class="slide" id="slide-2">
   <div class="chevrons"></div>
-  <div class="beams"><div class="beam"></div><div class="beam"></div><div class="beam"></div><div class="beam"></div></div>
-  <div class="pitch-bg"></div>
+  <div class="beams">
+    <div class="beam"></div><div class="beam"></div>
+    <div class="beam"></div><div class="beam"></div>
+  </div>
   <div class="center-glow"></div>
+  <div class="pitch-bg"></div>
   <img src="https://resources.premierleague.com/premierleague/badges/t3@x2.png"
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="slide-content">
-    <div class="tag fade-up">英超积分榜 · 前5</div>
-    <h2 class="fade-up-2"><em class="bronze-text">稳坐</em>第一，邻居们望尘莫及</h2>
+    <div class="tag">英超积分榜</div>
+    <h2>榜首<span class="bronze-text">稳如泰山</span>，5分领先</h2>
 
-    <div class="card fade-up-3" style="padding:0;overflow:hidden;">
-      <table class="standings-table">
-        <thead>
-          <tr>
-            <th>排名</th>
-            <th>球队</th>
-            <th>赛</th>
-            <th>胜</th>
-            <th>平</th>
-            <th>负</th>
-            <th>净</th>
-            <th>积分</th>
-            <th>近5场</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="arsenal-row">
-            <td>1</td>
-            <td>🔴 阿森纳</td>
-            <td>10</td>
-            <td>9</td>
-            <td>0</td>
-            <td>1</td>
-            <td>+10</td>
-            <td>27</td>
-            <td>
-              <div class="form-pills">
-                <div class="pill pill-w">胜</div>
-                <div class="pill pill-w">胜</div>
-                <div class="pill pill-w">胜</div>
-                <div class="pill pill-w">胜</div>
-                <div class="pill pill-w">胜</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>🔵 布莱顿</td>
-            <td>10</td>
-            <td>7</td>
-            <td>1</td>
-            <td>2</td>
-            <td>+19</td>
-            <td>22</td>
-            <td>
-              <div class="form-pills">
-                <div class="pill pill-w">胜</div>
-                <div class="pill pill-w">胜</div>
-                <div class="pill pill-l">负</div>
-                <div class="pill pill-w">胜</div>
-                <div class="pill pill-w">胜</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>🔵 曼城</td>
-            <td>10</td>
-            <td>7</td>
-            <td>0</td>
-            <td>3</td>
-            <td>+8</td>
-            <td>21</td>
-            <td>
-              <div class="form-pills">
-                <div class="pill pill-l">负</div>
-                <div class="pill pill-w">胜</div>
-                <div class="pill pill-l">负</div>
-                <div class="pill pill-l">负</div>
-                <div class="pill pill-w">胜</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>🔴 利物浦</td>
-            <td>10</td>
-            <td>5</td>
-            <td>3</td>
-            <td>2</td>
-            <td>+4</td>
-            <td>18</td>
-            <td>
-              <div class="form-pills">
-                <div class="pill pill-l">负</div>
-                <div class="pill pill-d">平</div>
-                <div class="pill pill-w">胜</div>
-                <div class="pill pill-d">平</div>
-                <div class="pill pill-w">胜</div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>🔵 切尔西</td>
-            <td>10</td>
-            <td>5</td>
-            <td>1</td>
-            <td>4</td>
-            <td>+3</td>
-            <td>16</td>
-            <td>
-              <div class="form-pills">
-                <div class="pill pill-l">负</div>
-                <div class="pill pill-w">胜</div>
-                <div class="pill pill-l">负</div>
-                <div class="pill pill-w">胜</div>
-                <div class="pill pill-l">负</div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <table class="standings-table">
+      <thead>
+        <tr>
+          <th>排名</th>
+          <th>球队</th>
+          <th>赛</th>
+          <th>胜</th>
+          <th>平</th>
+          <th>负</th>
+          <th>净</th>
+          <th>积分</th>
+          <th>近5场</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Arsenal -->
+        <tr class="row-arsenal">
+          <td><span class="rank-num">1</span></td>
+          <td>🔴 阿森纳</td>
+          <td>10</td><td>9</td><td>0</td><td>1</td>
+          <td style="color:var(--gold)">+10</td>
+          <td class="pts-cell">27</td>
+          <td>
+            <div class="form-pills">
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-w">胜</span>
+            </div>
+          </td>
+        </tr>
+        <!-- Brighton -->
+        <tr>
+          <td><span class="rank-num">2</span></td>
+          <td>🔵 布莱顿</td>
+          <td>10</td><td>7</td><td>1</td><td>2</td>
+          <td style="color:rgba(242,238,230,0.7)">+19</td>
+          <td class="pts-cell">22</td>
+          <td>
+            <div class="form-pills">
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-l">负</span>
+              <span class="pill pill-w">胜</span>
+            </div>
+          </td>
+        </tr>
+        <!-- Man City -->
+        <tr>
+          <td><span class="rank-num">3</span></td>
+          <td>🔵 曼城</td>
+          <td>10</td><td>7</td><td>0</td><td>3</td>
+          <td style="color:rgba(242,238,230,0.7)">+8</td>
+          <td class="pts-cell">21</td>
+          <td>
+            <div class="form-pills">
+              <span class="pill pill-l">负</span>
+              <span class="pill pill-l">负</span>
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-w">胜</span>
+            </div>
+          </td>
+        </tr>
+        <!-- Liverpool -->
+        <tr>
+          <td><span class="rank-num">4</span></td>
+          <td>🔴 利物浦</td>
+          <td>10</td><td>5</td><td>3</td><td>2</td>
+          <td style="color:rgba(242,238,230,0.7)">+4</td>
+          <td class="pts-cell">18</td>
+          <td>
+            <div class="form-pills">
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-l">负</span>
+              <span class="pill pill-d">平</span>
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-d">平</span>
+            </div>
+          </td>
+        </tr>
+        <!-- Chelsea -->
+        <tr>
+          <td><span class="rank-num">5</span></td>
+          <td>🔵 切尔西</td>
+          <td>10</td><td>5</td><td>1</td><td>4</td>
+          <td style="color:rgba(242,238,230,0.7)">+3</td>
+          <td class="pts-cell">16</td>
+          <td>
+            <div class="form-pills">
+              <span class="pill pill-l">负</span>
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-l">负</span>
+              <span class="pill pill-w">胜</span>
+              <span class="pill pill-l">负</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="gap-note">
+      📊 阿森纳领先第2名布莱顿 <strong>5分</strong>——差距虽说不到安全区，但赛程过了四分之一，这种领先已经让枪手球迷敢偷偷幻想了。冠军他们的？先把纽卡打完再说！
     </div>
-
-    <p class="gap-note fade-up-4">
-      领先第2名布莱顿 <strong>+5分</strong>，领先第3名曼城 <strong>+6分</strong>。
-      国际周休息一下，回来继续虐菜？大哥先暂时退出群聊了😎
-    </p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
-     SLIDE 4 — 积分追逐战
-═══════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 4 — 积分追逐战 (Chart)
+══════════════════════════════════════════════════════ -->
 <section class="slide chart-slide" id="slide-3">
   <div class="chevrons"></div>
-  <div class="beams"><div class="beam"></div><div class="beam"></div><div class="beam"></div><div class="beam"></div></div>
-  <div class="pitch-bg"></div>
+  <div class="beams">
+    <div class="beam"></div><div class="beam"></div>
+    <div class="beam"></div><div class="beam"></div>
+  </div>
   <div class="center-glow"></div>
+  <div class="pitch-bg"></div>
   <img src="https://resources.premierleague.com/premierleague/badges/t3@x2.png"
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="slide-content">
     <div class="tag">积分追逐战</div>
-    <h2>枪手<em class="bronze-text">一骑绝尘</em>，布莱顿在后面喘气</h2>
+    <h2>枪手 vs <span class="bronze-text">布莱顿</span> 积分曲线</h2>
 
     <div class="chart-card">
       <div class="canvas-wrap">
-        <canvas id="pointsChart"></canvas>
+        <canvas id="ptsChart"></canvas>
       </div>
       <div class="chart-legend">
         <div class="legend-item">
-          <div class="legend-dot" style="background:#C8102E;"></div>
+          <div class="legend-dot" style="background:#C8102E"></div>
           <span>阿森纳</span>
         </div>
         <div class="legend-item">
-          <div class="legend-dot" style="background:#E8B84B;width:16px;height:2px;border-radius:1px;"></div>
-          <span>布莱顿（追赶者）</span>
+          <div class="legend-dot" style="background:#E8B84B"></div>
+          <span>布莱顿</span>
         </div>
       </div>
-      <div class="chart-annotation ahead">▲ 枪手领先 5 分 — 布莱顿加油吧，追上来再说</div>
+      <div class="chart-annotation ahead">▲ 领先 5 分（第10轮后）</div>
+      <div class="pts-gap-note">布莱顿本赛季净胜球高达+19，进攻犀利；但积分上，枪手仍稳压一头。GW5枪手被布莱顿3-0暴揍，之后一路狂飙——报应不知道，报应总会来 😤</div>
     </div>
   </div>
 </section><script>
-(function(){
-  var ctx = document.getElementById('pointsChart');
-  if(!ctx) return;
-  var labels = ['GW1','GW2','GW3','GW4','GW5','GW6','GW7','GW8','GW9','GW10'];
-  var arsenalPts = [3,6,9,12,12,15,18,21,24,27];
-  var rivalPts   = [3,3,4,7,10,13,16,16,19,22];
+(function() {
+  var ctx = document.getElementById('ptsChart').getContext('2d');
   new Chart(ctx, {
     type: 'line',
     data: {
-      labels: labels,
+      labels: ['GW1','GW2','GW3','GW4','GW5','GW6','GW7','GW8','GW9','GW10'],
       datasets: [
         {
           label: '阿森纳',
-          data: arsenalPts,
+          data: [3,6,9,12,12,15,18,21,24,27],
           borderColor: '#C8102E',
           backgroundColor: 'rgba(200,16,46,0.12)',
           fill: true,
@@ -1022,7 +1084,7 @@
         },
         {
           label: '布莱顿',
-          data: rivalPts,
+          data: [3,4,7,7,10,13,16,16,19,22],
           borderColor: '#E8B84B',
           backgroundColor: 'transparent',
           fill: false,
@@ -1069,7 +1131,7 @@
           ticks: {
             color: 'rgba(242,238,230,0.5)',
             font: { family: 'Oswald', size: 11 },
-            maxTicksLimit: 8
+            maxTicksLimit: 10
           }
         }
       }
@@ -1077,137 +1139,145 @@
   });
 })();</script>
 
-<!-- ═══════════════════════════════════════════════════════
-     SLIDE 5 — 积分竞争
-═══════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 5 — 积分竞争 (Title Race)
+══════════════════════════════════════════════════════ -->
 <section class="slide" id="slide-4">
   <div class="chevrons"></div>
-  <div class="beams"><div class="beam"></div><div class="beam"></div><div class="beam"></div><div class="beam"></div></div>
-  <div class="pitch-bg"></div>
+  <div class="beams">
+    <div class="beam"></div><div class="beam"></div>
+    <div class="beam"></div><div class="beam"></div>
+  </div>
   <div class="center-glow"></div>
+  <div class="pitch-bg"></div>
   <img src="https://resources.premierleague.com/premierleague/badges/t3@x2.png"
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="slide-content">
-    <div class="tag fade-up">积分竞争 · 追赶者聚焦</div>
-    <h2 class="fade-up-2"><em class="bronze-text">布莱顿</em>：这个海鸥是认真的？</h2>
+    <div class="tag">积分竞争</div>
+    <h2>关注追赶者：<span class="bronze-text">布莱顿</span></h2>
 
-    <div class="rival-grid fade-up-3">
-      <!-- Left: results -->
+    <div class="title-race-grid">
+      <!-- Left: Results -->
       <div class="card">
-        <div class="section-label">近3场战绩</div>
-        <ul class="rival-results-list">
-          <li>
-            <span>利物浦 2–0 布莱顿</span>
-            <span class="rl-score">0–2</span>
-            <span class="rl-wdl l">负</span>
-          </li>
-          <li>
-            <span>布莱顿 1–0 曼城</span>
-            <span class="rl-score">1–0</span>
-            <span class="rl-wdl w">胜</span>
-          </li>
-          <li>
-            <span>布莱顿 2–0 布伦特福德</span>
-            <span class="rl-score">2–0</span>
-            <span class="rl-wdl w">胜</span>
-          </li>
-        </ul>
+        <div class="section-label-oswald">近3场战绩</div>
+        <div class="rival-results">
+          <div class="rival-result-row win">
+            <span class="rival-score-badge">2–0</span>
+            <span style="font-family:'Noto Sans SC',sans-serif;font-size:0.8rem;">vs 布伦特福德（主）· 11月8日</span>
+            <span style="margin-left:auto;font-family:'Oswald',sans-serif;font-size:0.7rem;color:#22c55e;">胜</span>
+          </div>
+          <div class="rival-result-row win">
+            <span class="rival-score-badge">1–0</span>
+            <span style="font-family:'Noto Sans SC',sans-serif;font-size:0.8rem;">vs 曼城（客）· 10月31日</span>
+            <span style="margin-left:auto;font-family:'Oswald',sans-serif;font-size:0.7rem;color:#22c55e;">胜</span>
+          </div>
+          <div class="rival-result-row loss">
+            <span class="rival-score-badge">0–2</span>
+            <span style="font-family:'Noto Sans SC',sans-serif;font-size:0.8rem;">vs 利物浦（客）· 10月25日</span>
+            <span style="margin-left:auto;font-family:'Oswald',sans-serif;font-size:0.7rem;color:#ef4444;">负</span>
+          </div>
+        </div>
+
         <div style="margin-top:12px;">
-          <div class="section-label">当前积分差</div>
-          <p style="font-family:'Oswald',sans-serif;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--crimson);margin:4px 0;">−5 分</p>
-          <p style="font-size:0.72rem;color:var(--text-muted);margin:0;font-family:'Noto Sans SC',sans-serif;">布莱顿落后枪手 5 分（均赛10场）</p>
+          <div class="section-label-oswald">接下来的赛程</div>
+          <div class="fixture-upcoming">
+            <div class="fixture-upcoming-row">
+              <span class="diff-dot diff-easy" style="font-family:'Oswald',sans-serif;">●</span>
+              <span style="font-family:'Noto Sans SC',sans-serif;font-size:0.8rem;flex:1;">vs 赫尔城（客）· 11月22日</span>
+              <span style="font-family:'Oswald',sans-serif;font-size:0.65rem;color:#22c55e;">● 轻松</span>
+            </div>
+            <div class="fixture-upcoming-row">
+              <span class="diff-dot diff-medium" style="font-family:'Oswald',sans-serif;">●</span>
+              <span style="font-family:'Noto Sans SC',sans-serif;font-size:0.8rem;flex:1;">vs 纽卡斯尔（主）· 11月29日</span>
+              <span style="font-family:'Oswald',sans-serif;font-size:0.65rem;color:#f59e0b;">● 中等</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Right: upcoming fixtures -->
-      <div class="card">
-        <div class="section-label">接下来的赛程</div>
-        <div class="fixture-row">
-          <span class="diff-dot diff-easy" style="font-family:'Oswald',sans-serif;">●</span>
-          <span style="font-family:'Noto Sans SC',sans-serif;font-size:0.78rem;color:var(--text-muted);">11月22日 客场 赫尔城</span>
-          <span style="font-family:'Oswald',sans-serif;font-size:0.68rem;color:#22c55e;">轻松</span>
+      <!-- Right: Stats + Verdict -->
+      <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+        <div>
+          <div class="section-label-oswald" style="margin-bottom:4px;">与枪手差距</div>
+          <div class="pts-gap-badge">−5 分</div>
+          <div style="font-family:'Noto Sans SC',sans-serif;font-size:0.75rem;color:var(--text-muted);margin-top:2px;">（赛10场，积22分）</div>
         </div>
-        <div class="fixture-row">
-          <span class="diff-dot diff-medium" style="font-family:'Oswald',sans-serif;">●</span>
-          <span style="font-family:'Noto Sans SC',sans-serif;font-size:0.78rem;color:var(--text-muted);">11月29日 主场 纽卡斯尔</span>
-          <span style="font-family:'Oswald',sans-serif;font-size:0.68rem;color:#f59e0b;">中等</span>
+        <div>
+          <div class="section-label-oswald">数据一览</div>
+          <div style="font-family:'Oswald',sans-serif;font-size:0.78rem;color:var(--text-muted);line-height:1.8;">
+            净胜球 <span style="color:var(--gold);">+19</span>（全联赛最高）<br>
+            场均进球 <span style="color:var(--gold);">2.6</span> · 场均失球 <span style="color:var(--gold);">0.7</span>
+          </div>
         </div>
-        <div class="fixture-row">
-          <span class="diff-dot diff-medium" style="font-family:'Oswald',sans-serif;">●</span>
-          <span style="font-family:'Noto Sans SC',sans-serif;font-size:0.78rem;color:var(--text-muted);">12月2日 客场 伯恩茅斯</span>
-          <span style="font-family:'Oswald',sans-serif;font-size:0.68rem;color:#f59e0b;">中等</span>
+        <div class="verdict-box">
+          <div class="section-label-oswald" style="margin-bottom:4px;font-family:'Oswald',sans-serif;">威胁评级</div>
+          布莱顿今年简直开了挂——净胜球+19，把枪手+10按在地上摩擦。
+          胡尔泽勒的战术板比快餐店菜单还丰富。<br><br>
+          不过，5分的差距加上赛程未来没啥大妖，布莱顿得保持完美节奏才有机会。
+          <span style="font-family:'Oswald',sans-serif;font-size:0.7rem;color:var(--text-muted);display:block;margin-top:4px;font-family:'Oswald',sans-serif;">* 威胁程度：中高 ⚠️</span>
         </div>
-        <div class="fixture-row">
-          <span class="diff-dot diff-hard" style="font-family:'Oswald',sans-serif;">●</span>
-          <span style="font-family:'Noto Sans SC',sans-serif;font-size:0.78rem;color:var(--text-muted);">12月5日 客场 诺丁汉</span>
-          <span style="font-family:'Oswald',sans-serif;font-size:0.68rem;color:#ef4444;">困难</span>
-        </div>
-        <p style="font-size:0.65rem;color:var(--text-muted);margin-top:8px;font-family:'Oswald',sans-serif;">* 难度仅供参考</p>
       </div>
-    </div>
-
-    <div class="rival-verdict fade-up-4">
-      布莱顿净胜球+19碾压全场，但5分差距还得看赛程。狄亚哥·戈麦斯每场都在射远射？
-      海鸥要继续飞的话，别在国际周期间折断翅膀了。枪手目前表示：
-      <strong style="color:var(--gold);">爱追追，追不上是你的事。</strong>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════════
      SLIDE 6 — 近期赛程
-═══════════════════════════════════════════════════════ -->
+══════════════════════════════════════════════════════ -->
 <section class="slide" id="slide-5">
   <div class="chevrons"></div>
-  <div class="beams"><div class="beam"></div><div class="beam"></div><div class="beam"></div><div class="beam"></div></div>
-  <div class="pitch-bg"></div>
+  <div class="beams">
+    <div class="beam"></div><div class="beam"></div>
+    <div class="beam"></div><div class="beam"></div>
+  </div>
   <div class="center-glow"></div>
+  <div class="pitch-bg"></div>
   <img src="https://resources.premierleague.com/premierleague/badges/t3@x2.png"
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="slide-content">
-    <div class="tag fade-up">近期赛程</div>
-    <h2 class="fade-up-2">国际周后<em class="bronze-text">硬仗连连</em>，扣好安全带！</h2>
+    <div class="tag">近期赛程</div>
+    <h2>前路风景<span class="bronze-text">如画</span>，或险象环生</h2>
 
-    <div class="fixture-list fade-up-3">
+    <div class="fixtures-list">
 
-      <!-- GW11: Newcastle away -->
+      <!-- Fixture 1: Newcastle away -->
       <div class="fixture-item">
         <div class="fixture-comp">英超</div>
         <div class="fixture-info">
-          <div class="fixture-opponent">纽卡斯尔（客场）</div>
-          <div class="fixture-meta">2026年11月21日（周六）· 圣詹姆斯公园</div>
+          <div class="fixture-opponent">客战 纽卡斯尔联</div>
+          <div class="fixture-date">11月21日（周六）· 圣詹姆斯公园</div>
         </div>
         <div class="fixture-stars">★★☆</div>
         <div class="fixture-stakes">
-          圣詹姆斯公园的黑白军团虎视眈眈——枪手能继续开启英超客场必胜？奥登加德船长上！
+          纽卡主场是猎鹰巢穴，噪音比枪手的背景音乐还响。伊萨克还在，漏防后果自负。胜则比追赶者多8分，狠！
         </div>
       </div>
 
-      <!-- UCL GW5: Dortmund home -->
+      <!-- Fixture 2: Borussia Dortmund (UCL) -->
       <div class="fixture-item">
-        <div class="fixture-comp ucl">欧冠</div>
+        <div class="fixture-comp" style="color:var(--bronze-hi);border-color:rgba(169,134,63,0.3);background:rgba(169,134,63,0.1);">欧冠</div>
         <div class="fixture-info">
-          <div class="fixture-opponent">多特蒙德（主场）</div>
-          <div class="fixture-meta">2026年11月24日（周二）· 酋长球场</div>
+          <div class="fixture-opponent">主场 多特蒙德</div>
+          <div class="fixture-date">11月24日（周一）· 酋长球场</div>
         </div>
-        <div class="fixture-stars">★★☆</div>
+        <div class="fixture-stars" style="color:var(--bronze-hi);">★★☆</div>
         <div class="fixture-stakes">
-          黄色风暴来袭！欧冠主场不败是底线。让黄蜂队尝尝伦敦的气场！
+          黄黑军团来访！欧冠联赛阶段继续不败冲击——全场亮灯，把球送进黄墙那一侧的网窝，今晚就是传奇 ⚡
         </div>
       </div>
 
-      <!-- GW12: Man City home -->
+      <!-- Fixture 3: Man City at home -->
       <div class="fixture-item">
         <div class="fixture-comp">英超</div>
         <div class="fixture-info">
-          <div class="fixture-opponent">曼城（主场）</div>
-          <div class="fixture-meta">2026年11月29日（周日）· 酋长球场</div>
+          <div class="fixture-opponent">主场 曼城</div>
+          <div class="fixture-date">11月29日（周日）· 酋长球场</div>
         </div>
         <div class="fixture-stars">★★★</div>
         <div class="fixture-stakes">
-          🔥 本赛季最大硬仗之一！枪手vs蓝月亮，赢了积分差扩至9分。社区盾3-0只是预热，联赛才是真刀真枪！
+          超级碗降临北伦敦！马雷斯卡的曼城落后6分，背水一战。枪手若赢，本赛季冠军竞争基本提前锁定走向。硬仗！背好战术板！🔥
         </div>
       </div>
 
@@ -1215,68 +1285,74 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════════
      SLIDE 7 — 球队动态与热评
-═══════════════════════════════════════════════════════ -->
+══════════════════════════════════════════════════════ -->
 <section class="slide" id="slide-6">
   <div class="chevrons"></div>
-  <div class="beams"><div class="beam"></div><div class="beam"></div><div class="beam"></div><div class="beam"></div></div>
-  <div class="pitch-bg"></div>
+  <div class="beams">
+    <div class="beam"></div><div class="beam"></div>
+    <div class="beam"></div><div class="beam"></div>
+  </div>
   <div class="center-glow"></div>
+  <div class="pitch-bg"></div>
   <img src="https://resources.premierleague.com/premierleague/badges/t3@x2.png"
        onerror="this.style.display='none'" class="crest-watermark" alt="">
 
   <div class="slide-content">
-    <div class="tag fade-up">球队动态</div>
-    <h2 class="fade-up-2"><em class="bronze-text">伤情&停赛</em>汇报：缺人，但仍在赢球</h2>
+    <div class="tag">球队动态与热评</div>
+    <h2>伤兵名单 &amp; <span class="bronze-text">犀利热评</span></h2>
 
-    <div class="injury-grid fade-up-3">
-      <!-- Bukayo Saka -->
-      <div class="injury-card">
-        <div class="injury-name">萨卡</div>
-        <div class="injury-type">受伤 · 大腿肌肉</div>
-        <div class="injury-return">预计回归：12月2日 vs 布伦特福德</div>
-        <div class="injury-comment">我们的国宝在国际周休息，出来是好事！</div>
+    <div class="slide7-wrap">
+      <!-- Injury Grid -->
+      <div class="injury-grid">
+        <div class="injury-card">
+          <div class="injury-name">布卡约·萨卡</div>
+          <div class="injury-type injured">🏥 肌肉伤（大腿）</div>
+          <div class="injury-return">预计返回：11月下旬（TBD）</div>
+          <div class="injury-comment">枪手最贵资产下线，球队依然连胜——但真正的死亡之组还在后头，萨卡你快回来！</div>
+        </div>
+        <div class="injury-card">
+          <div class="injury-name">马克斯·道曼</div>
+          <div class="injury-type suspended">🟨 停赛（红牌）</div>
+          <div class="injury-return">缺席下一联赛赛事</div>
+          <div class="injury-comment">只差1票上诉成功……2-1投票裁定停赛，这位小将的运气差到连脚碰脚都是红牌级别。</div>
+        </div>
+        <div class="injury-card">
+          <div class="injury-name">赛奥斯·佐利斯</div>
+          <div class="injury-type injured">🏥 MRI扫描（肌肉不适）</div>
+          <div class="injury-return">待定（国家队征调期受伤）</div>
+          <div class="injury-comment">上次去希腊征召也受伤，这次又闹幺蛾子。阿泰塔已经开始背诵九九乘法表冷静了。</div>
+        </div>
+        <div class="injury-card">
+          <div class="injury-name">埃布里奇·埃泽</div>
+          <div class="injury-type injured">🏥 伤势（利物浦战前）</div>
+          <div class="injury-return">状态待观察</div>
+          <div class="injury-comment">利物浦战前临时告急，好在佐利斯及时顶上——造化弄人，逼出来的才是真英雄。</div>
+        </div>
       </div>
-      <!-- Ezri Konsa -->
-      <div class="injury-card">
-        <div class="injury-name">孔萨</div>
-        <div class="injury-type">受伤 · 膝盖（疑似）</div>
-        <div class="injury-return">预计回归：TBD</div>
-        <div class="injury-comment">布拉格一战下场，让萨利巴休息好了继续顶</div>
-      </div>
-      <!-- Max Dowman suspended -->
-      <div class="injury-card">
-        <div class="injury-name">道曼</div>
-        <div class="injury-type suspended">停赛 · 红牌（3场禁赛）</div>
-        <div class="injury-return">可回归：11月24日 欧冠 vs 多特蒙德</div>
-        <div class="injury-comment">EFL杯打费利特伍德被红牌——19岁学费，记住了！</div>
-      </div>
-      <!-- Hincapie -->
-      <div class="injury-card">
-        <div class="injury-name">因卡皮耶</div>
-        <div class="injury-type">受伤 · 脚踝</div>
-        <div class="injury-return">预计回归：TBD</div>
-        <div class="injury-comment">新援伤了…阿尔特塔表示：我懂，我习惯了</div>
-      </div>
-    </div>
 
-    <div class="hot-take-section fade-up-4">
-      <div class="hot-take-main">
-        "10场9胜，萨卡缺阵依然横扫，这届枪手的板凳深度让阿尔特塔终于可以睡着觉了——当然，前提是曼城12月29日别找回状态。"
-      </div>
-      <div class="hot-take-pills">
-        <div class="hot-take-pill">
-          <div class="hot-take-pill-label">冠军争夺</div>
-          <p>5分领先布莱顿，6分领先曼城。国际周过后若能拿下纽卡，冬窗前的悬念基本消失。枪手这次是认真要蝉联的。</p>
+      <!-- Hot Take Section -->
+      <div class="hot-take-section">
+        <div class="hot-take-label">本周热评</div>
+
+        <div class="hot-take-main">
+          "10轮9胜、安菲尔德封神、欧冠不败——这支枪手不是在争冠军，他们是在通知其他人谁才是老大。"
         </div>
-        <div class="hot-take-pill">
-          <div class="hot-take-pill-label">关键对决</div>
-          <p>11月29日曼城主场对决堪称本轮最大焦点。若蓝月亮落后9分，瓜帅可能连年会都心不在焉了。酋长球场准备好了。</p>
-        </div>
-        <div class="hot-take-pill">
-          <div class="hot-take-pill-label">隐忧</div>
-          <p>萨卡伤缺已累积7场，回归日期"预计12月"不太确定。马杜艾克状态出色临时撑场，但王牌一日不回，悬着的心一日不落。</p>
+
+        <div class="hot-take-pills">
+          <div class="hot-take-pill">
+            <div class="hot-take-pill-label">冠军争夺</div>
+            <p>5分领先布莱顿，6分压制曼城，枪手已经让追赶者需要靠奇迹才能翻盘。哈弗茨+厄德高的双核组合正处于职业生涯最佳状态。</p>
+          </div>
+          <div class="hot-take-pill">
+            <div class="hot-take-pill-label">关键对决</div>
+            <p>11月29日曼城主场大战是本赛季迄今最大考验。阿泰塔上周已把战术板磨出火星，枪手若赢这场，冠军形势直接明朗化。</p>
+          </div>
+          <div class="hot-take-pill">
+            <div class="hot-take-pill-label">隐忧</div>
+            <p>萨卡缺阵、道曼停赛、佐利斯MRI——三个位置同时存疑。枪手的伤兵室虽然不算爆满，但每个缺阵的都是关键战力，心跳不稳！</p>
+          </div>
         </div>
       </div>
     </div>
@@ -1289,7 +1365,12 @@
   function goTo(i) { if (slides[i]) slides[i].scrollIntoView({ behavior: 'smooth' }); }
   dots.forEach(function (d) { d.addEventListener('click', function () { goTo(parseInt(this.dataset.idx, 10)); }); });
   var obs = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) { if (e.isIntersecting) { var i = slides.indexOf(e.target); dots.forEach(function (d, j) { d.classList.toggle('active', i === j); }); } });
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        var i = slides.indexOf(e.target);
+        dots.forEach(function (d, j) { d.classList.toggle('active', i === j); });
+      }
+    });
   }, { threshold: 0.5 });
   slides.forEach(function (s) { obs.observe(s); });
   document.addEventListener('keydown', function (e) {
